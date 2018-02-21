@@ -1,0 +1,9 @@
+[server]
+general-log=TRUE
+general-log-file=/var/log/map_stdout
+log-error=/var/log/map_stdout
+pid-file=/var/run/mysqld/mysql.pid
+slow-query-log-file=/var/log/map_stdout
+socket=/var/run/mysqld/mysql.sock
+#to allow mounting to an external dir on kube
+datadir=/var/lib/mysql/data

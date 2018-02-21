@@ -1,0 +1,3 @@
+[submodule "gitea/theme-earl-grey"]
+	path = gitea/theme-earl-grey
+	url = https://github.com/acoolstraw/earl-grey.git

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "labels": ["renovatebot"],
+  "dependencyDashboard": false,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "ignoreTests": true
+    }
+  ],
+  "pinDigests": true,
+  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
+}

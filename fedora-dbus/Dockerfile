@@ -1,4 +1,4 @@
-FROM fedora-pulse
+FROM simbelmas/fedora-pulse
 RUN dnf -y install dbus-x11 \
     && dnf clean all
 

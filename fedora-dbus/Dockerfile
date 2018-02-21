@@ -4,5 +4,4 @@ RUN dnf -y install dbus-x11 \
 
 ENV HOME /home/svc
 
-
 ENTRYPOINT /bin/bash

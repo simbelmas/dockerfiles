@@ -9,7 +9,4 @@ RUN useradd -m svc \
 COPY pulse-client.conf /home/svc/.config/pulse/client.conf
 RUN chown svc: /home/svc/ -R
 
-ENV HOME /home/svc
-USER svc
-
 ENTRYPOINT /bin/bash

@@ -1,4 +1,4 @@
-FROM fedora
+FROM simbelmas/fedora-pulse
 RUN dnf -y install thunderbird thunderbird-enigmail \
     && dnf clean all
 

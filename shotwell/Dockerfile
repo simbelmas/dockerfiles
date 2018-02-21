@@ -1,4 +1,4 @@
-FROM fedora 
+FROM simbelmas/fedora-dbus
 RUN dnf -y install shotwell \
     && dnf -y install pulseaudio \
     && dnf -y install dbus-x11 \

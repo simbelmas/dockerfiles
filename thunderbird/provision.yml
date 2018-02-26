@@ -17,13 +17,8 @@
     name: "{{ container_name }}"
     network_mode: host
     state: present
-    #pull: yes
-    #image: simbelmas/thunderbird
-    image: thund
-    ipc_mode: private
-    shm_size: 1G
-    groups: "{{ service_user_data.group }}"
-    user: "{{ service_user_data.uid }}"
+    pull: yes
+    image: simbelmas/thunderbird
     env:
       DISPLAY: "unix{{ unix_display.stdout }}"
       UID: "{{ service_user_data.uid }}"
@@ -36,8 +31,6 @@
     - "{{ service_user_data.home }}/.config/gtk-3.0/:/home/svc/.config/gtk-3.0:ro"
     - /etc/localtime:/etc/localtime:ro
     - /tmp/.X11-unix:/tmp/.X11-unix
-    - /dev/snd:/dev/snd
-
 
 - name: Create launcher in path
   copy:

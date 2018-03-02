@@ -29,6 +29,7 @@
     - "{{ service_user_data.home }}/.pulse:/home/svc/.pulse"
     - "/run/user/{{ service_user_data.uid }}/pulse:/run/user/{{ service_user_data.uid }}/pulse"
     - "{{ service_user_data.home }}/.config/gtk-3.0/:/home/svc/.config/gtk-3.0:ro"
+    - "{{ download_dir | default(service_user_data.home + '/Téléchargements') }}:/home/svc/Downloads"
     - /etc/localtime:/etc/localtime:ro
     - /tmp/.X11-unix:/tmp/.X11-unix
 

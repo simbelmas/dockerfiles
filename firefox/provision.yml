@@ -40,10 +40,10 @@
     content: |
       #!/bin/bash -e
 
-      if [ -z "$(docker ps -f name=ffperso -q)" ] ; then
+      if [ -z "$(docker ps -f name={{ container_name }} -q)" ] ; then
         (
           set -x
-          docker start ffperso
+          docker start {{ container_name }}
           sleep 5
         )
       fi
@@ -67,6 +67,6 @@
         args=$(echo $@ | sed "s#${!#}#/home/svc/host_pages/${!#}#")
         (
           set -x
-          docker exec ffperso su svc -c "firefox $args"
+          docker exec {{ container_name }} su svc -c "firefox $args"
         )
       fi

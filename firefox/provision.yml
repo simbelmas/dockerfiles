@@ -40,15 +40,8 @@
     content: |
       #!/bin/bash -e
 
-      if [ -z "$(docker ps -f name={{ container_name }} -q)" ] ; then
-        (
-          set -x
-          docker start {{ container_name }}
-          sleep 5
-        )
-      fi
-
-      if [ "${#}" -gt 0 -a -n "$(echo ${!#} | grep -iE '.*html$')" -a -z "$(echo ${!#} | grep -iE 'http[s]?://')" ] ; then
+      #Mount local dir
+      if [ "$#" -gt 0 -a -n "$(echo ${!#} | grep -iE '.*html$')" -a -z "$(echo ${!#} | grep -iE 'http[s]?://')" ] ; then
         mountpoin_name=$(echo ${!#} | cut -f 1 -d'/')
         data_dir=$(readlink -m "${mountpoin_name}")
         dest_dir=/tmp/{{ container_name }}/$(basename "${data_dir}")
@@ -63,6 +56,16 @@
         fi
       fi
 
+      #Start container
+      if [ -z "$(docker ps -f name={{ container_name }} -q)" ] ; then
+        (
+          set -x
+          docker start {{ container_name }}
+          sleep 5
+        )
+      fi
+
+      #Load local page
       if [ -n "$(echo $@ | tr -d ' ')" ] ; then
         args=$(echo $@ | sed "s#${!#}#/home/svc/host_pages/${!#}#")
         (
@@ -70,3 +73,4 @@
           docker exec {{ container_name }} su svc -c "firefox $args"
         )
       fi
+

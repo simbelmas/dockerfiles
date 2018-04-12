@@ -1,5 +1,10 @@
 #!/bin/bash -ex
 
+#Ensure group exists
+if [ -z "$(grep -w "${GID}" /etc/group)" ] ; then
+  groupmod -g "${GID}" svc
+fi 
+
 # Ensure permissions are right
 usermod -g ${GID} -u ${UID} svc
 chown svc: /home/svc -R || true #don't stop if this fails as we can mount ro fs on / home

@@ -1,0 +1,75 @@
+---
+- name: Create data dir
+  file:
+    state: directory
+    path: "{{ service_user_data.home }}/app_data/{{ container_name }}"
+    owner: "{{ service_user_data.name }}"
+    group: "{{ service_user_data.name }}"
+    mode: 0700
+
+- name: Create {{ container_name }} container
+  become: yes
+  docker_container:
+    name: "{{ container_name }}"
+    network_mode: host
+    state: present
+    pull: yes
+    image: jess/chrome
+    ipc_mode: private
+    privileged: yes
+    capabilities:
+    - SYS_ADMIN
+    shm_size: 2G
+    env:
+      DISPLAY: "unix{{ unix_display.stdout }}"
+      UID: "{{ service_user_data.uid }}"
+      GID: "{{ service_user_data.group }}"
+    volumes:
+    - "{{ service_user_data.home }}/.pulse:/home/svc/.pulse"
+    - "/run/user/{{ service_user_data.uid }}/pulse:/run/user/{{ service_user_data.uid }}/pulse"
+    - "{{ service_user_data.home }}/.config/gtk-3.0/:/home/svc/.config/gtk-3.0:ro"
+    - "{{ download_dir | default(service_user_data.home + '/Téléchargements') }}:/home/svc/Downloads"
+    - "/tmp/{{ container_name }}:/home/svc/host_pages"
+    - /etc/localtime:/etc/localtime:ro
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - /dev/snd:/dev/snd
+    - /dev/dri:/dev/dri
+
+- name: Create launcher in path
+  copy:
+    owner: "{{ service_user_data.name }}"
+    dest: "{{ service_user_data.home }}/bin/{{ container_name }}"
+    mode: 0700
+    content: |
+      #!/bin/bash -e
+
+      if [ -z "$(docker ps -f name=ffperso -q)" ] ; then
+        (
+          set -x
+          docker start {{ container_name }}
+          sleep 5
+        )
+      fi
+
+      if [ "${#}" -gt 0 -a -n "$(echo ${!#} | grep -iE '.*html$')" -a -z "$(echo ${!#} | grep -iE 'http[s]?://')" ] ; then
+        mountpoin_name=$(echo ${!#} | cut -f 1 -d'/')
+        data_dir=$(readlink -m "${mountpoin_name}")
+        dest_dir=/tmp/{{ container_name }}/$(basename "${data_dir}")
+        if [ ! -e "${dest_dir}" ] ; then
+          mkdir "${dest_dir}"
+        fi
+        if [ -z "$(mount | grep "${dest_dir}")" ] ; then
+          (
+            set -x
+            sudo mount -o bind "${data_dir}" "${dest_dir}"
+          )
+        fi
+      fi
+
+      if [ -n "$(echo $@ | tr -d ' ')" ] ; then
+        args=$(echo $@ | sed "s#${!#}#/home/svc/host_pages/${!#}#")
+        (
+          set -x
+          docker exec {{ container_name }} su svc -c "firefox $args"
+        )
+      fi

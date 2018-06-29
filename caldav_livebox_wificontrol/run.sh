@@ -1,4 +1,4 @@
-#!/bin/ash -xe
+#!/bin/ash -e
 #fill UID/GID variables if not defined
 if [ -z "${UID}" ] ; then
   UID=0

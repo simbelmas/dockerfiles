@@ -16,7 +16,7 @@ parser.add_argument('--calendar-url',dest='caldav_url',required=True,help='webda
 parser.add_argument('--calendar-name',dest='wifi_calendar_name',required=True,help='calendar name')
 parser.add_argument('--event-name',dest='wifi_event_name',required=True,help='event name')
 parser.add_argument('--livebox-url',dest='livebox_url',required=True,help='Livebox web admin url')
-parser.add_argument('--livebox-user',dest='librebox_user',required=True,help='Livebox admin user')
+parser.add_argument('--livebox-user',dest='livebox_user',required=True,help='Livebox admin user')
 parser.add_argument('--livebox-pass',dest='livebox_pass',required=True,help='Livebox admin pass')
 
 

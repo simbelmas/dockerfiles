@@ -28,13 +28,7 @@ fi
 
 # run app
 if [ -z "$(grep 'svc:' /etc/passwd)" ] ; then
-  (
-    set -x
     "$@"
-  )
 else
-  (
-    set -x
     "$@"
-  )
 fi

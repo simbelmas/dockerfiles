@@ -7,6 +7,7 @@ from lvwifi import Lvwifi
 from wificontrol import Wificontrol
 import pytz
 
+
 # Parse options
 parser = argparse.ArgumentParser(description='manage wifi')
 #parser.add_argument('--enable',dest='action',help='enable wifi')
@@ -19,7 +20,6 @@ parser.add_argument('--livebox-url',dest='livebox_url',required=True,help='Liveb
 parser.add_argument('--livebox-user',dest='livebox_user',required=True,help='Livebox admin user')
 parser.add_argument('--livebox-pass',dest='livebox_pass',required=True,help='Livebox admin pass')
 
-
 args = parser.parse_args()
 
 if __name__ == "__main__":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
   wifi_calendar_filtered_list= list(filter(lambda cal: str(cal).find(args.wifi_calendar_name) != -1,calendars))
 
   if not wifi_calendar_filtered_list:
-    raise LookupError('the wifi calendar "%s", could not be found in provided calendars(%s)',wifi_calendar_name,calendars)
+    raise LookupError('the wifi calendar "%s", could not be found in provided calendars(%s)',args.wifi_calendar_name,calendars)
 
   #Prepare dates to search event
   today = datetime.now().date()
@@ -42,17 +42,22 @@ if __name__ == "__main__":
     #prepare wifi management class
     livebox_wifi = Lvwifi(args.livebox_url, args.livebox_user, args.livebox_pass)
     wifi_mgmt_threads = []
+    matching_events=0
     for event in events:
       gcal = Calendar.from_ical(event.data)
       for component in gcal.walk():
         if component.name == "VEVENT" and args.wifi_event_name in component.get('summary'):
+            matching_events=+1
             start_date = component.get('dtstart').dt
             end_date = component.get('dtend').dt
             eventid = component['UID']
             thread = Wificontrol(eventid,start_date,end_date,livebox_wifi,False)
             thread.start()
             wifi_mgmt_threads.append(thread)
-
+    if matching_events == 0:
+      print('The event "' + args.wifi_event_name + '"was not found in calendar "' + args.wifi_calendar_name +'" between "'+ str(today) +'" and "' + str(tomorrow) +'"')
     #Waiting for all threads to finish
     for t in wifi_mgmt_threads:
       t.join()
+  else:
+    print('no event found at all')

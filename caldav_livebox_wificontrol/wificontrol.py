@@ -7,7 +7,7 @@ import time
 import pytz
 
 class Wificontrol (threading.Thread):
-  def __init__(self,thread_id,start_date,stop_date,livebox_wifi,wanted_status = False,enforce_interval_seconds = (5*60),toggle_at_end=True):
+  def __init__(self,thread_id,start_date,stop_date,livebox_wifi,wanted_status = False,enforce_interval_seconds = (10*60),toggle_at_end=True):
     threading.Thread.__init__(self)
     self.thread_id = thread_id
     self.start_date = start_date
@@ -23,4 +23,6 @@ class Wificontrol (threading.Thread):
       print('set status to ',str(self.wanted_status))
       time.sleep(self.enforce_interval)
     if self.toggle_at_end:
+      print('Restore wifi state before stopping')
       self.__livebox_wifi.toggle_status()
+    print('Period end reatched, stopping')

@@ -19,7 +19,6 @@ parser.add_argument('--event-name',dest='wifi_event_name',required=True,help='ev
 parser.add_argument('--livebox-url',dest='livebox_url',required=True,help='Livebox web admin url')
 parser.add_argument('--livebox-user',dest='livebox_user',required=True,help='Livebox admin user')
 parser.add_argument('--livebox-pass',dest='livebox_pass',required=True,help='Livebox admin pass')
-
 args = parser.parse_args()
 
 if __name__ == "__main__":
@@ -28,7 +27,6 @@ if __name__ == "__main__":
   print('grab calendars')
   calendars = client.principal().calendars()
   wifi_calendar_filtered_list= list(filter(lambda cal: str(cal).find(args.wifi_calendar_name) != -1,calendars))
-  
 
   if not wifi_calendar_filtered_list:
     raise LookupError('the wifi calendar "%s", could not be found in provided calendars(%s)',args.wifi_calendar_name,calendars)

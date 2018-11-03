@@ -19,8 +19,8 @@ class Wificontrol (threading.Thread):
   def run(self):
     now = datetime.now(tz=pytz.timezone('Europe/Paris'))
     while self.start_date <= now and self.stop_date >= now:
-      self.__livebox_wifi.switchto(self.wanted_status)
       print('set status to ',str(self.wanted_status))
+      self.__livebox_wifi.switchto(self.wanted_status)
       time.sleep(self.enforce_interval)
     if self.toggle_at_end:
       print('Restore wifi state before stopping')

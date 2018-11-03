@@ -26,7 +26,10 @@ class Lvwifi:
   def status(self):
     jsonparameters={"parameters":{"mibs":"base wlanvap","flag":"wlanvap","traverse":"down"}}
     r = self.__session.post(self.__livebox_url + '/sysbus/NeMo/Intf/lan:getMIBs', params=jsonparameters)
-    return(r.json()['result']['status']['base']['wifi0_ath']['Enable'])
+    status=r.json()['result']['status']['base']['wifi0_ath']['Enable']
+    if status is None:
+        raise ValueError('cannot get status')
+    return status
 
   def switchto(self,newstatus: bool):
     jsonparams={"parameters":{"mibs":{"penable":{"wifi0_ath":{"PersistentEnable": newstatus,"Enable": newstatus}}}}}

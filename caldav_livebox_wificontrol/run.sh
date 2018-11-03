@@ -30,5 +30,5 @@ fi
 if [ -z "$(grep 'svc:' /etc/passwd)" ] ; then
     "$@"
 else
-    "$@"
+    sudo -u svc "$@"
 fi

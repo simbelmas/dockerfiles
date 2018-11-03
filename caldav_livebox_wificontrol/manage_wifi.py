@@ -52,7 +52,7 @@ if __name__ == "__main__":
             start_date = component.get('dtstart').dt
             end_date = component.get('dtend').dt
             eventid = component['UID']
-            thread = Wificontrol(eventid,start_date,end_date,livebox_wifi,False)
+            thread = Wificontrol(eventid,start_date,end_date,livebox_wifi,False,10)
             thread.start()
             wifi_mgmt_threads.append(thread)
     if matching_events == 0:

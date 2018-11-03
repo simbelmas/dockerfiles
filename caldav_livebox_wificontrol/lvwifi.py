@@ -35,7 +35,7 @@ class Lvwifi:
       raise ValueError('cannot set wifi status : wrong http status code (' + str(r.status_code) + '): ' + r.text)
     if 'error' in r.text:
       raise ValueError('cannot set wifi status : errors in operation \n' + r.text)
-    if self.status() != newstatus:
+    if self.status() != newstatus :
         raise EnvironmentError('the wifi status after operation is not the wanted one')
 
   def __init__(self,livebox_url,livebox_user,livebox_pass):

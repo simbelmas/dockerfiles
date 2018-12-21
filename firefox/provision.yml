@@ -12,7 +12,7 @@
     name: "{{ service_user_data.name }}_{{ container_name }}"
     network_mode: host
     state: present
-    #pull: yes
+    pull: yes
     image: simbelmas/firefox
     ipc_mode: private
     shm_size: 2G

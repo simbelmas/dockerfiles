@@ -8,9 +8,10 @@ To use it, pass 3 environment variables:
  * imapfilter_parameters: parameters of imapfilter command
 
 ```
-docker container run imapfilter -d \
-  -v /docker/imapfilter:/imapfilter
-  -e UID=1010 \
-  -e GID=2010 \
-  -e imapfilter_parameters -vc /imapfilter/mycnf.lua
+docker container run -it --name imapfilter -d \
+   -v $(readlink -m .):/imapfilter \
+   -e UID=${UID} \
+   -e GID=${GID} \
+   -e imapfilter_parameters='-vc /imapfilter/sample_config.lua' \
+   imapfilter
 ```

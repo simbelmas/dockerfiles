@@ -13,5 +13,5 @@ docker container run -it --name imapfilter -d \
    -e UID=${UID} \
    -e GID=${GID} \
    -e imapfilter_parameters='-vc /imapfilter/sample_config.lua' \
-   imapfilter
+   sbelmas/imapfilter
 ```

@@ -1,10 +1,7 @@
-FROM simbelmas/fedora-pulse
-RUN dnf -y install firefox && \
-    dnf clean all
+FROM  fedora
+RUN dnf -y install dbus-x11 firefox \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
 
-COPY run.sh /run.sh
-RUN chmod a+x /run.sh
-
-ENV HOME /home/svc
-
-ENTRYPOINT /run.sh
+ENTRYPOINT ["/usr/bin/firefox"]
+CMD ["--new-instance"]

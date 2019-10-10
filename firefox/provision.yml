@@ -34,6 +34,6 @@
             --volume /etc/localtime:/etc/localtime:ro \
             --volume /tmp/.X11-unix:/tmp/.X11-unix \
             --name {{ container_name }} \
-            ff
+            simbelmas/firefox
         )
       fi

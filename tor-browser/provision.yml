@@ -1,0 +1,38 @@
+---
+- name: Create data dir
+  file:
+    state: directory
+    path: "{{ service_user_data.home }}/app_data/{{ container_name }}"
+    owner: "{{ service_user_data.name }}"
+    group: "{{ service_user_data.group }}"
+
+- name: Pull image
+  podman_image:
+    name: simbelmas/tor-browser
+    state: present
+
+- name: Create launcher in path
+  copy:
+    owner: "{{ service_user_data.name }}"
+    group: "{{ service_user_data.group }}"
+    dest: "{{ service_user_data.home }}/bin/{{ container_name }}"
+    mode: 0700
+    content: |
+      #!/bin/bash -e
+
+      #Start container
+      if [ -z "$(podman ps | grep {{ container_name }} )" ] ; then
+        (
+          set -x
+          podman container run \
+            --privileged \
+            --rm \
+            --env DISPLAY=${DISPLAY} \
+            --volume "{{ service_user_data.home }}/.config/gtk-3.0/:/root/.config/gtk-3.0:ro" \
+            --volume "{{ download_dir | default(service_user_data.home + '/Téléchargements') }}:/root/Downloads" \
+            --volume /etc/localtime:/etc/localtime:ro \
+            --volume /tmp/.X11-unix:/tmp/.X11-unix \
+            --name {{ container_name }} \
+            simbelmas/tor-browser ${@}
+        )
+      fi

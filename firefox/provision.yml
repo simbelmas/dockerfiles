@@ -27,6 +27,7 @@
           podman container run \
             --privileged \
             --rm \
+            --dns 127.0.0.1,9.9.9.9 \
             --env "DISPLAY=unix{{ unix_display.stdout }}" \
             --volume "{{ service_user_data.home }}/app_data/{{ container_name }}:/root/.mozilla" \
             --volume "{{ service_user_data.home }}/.config/gtk-3.0/:/root/.config/gtk-3.0:ro" \

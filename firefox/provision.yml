@@ -21,7 +21,7 @@
       #!/bin/bash -e
 
       #Start container
-      if [ -z "$(podman container ps -f name={{ container_name }} -q)" ] ; then
+      if [ -z "$(podman ps | grep {{ container_name }} )" ] ; then
         (
           set -x
           podman container run \

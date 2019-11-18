@@ -1,4 +1,4 @@
-FROM  fedora
+FROM  docker.io/fedora
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 ENV LANG C.UTF-8
 

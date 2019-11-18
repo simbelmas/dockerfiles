@@ -11,12 +11,12 @@ RUN latest_tor=$(curl  -sS -o - --connect-timeout 3 https://www.torproject.org/d
     && curl -sSOL https://www.torproject.org/${latest_tor}.asc \
     && export GNUPGHOME=$(mktemp -d) \
     && gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org \
-    && gpg2 --verify tor-browser-linux64-8.5.5_en-US.tar.xz{.asc,} \
+    && gpg2 --verify $(basename "${latest_tor}"){.asc,} \
     && tar -C /usr/local/bin -Jxv --strip-components 1 -f $(basename "${latest_tor}") \
     && dnf clean all \
     && chmod a+x /usr/local/bin/Browser/start-tor-browser \
     && chmod a+rX -R /usr/local/bin/Browser \
-    && sed '/"`id -u`" -eq 0/,/fi/{d}' -i /usr/local/bin/Browser/start-tor-browser
+    && sed '/"`id -u`" -eq 0/,/fi/{d}' -i /usr/local/bin/Browser/start-tor-browser \
     && rm -rf ${GNUPGHOME} /tmp/$(basename "${latest_tor}")* /var/cache/dnf
 
 ENTRYPOINT ["/usr/local/bin/Browser/start-tor-browser", "--log", "/dev/stdout"]

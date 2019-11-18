@@ -26,6 +26,7 @@
           set -x
           podman container run \
             --privileged \
+            --shm-size 2G \
             --rm \
             --env DISPLAY=${DISPLAY} \
             --volume "{{ service_user_data.home }}/.config/gtk-3.0/:/root/.config/gtk-3.0:ro" \

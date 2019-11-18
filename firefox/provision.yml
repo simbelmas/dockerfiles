@@ -26,6 +26,7 @@
           set -x
           podman container run \
             --privileged \
+            --shm-size 2G \
             --rm \
             --dns 127.0.0.1,9.9.9.9 \
             --env "DISPLAY=unix{{ unix_display.stdout }}" \
@@ -35,6 +36,6 @@
             --volume /etc/localtime:/etc/localtime:ro \
             --volume /tmp/.X11-unix:/tmp/.X11-unix \
             --name {{ container_name }} \
-            simbelmas/firefox --new-instance ${@}
+            simbelmas/firefox --no-remote --new-instance ${@}
         )
       fi

@@ -17,7 +17,7 @@ RUN sed '2i pid /tmp/nginx.pid;' -i /etc/nginx/nginx.conf \
 RUN adduser -S -H -D -h /var/lib/nginx -s /sbin/nologin -u 82 www-data \
     && chown -R www-data: /var/lib/nginx /var/tmp/nginx
 
-USER www-data
+USER 82
 
 EXPOSE 8080
 

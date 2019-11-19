@@ -9,4 +9,4 @@ RUN apk --no-cache add -t build gcc g++ autoconf libpng-dev make \
     && docker-php-source delete \
     && apk del build
 
-USER www-data
+USER 82

@@ -9,4 +9,8 @@ RUN apk --no-cache add -t build gcc g++ autoconf libpng-dev make \
     && docker-php-source delete \
     && apk del build
 
+#configmap additional directory for php.conf directory
+RUN mkdir /usr/local/etc/php/configmap.d
+COPY includeconfigmap_dir.conf /usr/local/etc/php/conf.d/
+
 USER 82

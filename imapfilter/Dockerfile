@@ -1,23 +1,23 @@
-FROM alpine
+FROM docker.io/alpine
+  
+#Compile imapfilter
+RUN apk --no-cache add lua openssl pcre \
+    && apk --no-cache  add -t dev_tools git lua-dev openssl-dev make gcc libc-dev pcre-dev \
+    && git clone https://github.com/lefcha/imapfilter.git /imapfilter_build \
+    && cd /imapfilter_build \
+    && make \
+    && make install \
+    && rm -rf /imapfilter_build \
+    && apk del dev_tools
 
-#Install requirements
-RUN apk --no-cache add lua openssl pcre
+RUN addgroup -g 1001 imapfilter \
+    && adduser -G imapfilter -D -H -h /imapfilter -u 1001 -s /bin/nologin imapfilter \
+    && mkdir -vp /imapfilter/creds /imapfilter/config \
+    && chown -Rv 1001:1001 /imapfilter
 
-#Install dev tools to compile imapfilter
-RUN apk --no-cache  add git -t dev_tools lua-dev openssl-dev make gcc libc-dev pcre-dev
+COPY --chown=1001:1001 run.lua /imapfilter/run.lua
 
-#Compile imapfilter and install it
-RUN git clone https://github.com/lefcha/imapfilter.git /imapfilter_build
-RUN cd /imapfilter_build \
-  && make \
-  && make install
+USER 1001
 
-#Cleanup
-RUN rm -rf /imapfilter_build
-RUN apk del dev_tools
-
-#Add startup script
-COPY run.sh /run.sh
-RUN chmod a+x /run.sh
-
-ENTRYPOINT /run.sh
+ENTRYPOINT ["/usr/local/bin/imapfilter"]
+CMD ["-c", "/imapfilter/run.lua"]

@@ -2,16 +2,20 @@
 Provides alpine container with [imapfilter](https://github.com/lefcha/imapfilter), email filter written in lua.
 
 
-To use it, pass 3 environment variables:
- * UID: user id
- * GID: user group id
- * imapfilter_parameters: parameters of imapfilter command
-
+Imapfilter run rootless with user 1001 and the following directory structure is defined to allow mounting secrets/configs:
 ```
-docker container run -it --name imapfilter -d \
-   -v $(readlink -m .):/imapfilter \
-   -e UID=${UID} \
-   -e GID=${GID} \
-   -e imapfilter_parameters='-vc /imapfilter/sample_config.lua' \
-   sbelmas/imapfilter
+/imapfilter
+/imapfilter/creds
+/imapfilter/config
+```
+
+By default, imapfilter tries to load /imapfilter/creds/creds.lua then /imapfilter/config.config.lua that should be mounted into container.
+
+Sample run :
+```
+podman container run -t --rm \
+   -v ./sample/creds.lua:/imapfilter/creds/creds.lua \
+   -v ./sample/rules.lua:/imapfilter/rules/rules.lua \
+   -v ./sample/imapInteractive.lua:/imapfilter/config/config.lua \
+   quay.io/simbelmas/imapfilter
 ```

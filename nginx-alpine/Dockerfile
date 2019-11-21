@@ -1,6 +1,6 @@
 FROM docker.io/alpine:latest
 LABEL maintainer "Simon Belmas <slos@soket.fr"
-RUN apk --no-cache add nginx nginx-mod-http-geoip nginx-mod-http-xslt-filter  nginx-mod-http-image-filter nginx-mod-http-js
+RUN apk --no-cache add nginx nginx-mod-http-geoip nginx-mod-http-xslt-filter nginx-mod-http-image-filter nginx-mod-http-js tzdata
 
 #Configure logs and unprivileged access to files
 RUN sed '2i pid /tmp/nginx.pid;' -i /etc/nginx/nginx.conf \

@@ -6,7 +6,7 @@ RUN apk --no-cache add transmission-daemon
 
 RUN mkdir -vp /transmission_settings /config /downloads/{complete,incomplete} \
     && ln -sf /transmission_settings/settings.json /config/settings.json \
-    && chown -vR transmission: /config /downloads /transmission_settings
+    && chown -vR 100:101 /config /downloads /transmission_settings
 
 USER 100
 

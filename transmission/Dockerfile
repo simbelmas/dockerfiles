@@ -4,8 +4,9 @@ LABEL maintainer "Simon Belmas <slos@soket.fr"
 #Compile imapfilter
 RUN apk --no-cache add transmission-daemon
 
-RUN mkdir -vp /config /downloads/{complete,incomplete} \
-    && chown -vR transmission: /config /downloads 
+RUN mkdir -vp /transmission_settings /config /downloads/{complete,incomplete} \
+    && ln -sf /transmission_settings/settings.json /config/settings.json \
+    && chown -vR transmission: /config /downloads /transmission_settings
 
 USER 100
 

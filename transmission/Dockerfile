@@ -15,6 +15,6 @@ RUN chmod a+rx /run.sh
 USER 100
 
 
-ENTRYPOINT ["/usr/bin/transmission-daemon"]
-CMD ["--foreground", "--no-watch-dir", "--incomplete-dir","/downloads/incomplete", "--config-dir", "/config", "--logfile", "/dev/stdout", "--download-dir", "/downloads/complete","--log-error", "--log-info", "--pid-file", "/tmp/transmission.pid"
-#ENTRYPOINT ["/run.sh" ]
+#ENTRYPOINT ["/usr/bin/transmission-daemon"]
+#CMD ["--foreground", "--no-watch-dir", "--incomplete-dir","/downloads/incomplete", "--config-dir", "/config", "--logfile", "/dev/stdout", "--download-dir", "/downloads/complete","--log-error", "--log-info", "--pid-file", "/tmp/transmission.pid"
+ENTRYPOINT ["/run.sh" ]

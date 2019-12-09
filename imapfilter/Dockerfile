@@ -1,5 +1,6 @@
 FROM docker.io/alpine
-  
+
+LABEL maintainer "Simon Belmas <slos@soket.fr"
 #Compile imapfilter
 RUN apk --no-cache add lua openssl pcre \
     && apk --no-cache  add -t dev_tools git lua-dev openssl-dev make gcc libc-dev pcre-dev \

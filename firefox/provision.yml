@@ -30,12 +30,16 @@
             --rm \
             --dns 127.0.0.1,9.9.9.9 \
             --env "DISPLAY=unix{{ unix_display.stdout }}" \
-            --volume "{{ service_user_data.home }}/app_data/{{ container_name }}:/root/.mozilla" \
+            {% if firefox_storage | default(true) %}
+             --volume "{{ service_user_data.home }}/app_data/{{ container_name }}:/root/.mozilla" \
+            {% endif -%}
             --volume "{{ service_user_data.home }}/.config/gtk-3.0/:/root/.config/gtk-3.0:ro" \
             --volume "{{ download_dir | default(service_user_data.home + '/Téléchargements') }}:/root/Downloads" \
+            --volume "{{ service_user_data.home }}/.pulse:/root/.pulse" \
+            --volume "/run/user/{{ service_user_data.uid }}/pulse:/run/user/0/pulse" \
             --volume /etc/localtime:/etc/localtime:ro \
             --volume /tmp/.X11-unix:/tmp/.X11-unix \
             --name {{ container_name }} \
-            simbelmas/firefox --no-remote --new-instance ${@}
+            localhost/simbelmas/firefox --no-remote --new-instance ${@}
         )
       fi

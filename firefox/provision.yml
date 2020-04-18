@@ -8,7 +8,7 @@
 
 - name: Pull image
   podman_image:
-    name: simbelmas/firefox
+    name: quay.io/simbelmas/firefox
     state: present
 
 - name: Create launcher in path
@@ -40,6 +40,6 @@
             --volume /etc/localtime:/etc/localtime:ro \
             --volume /tmp/.X11-unix:/tmp/.X11-unix \
             --name {{ container_name }} \
-            docker.io/simbelmas/firefox --no-remote --new-instance ${@}
+            quay.io/simbelmas/firefox --no-remote --new-instance ${@}
         )
       fi

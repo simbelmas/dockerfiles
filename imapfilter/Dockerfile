@@ -1,6 +1,7 @@
-FROM docker.io/alpine
+ARG baseimg=docker.io/multiarch/alpine:x86_64-latest-stable
+FROM $baseimg
 
-LABEL maintainer "Simon Belmas <slos@soket.fr"
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
 #Compile imapfilter
 RUN apk --no-cache add lua openssl pcre \
     && apk --no-cache  add -t dev_tools git lua-dev openssl-dev make gcc libc-dev pcre-dev \

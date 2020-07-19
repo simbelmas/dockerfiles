@@ -1,5 +1,7 @@
-FROM docker.io/php:fpm-alpine
-LABEL maintainer "Simon Belmas <slos@soket.fr"
+ARG baseimg=docker.io/php:fpm-alpine
+FROM $baseimg
+
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
 RUN apk --no-cache add -t build gcc g++ autoconf libpng-dev make \
     && apk --no-cache add libpng tzdata \
     && docker-php-source extract \

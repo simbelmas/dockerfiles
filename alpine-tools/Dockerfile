@@ -3,13 +3,17 @@ FROM $baseimg
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN apk --no-cache add git less openssh
+RUN apk --no-cache add \
+       borgbackup \
+       nfs-utils \
+       vimdiff \
+       git less openssh
 
 VOLUME /git
 WORKDIR /git
 
-RUN addgroup -g 1001 git \
-    && adduser -G git -D -H -u 1001 -s /bin/nologin git
+RUN addgroup -g 1001 svc \
+    && adduser -G svc -D -H -u 1001 -s /bin/nologin svc
 
 USER 1001
 

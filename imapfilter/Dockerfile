@@ -7,7 +7,7 @@ RUN apk --no-cache add lua openssl pcre2\
     && apk --no-cache  add -t dev_tools git lua-dev openssl-dev make gcc libc-dev pcre2-dev \
     && git clone https://github.com/lefcha/imapfilter.git /imapfilter_build \
     && cd /imapfilter_build \
-    && make -e LIBPCRE='-lpcre2-8' \
+    && make \
     && make install \
     && rm -rf /imapfilter_build \
     && apk del dev_tools

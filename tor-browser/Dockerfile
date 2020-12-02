@@ -1,10 +1,12 @@
-FROM  docker.io/fedora
+ARG baseimg=registry.fedoraproject.org/fedora:latest
+FROM $baseimg
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 ENV LANG C.UTF-8
 
 WORKDIR /tmp
 
-RUN latest_tor=$(curl  -sS -o - --connect-timeout 3 https://www.torproject.org/download/ | awk -F \" '$0 ~ /downloadLink.*tor-browser-linux/ { print $4 }') \
+RUN set -x \
+    && latest_tor=$(curl  -sS -o - --connect-timeout 3 https://www.torproject.org/download/ | awk -F \" '$0 ~ /btn.*downloadLink.*tor-browser-linux/ { print $4 }') \
     && if [ -z "${latest_tor}" ] ; then echo "cannot find latest tor version, exiting" >&2 ; exit 1 ; fi \
     && dnf install -y xz zenity file dbus-glib libX11-xcb libXt \
     && curl -sSOL https://www.torproject.org/${latest_tor} \

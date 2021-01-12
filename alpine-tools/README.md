@@ -1,5 +1,9 @@
 #Alpine git
-Provides alpine container with git.
+Provides alpine container with:
+* git
+* borg backup
+* python kubernetes client
+  
 Allow builds from various archs.
 
 

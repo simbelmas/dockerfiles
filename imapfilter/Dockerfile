@@ -21,5 +21,5 @@ COPY --chown=1001:1001 run.lua /imapfilter/run.lua
 
 USER 1001
 
-ENTRYPOINT ["/usr/local/bin/imapfilter"]
-CMD ["-c", "/imapfilter/run.lua"]
+ENTRYPOINT ["/usr/local/bin/imapfilter", "-c", "/imapfilter/run.lua"]
+CMD []

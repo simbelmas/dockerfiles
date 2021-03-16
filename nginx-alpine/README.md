@@ -1,3 +1,6 @@
 # nginx-alpine
 
-nginx alpine with same user as php
+nginx alpine that runs as user 82 (alpine php default).
+
+Configuration dir is `/etc/nginx/conf.d`.
+Html dir is `/var/lib/html`.

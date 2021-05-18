@@ -1,8 +1,8 @@
 #!/bin/ash -xe
-if [ "$(find /etc/php7/kube/php-conf.d -type f -iname \*.ini | wc -l)" -gt 0 ] ; then
+if [ "$(ls -1 /etc/php7/kube/php-conf.d/*.ini | wc -l)" -gt 0 ] ; then
     cp -v /etc/php7/kube/php-conf.d/*.ini /etc/php7/conf.d
 fi
-if [ "$(find /etc/php7/kube/fpm-conf.d -type f -iname \*.conf | wc -l)" -gt 0 ] ; then
+if [ "$(ls -1 /etc/php7/kube/fpm-conf.d/*.conf | wc -l)" -gt 0 ] ; then
     cp -v /etc/php7/kube/fpm-conf.d/*.conf /etc/php7/php-fpm.d/
 fi
 

@@ -2,7 +2,7 @@ ARG baseimg=docker.io/multiarch/alpine:x86_64-latest-stable
 FROM $baseimg
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
-RUN apk --no-cache add nginx nginx-mod-http-geoip nginx-mod-http-xslt-filter nginx-mod-http-image-filter nginx-mod-http-js tzdata
+RUN apk --no-cache add nginx nginx-mod-http-geoip nginx-mod-http-xslt-filter nginx-mod-http-image-filter tzdata
 
 #Configure logs and unprivileged access to files
 RUN sed '2i pid /tmp/nginx.pid;' -i /etc/nginx/nginx.conf \

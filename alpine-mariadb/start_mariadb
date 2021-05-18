@@ -1,0 +1,17 @@
+#!/bin/ash
+if [ "$(ls -1 /var/lib/mysql | wc -l)" -eq 0 ] ; then
+    set -xe
+    mysql_install_db --user=mysql --auth-root-authentication-method=socket --datadir=/var/lib/mysql/data --skip-test-db
+    /usr/bin/mysqld &
+    mysqld_uid=$!
+    sleep 10
+    mysql <<EOSQL
+    use mysql;
+    delete from user where user='';
+    delete from user where user='root';
+EOSQL
+    kill -SIGTERM $mysqld_uid
+    sleep 10
+fi
+
+exec /usr/bin/mysqld $*

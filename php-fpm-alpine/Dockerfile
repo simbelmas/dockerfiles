@@ -10,7 +10,7 @@ RUN apk --no-cache add php7 php7-fpm php7-opcache \
         php7-ftp php7-bcmath php7-gmp php7-exif php7-pecl-apcu \
         php7-pecl-imagick ffmpeg \
         freetype libpng libjpeg-turbo \
-        libxml2
+        libxml2 php7-xml
 
 COPY start_fpm /usr/local/bin/
 COPY 00-php-fpm.conf /etc/php7/php-fpm.d/

@@ -1,6 +1,6 @@
 #!/bin/ash
 if [ "$( ls -1 /etc/my.cnf.kube.d/*.cnf | wc -l )" -gt 0 ] ; then
-    cp -v /etc/my.cnf.kube.d/*.cnf /etc/my.cnf.d/
+    cp -vf /etc/my.cnf.kube.d/*.cnf /etc/my.cnf.d/
 fi
 if [ "$(ls -1 /var/lib/mysql | wc -l)" -eq 0 ] ; then
     set -xe

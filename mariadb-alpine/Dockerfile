@@ -9,7 +9,7 @@ RUN deluser mysql \
     && addgroup -g 1001 mysql \
     && adduser -G mysql -D -H -h /var/lib/mysql -u 1001 -s /bin/nologin mysql \
     && mkdir /var/run/mysql \
-    && chown -Rv 1001:1001 /var/lib/mysql /var/run/mysql \
+    && chown -Rv mysql: /var/lib/mysql /var/run/mysql /etc/my.cnf.d \
     && ln -s /dev/stdout /var/log/map_stdout  \
     && ln -s /dev/stdout /var/log/map_stdout.err \
     && rm /etc/my.cnf.d/mariadb-server.cnf

@@ -14,10 +14,13 @@ RUN sed '2i pid /tmp/nginx.pid;' -i /etc/nginx/nginx.conf \
     && ln -s /dev/stderr /var/lib/nginx/logs/error.log \
     && if [ -e "/var/log/nginx/error.log" ] ; then rm -v /var/log/nginx/error.log ; fi \
     && ln -s /dev/stderr /var/log/nginx/error.log \
-    && mkdir -p /var/tmp/nginx
+    && mkdir -p /var/tmp/nginx /etc/nginx/kube
+
+COPY start_nginx /usr/local/bin
 
 RUN adduser -S -H -D -h /var/lib/nginx -s /sbin/nologin -u 82 www-data \
-    && chown -R www-data: /var/lib/nginx /var/tmp/nginx
+    && chown -R www-data: /var/lib/nginx /var/tmp/nginx /etc/nginx \
+    && chmod 755 /usr/local/bin/start_nginx
 
 USER 82
 
@@ -25,5 +28,5 @@ EXPOSE 8080
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["start_nginx"]
 

@@ -2,7 +2,7 @@ ARG baseimg=docker.io/multiarch/alpine:x86_64-latest-stable
 FROM $baseimg
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
-#Compile imapfilter
+
 RUN apk --no-cache add mosquitto
 
 RUN addgroup -g 1001 mosquittorun \

@@ -22,8 +22,6 @@ RUN chmod 755 /usr/local/bin/start_fpm \
     && adduser -S -H -D -h /var/lib/php7 -s /sbin/nologin -u 82 -G www-data www-data \
     && mkdir -p /var/run/php7 /var/www/html \
     && mkdir -p /etc/php7/kube/php-conf.d /etc/php7/kube/fpm-conf.d \
-    && ln -s /dev/stdout /var/log/php7/error.log \
-    && ln -s /dev/stdout /var/log/php7/map_stdout.log \
     && chown -R www-data: /var/lib/php7 /var/run/php7 /var/log/php7 /var/www/html /etc/php7
  
 USER 82

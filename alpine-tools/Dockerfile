@@ -9,7 +9,7 @@ RUN apk --no-cache add \
        vimdiff \
        git less openssh curl \
     && apk --no-cache add  python3 py3-pip \
-    && pip3 install kubernetes
+    && pip3 install kubernetes jinja2-tools
    
 RUN addgroup -g 1001 svc \
     && adduser -G svc -D -H -u 1001 -s /bin/nologin svc

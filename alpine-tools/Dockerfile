@@ -15,7 +15,7 @@ RUN addgroup -g 1001 svc \
     && adduser -G svc -D -H -u 1001 -s /bin/nologin svc
 
 RUN addgroup -g 82 www-data \
-    && adduser -G www-data -D -H -u 82 -s /sbin/nologin www-data
+    && adduser -G www-data -D -u 82 -s /sbin/nologin www-data
 USER 1001
 
 CMD ["git", "--help"]

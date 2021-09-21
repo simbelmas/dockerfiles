@@ -18,7 +18,6 @@ COPY 00-fpm-www.conf /etc/php7/php-fpm.d/
 COPY 000-container-php.ini /etc/php7/conf.d/
 
 RUN chmod 755 /usr/local/bin/start_fpm \
-    && addgroup -g 82 www-data \
     && adduser -S -H -D -h /var/lib/php7 -s /sbin/nologin -u 82 -G www-data www-data \
     && mkdir -p /var/run/php7 /var/www/html \
     && mkdir -p /etc/php7/kube/php-conf.d /etc/php7/kube/fpm-conf.d \

@@ -26,8 +26,7 @@ RUN apk --no-cache add git \
 
 COPY app.ini /var/lib/gitea/custom/conf/app.ini
 
-RUN addgroup -g 82 www-data \
-    && adduser -G www-data -D -H -h /var/lib/gitea -u 1001 gitea \
+RUN adduser -G www-data -D -H -h /var/lib/gitea -u 1001 gitea \
     && chown -Rv gitea:www-data /var/lib/gitea \
     && chmod g+rwX /var/lib/gitea -R \
     && chmod 750 /var/lib/gitea

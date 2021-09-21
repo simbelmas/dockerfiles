@@ -12,9 +12,7 @@ RUN apk --no-cache add \
     && pip3 install kubernetes jinja2-tools
    
 RUN addgroup -g 1001 svc \
-    && adduser -G svc -D -H -u 1001 -s /bin/nologin svc
-
-RUN addgroup -g 82 www-data \
+    && adduser -G svc -D -H -u 1001 -s /bin/nologin svc \
     && adduser -G www-data -D -u 82 -s /sbin/nologin www-data
 USER 1001
 

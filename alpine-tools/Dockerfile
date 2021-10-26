@@ -8,6 +8,7 @@ RUN apk --no-cache add \
        nfs-utils \
        vimdiff \
        git less openssh curl \
+       rsync \
     && apk --no-cache add  python3 py3-pip \
     && pip3 install kubernetes jinja2-tools
    

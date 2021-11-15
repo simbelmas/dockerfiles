@@ -13,11 +13,12 @@ RUN apk --no-cache add php7 php7-fpm php7-opcache \
         libxml2 php7-xml
 
 COPY start_fpm /usr/local/bin/
+COPY run_php_command /usr/local/bin/
 COPY 00-php-fpm.conf /etc/php7/php-fpm.d/
 COPY 00-fpm-www.conf /etc/php7/php-fpm.d/
 COPY 000-container-php.ini /etc/php7/conf.d/
 
-RUN chmod 755 /usr/local/bin/start_fpm \
+RUN chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
     && adduser -S -H -D -h /var/lib/php7 -s /sbin/nologin -u 82 -G www-data www-data \
     && mkdir -p /var/run/php7 /var/www/html \
     && mkdir -p /etc/php7/kube/php-conf.d /etc/php7/kube/fpm-conf.d \

@@ -9,4 +9,7 @@ fpm.conf customization files cna be mounted in /etc/php7-fpm-kube.d
 A script runs at startup and copy contents of theese dirs to configures ones.
 
 Configuration can be overriden by mounting files with '10-' prepending name in /etc/php7/kube/php-conf.d and /etc/php7/kube/fpm-conf.d
-  
+
+Entrypoints:
+* start_fpm
+* run_php_command

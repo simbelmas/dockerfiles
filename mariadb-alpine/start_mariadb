@@ -12,6 +12,7 @@ if [ "$(ls -1 /var/lib/mysql | wc -l)" -eq 0 ] ; then
     use mysql;
     delete from user where user='';
     delete from user where user='root';
+    mkdir /var/lib/mysql/backup
 EOSQL
     kill -SIGTERM $mysqld_uid
     sleep 10

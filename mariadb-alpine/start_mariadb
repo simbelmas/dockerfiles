@@ -13,6 +13,10 @@ if [ "$(ls -1 /var/lib/mysql | wc -l)" -eq 0 ] ; then
     delete from user where user='';
     delete from user where user='root';
     mkdir /var/lib/mysql/backup
+    if [ -e '/etc/myscr' ] ; then
+        echo "GRANT LOCK TABLES, SELECT ON *.* TO '$(cat /etc/myscr/backup_usr)'@'%' IDENTIFIED BY '$(cat /etc/myscr/backup_password)';; flush privileges;" | mysq
+l mysql
+    fi
 EOSQL
     kill -SIGTERM $mysqld_uid
     sleep 10

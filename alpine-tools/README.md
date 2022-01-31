@@ -1,12 +1,7 @@
-#Alpine git
+#Alpine Stess
 Provides alpine container with:
-* git
-* borg backup
-* python kubernetes client
-  
-Allow builds from various archs.
-
+* stress-ng
 
 podman container run -t --rm \
-   quay.io/simbelmas/alpine-git:x86_64
+   quay.io/simbelmas/alpine-tools:x86_64
 ```

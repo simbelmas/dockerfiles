@@ -8,6 +8,9 @@ RUN apk --no-cache add \
    
 RUN addgroup -g 1001 svc \
     && adduser -G svc -D -H -u 1001 -s /bin/nologin svc
+
+WORKDIR /tmp 
+
 USER 1001
 
 CMD ["stress-ng", "--help"]

@@ -8,5 +8,5 @@ Allow builds from various archs.
 
 
 podman container run -t --rm \
-   quay.io/simbelmas/alpine-stress:x86_64
+   quay.io/simbelmas/alpine-stress:x86_64 stress-ng --fork 4
 ```

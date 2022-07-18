@@ -5,7 +5,6 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN apk --no-cache add \
        nfs-utils \
-       vimdiff \
        git less openssh curl \
        rsync \
        python3 py3-pip \

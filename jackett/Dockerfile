@@ -1,5 +1,5 @@
-ARG baseimg=docker.io/alpine:latest
-FROM $baseimg
+FROM docker.io/alpine:latest
+
 
 RUN apk add --no-cache sqlite-libs gcompat bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
 

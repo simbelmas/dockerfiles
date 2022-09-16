@@ -1,5 +1,4 @@
-ARG baseimg=docker.io/multiarch/alpine:x86_64-latest-stable
-FROM $baseimg
+FROM docker.io/alpine:latest
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 #Compile imapfilter

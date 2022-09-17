@@ -1,11 +1,11 @@
-#!/bin/ash -xe
-if [ "$(ls -1 /etc/php7/kube/php-conf.d/*.ini | wc -l)" -gt 0 ] ; then
-    cp -vf /etc/php7/kube/php-conf.d/*.ini /etc/php7/conf.d
+#!/bin/ash -e
+if [ "$(ls -1 /etc/phpkube/php-conf.d/*.ini | wc -l)" -gt 0 ] ; then
+    cp -vf /etc/phpkube/php-conf.d/*.ini /etc/php8/conf.d
 fi
-if [ "$(ls -1 /etc/php7/kube/fpm-conf.d/*.conf | wc -l)" -gt 0 ] ; then
-    cp -vf /etc/php7/kube/fpm-conf.d/*.conf /etc/php7/php-fpm.d/
+if [ "$(ls -1 /etc/phpkube/fpm-conf.d/*.conf | wc -l)" -gt 0 ] ; then
+    cp -vf /etc/phpkube/fpm-conf.d/*.conf /etc/php8/php-fpm.d/
 fi
 
-exec /usr/sbin/php-fpm7 $*
+exec /usr/sbin/php-fpm8 $*
 
  

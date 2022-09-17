@@ -2,7 +2,7 @@ FROM docker.io/alpine:latest
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 #Compile imapfilter
-RUN apk --no-cache add mariadb mariadb-client mariadb-mytop
+RUN apk --no-cache add mariadb mariadb-client mariadb-mytop mariadb-server-utils
 
 RUN deluser mysql \
     && addgroup -g 1001 mysql \

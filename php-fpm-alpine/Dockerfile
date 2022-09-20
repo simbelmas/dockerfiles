@@ -6,7 +6,7 @@ RUN apk --no-cache add php8 php8-fpm php8-opcache \
         php8-mbstring php8-openssl php8-posix php8-session \
         php8-simplexml php8-xmlwriter php8-xmlreader php8-zip \
         php8-common php8-pdo_mysql php8-fileinfo php8-bz2 php8-intl \
-        php8-ftp php8-bcmath php8-gmp php8-exif php8-pecl-apcu php8-pcntl \
+        php8-ftp php8-bcmath php8-gmp php8-exif php8-pecl-apcu php8-pcntl php8-phar \
         php8-pecl-imagick ffmpeg \
         freetype libpng libjpeg-turbo \
         libxml2 php8-xml

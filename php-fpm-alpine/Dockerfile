@@ -20,6 +20,7 @@ COPY 00-fpm-www.conf /etc/php${php_version}/php-fpm.d/
 COPY 000-container-php.ini /etc/php${php_version}/conf.d/
 
 RUN sed "s/PHP_VERSION/${php_version}/g" -i /usr/local/bin/start_fpm \
+    && sed "s/PHP_VERSION/${php_version}/g" -i /usr/local/bin/run_php_command \ 
     && if [ ! -e /usr/bin/php ] ; then ln -s /usr/bin/php${php_version} /usr/bin/php ; fi
 
 RUN chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \

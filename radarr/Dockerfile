@@ -4,7 +4,6 @@ RUN apk add --no-cache sqlite-libs gcompat bash icu-libs krb5-libs libgcc libint
 
 RUN export arch=$(uname -m) \
     && if [ "$arch" = "x86_64" ] ; then export software_arch="x64" ; elif [ "$arch" == "armv7l" ] ; then export software_arch="arm" ; fi \
-    && echo Installing jackett on arch $arch translated to ${software_arch} \
     && cd /opt \
     && export download_url="http://radarr.servarr.com/v1/update/master/updatefile?os=linuxmusl&runtime=netcore&arch=${software_arch}" \
     && echo ${download_url} > software_downloaded_from \
@@ -13,7 +12,7 @@ RUN export arch=$(uname -m) \
 RUN adduser -G media -D -h /opt/mediaData -u 82 -s /bin/nologin -G www-data media \
     && chown -Rv media: /opt/Radarr
 
-USER 1001
+USER 82
 WORKDIR /opt/mediaData
 ENTRYPOINT ["/opt/Radarr/Radarr"]
 CMD ["-nobrowser","-data=/opt/mediaData"]

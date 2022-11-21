@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-minimal:latest
+FROM quay.io/fedora/fedora-minimal:36
 
 RUN microdnf -y install python3-pip \
     && microdnf clean all

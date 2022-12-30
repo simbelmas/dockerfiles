@@ -10,6 +10,7 @@ RUN apk --no-cache add php${php_version} php${php_version}-fpm php${php_version}
         php${php_version}-common php${php_version}-pdo_mysql php${php_version}-fileinfo php${php_version}-bz2 php${php_version}-intl \
         php${php_version}-ftp php${php_version}-bcmath php${php_version}-gmp php${php_version}-exif php${php_version}-pecl-apcu php${php_version}-pcntl php${php_version}-phar \
         php${php_version}-pecl-imagick ffmpeg \
+        curl \
         freetype libpng libjpeg-turbo \
         libxml2 php${php_version}-xml
 

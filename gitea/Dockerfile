@@ -37,6 +37,6 @@ RUN chown -Rv app:www-data /var/lib/gitea \
 
 WORKDIR /var/lib/gitea
 ENTRYPOINT ["/usr/local/bin/gitea","web"]
-CMD ["-c", "/var/libc/gitea/custom/conf/app.ini"]
+CMD ["-c", "/var/lib/gitea/custom/conf/app.ini"]
 
 USER 1001

@@ -1,4 +1,4 @@
-FROM docker.io/alpine:latest
+FROM quay.io/simbelmas/alpine:latest
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 RUN apk --no-cache add nginx nginx-mod-http-geoip nginx-mod-http-xslt-filter nginx-mod-http-image-filter tzdata

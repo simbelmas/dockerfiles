@@ -1,4 +1,4 @@
-FROM docker.io/alpine:latest
+FROM quay.io/simbelmas/alpine:latest
 
 ARG php_version=81
 

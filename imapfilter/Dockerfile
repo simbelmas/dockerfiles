@@ -1,4 +1,4 @@
-FROM docker.io/alpine:latest
+FROM quay.io/simbelmas/alpine:latest
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 #Compile imapfilter

@@ -1,4 +1,3 @@
-#FROM docker.io/alpine:latest
 FROM quay.io/fedora/fedora-minimal:latest
 ARG arch=amd64
 ARG arch_variant=""

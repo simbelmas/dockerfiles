@@ -1,4 +1,4 @@
-FROM docker.io/alpine:latest
+FROM quay.io/simbelmas/alpine:latest
 
 RUN apk add --no-cache dotnet6-sdk
 

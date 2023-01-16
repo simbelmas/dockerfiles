@@ -3,7 +3,7 @@
 #--------Build KSOPS and Kustomize-----------#
 #--------------------------------------------#
 
-FROM docker.io/viaductoss/ksops:latest as ksops-builder
+FROM quay.io/simbelmas/ksops:latest as ksops-builder
 
 #--------------------------------------------#
 #--------Build Custom Argo Image-------------#

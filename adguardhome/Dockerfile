@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/adguardhome-mirror:latest
+FROM quay.io/simbelmas/adguardhome:dockerio-latest-mirror
 
 RUN addgroup -g 1001 adguard \
     && adduser -G adguard -D -H -h /opt/adguardhome -u 1001 -s /bin/nologin adguard \

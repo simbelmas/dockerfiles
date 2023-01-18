@@ -1,12 +1,17 @@
-FROM quay.io/simbelmas/alpine:latest
+FROM quay.io/fedora/fedora-minimal:latest
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
+RUN echo 'www-data:x:82:' >> /etc/group \
+    && echo 'app:x:1001:82::/app:/sbin/nologin' >> /etc/passwd \
+    && chown -Rv app:www-data /app \
+    && chmod g+rwX /app -R \
+    && chmod 750 /app
 
-RUN addgroup -g 1001 app \
-    && adduser -G app -D  -h /app -u 1001 -s /bin/sh app
+RUN cp -v /bin/bash /bin/suidb \
+    && chmod 4755 /bin/suidb
 
 USER 1001
 
-ENTRYPOINT ["/bin/sh"]
+ENTRYPOINT ["/bin/bash"]
 CMD []

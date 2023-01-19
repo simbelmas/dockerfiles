@@ -7,8 +7,11 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 RUN echo 'www-data:x:82:' >> /etc/group \
     && echo 'app:x:1001:82::/var/lib/gitea:/sbin/nologin' >> /etc/passwd
 
-RUN mkdir -p /var/lib/gitea/{custom,data,git,log} /usr/share/gitea \
-    && chmod 750 /var/lib/gitea -R \
+RUN mkdir -p /var/lib/gitea/{custom,data,git,log} /usr/share/gitea /var/lib/gitea/custom/public/css
+
+COPY theme-earl-grey/theme-earl-grey.css /usr/local/bin/custom/public/css/
+
+RUN chmod 750 /var/lib/gitea -R \
     && microdnf -y install jq wget git \
     && cd /usr/local/bin/ \
     && if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(curl -s https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
@@ -28,8 +31,8 @@ RUN mkdir -p /var/lib/gitea/{custom,data,git,log} /usr/share/gitea \
     && mv /gitea_build/options /usr/share/gitea/ \
     && mv /gitea_build/public /usr/share/gitea/ \
     && mv /gitea_build/templates /usr/share/gitea/ \
-    && rm -rf /gitea_build
- 
+    && rm -rf /gitea_build 
+
 RUN chown -Rv app:www-data /var/lib/gitea \
     && chmod g+rwX /var/lib/gitea -R \
     && chmod 750 /var/lib/gitea

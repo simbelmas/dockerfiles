@@ -2,7 +2,7 @@ From fedora:latest
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN rpm --setcaps shadow-utils 2>/dev/null \
-    && dnf -y install buildah skopeo fuse-overlayfs cpp --exclude container-selinux containers-common qemu-user-static \
+    && dnf -y install buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux containers-common qemu-user-static \
     && dnf -y clean all && rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 ENV BUILDAH_ISOLATION=chroot

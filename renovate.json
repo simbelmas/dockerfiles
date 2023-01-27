@@ -8,19 +8,18 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "packageRules": [
     {
-      "matchPackageNames": ["fedora","fedora-minimal"],
+      "matchPackagePatterns": [".*fedora.*"],
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "automerge": true,
-      "ignoreTests": true,
-      "pinDigests": true     
+      "ignoreTests": true    
     },
     {
+      "excludePackagePatterns": [".*fedora.*"],
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "automerge": false,
-      "ignoreTests": true,
-      "pinDigests": true     
+      "ignoreTests": true
     },
     {
       "matchDatasources": ["docker"],
@@ -31,9 +30,7 @@
     },
     {
       "matchPaths": ["bazarr/**"],
-      "matchUpdateTypes": ["major","minor", "patch", "pin", "digest"],
-      "automerge": false,
-      "ignoreTests": true
+      "automerge": false
     }
   ],
   "docker": {

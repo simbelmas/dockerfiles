@@ -8,6 +8,14 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "packageRules": [
     {
+      "matchPackageNames": ["fedora","fedora-minimal"],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "automerge": true,
+      "ignoreTests": true,
+      "pinDigests": true     
+    },
+    {
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "automerge": false,

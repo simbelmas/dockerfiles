@@ -20,5 +20,10 @@
       "automerge": false,
       "ignoreTests": true
     }
-  ]
+  ],
+  "docker": {
+    "digest": {
+      "enabled": true
+    }
+  }
 }

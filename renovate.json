@@ -9,8 +9,15 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["digest"],
+      "matchUpdateTypes": ["major"],
       "automerge": false,
+      "ignoreTests": true,
+      "pinDigests": true     
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
       "ignoreTests": true,
       "pinDigests": true     
     },

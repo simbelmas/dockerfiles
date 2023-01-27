@@ -1,5 +1,4 @@
-FROM quay.io/fedora/fedora-minimal:latest
-ARG arch=amd64
+FROM quay.io/fedora/fedora-minimal:38
 ARG arch_variant=""
 ARG app_version
 LABEL maintainer "Simon Belmas <slos@soket.fr>"

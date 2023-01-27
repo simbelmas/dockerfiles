@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-minimal:latest
+FROM quay.io/fedora/fedora-minimal:35
 ARG arch=amd64
 ARG arch_variant=""
 ARG app_version

@@ -25,5 +25,6 @@
     "digest": {
       "enabled": true
     }
-  }
+  },
+  "ignore-paths": ["transmission/**","mosquitto/**","home-assistant/**"]
 }

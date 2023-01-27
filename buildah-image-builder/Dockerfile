@@ -1,4 +1,4 @@
-From fedora:latest
+From quay.io/fedora:latest
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN rpm --setcaps shadow-utils 2>/dev/null \

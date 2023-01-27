@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-minimal:35
+FROM quay.io/fedora/fedora-minimal:38
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'app:x:1001:' >> /etc/group \

@@ -9,9 +9,10 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": ["digest"],
       "automerge": false,
-      "ignoreTests": true       
+      "ignoreTests": true,
+      "pinDigests": true     
     },
     {
       "matchPaths": ["bazarr/**"],

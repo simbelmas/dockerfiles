@@ -3,13 +3,13 @@
 #--------Build KSOPS and Kustomize-----------#
 #--------------------------------------------#
 
-FROM quay.io/simbelmas/argocd:dockerio-ksops-latest-mirror@sha256:2d6df4072ed8ba4fd9f0299964452e368657322fbe26703f856e8f0abf157890 as ksops-builder
+FROM quay.io/simbelmas/argocd:dockerio-ksops-latest-mirror@sha256:0db8c00622e81e7f4a1026e7126eab66578fbce4f9f2a23edc3a92bf03dbe0f9 as ksops-builder
 
 #--------------------------------------------#
 #--------Build Custom Argo Image-------------#
 #--------------------------------------------#
 
-FROM quay.io/argoproj/argocd:v2.5.6 as argocd
+FROM quay.io/argoproj/argocd:v2.5.8 as argocd
 
 # Switch to root for the ability to perform install
 USER root

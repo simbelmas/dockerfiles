@@ -26,5 +26,5 @@
       "enabled": true
     }
   },
-  "ignore-paths": ["transmission/**","mosquitto/**","home-assistant/**"]
+  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**"]
 }

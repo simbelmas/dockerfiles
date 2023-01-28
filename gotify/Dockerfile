@@ -1,6 +1,9 @@
-FROM quay.io/fedora/fedora-minimal:38
-ARG arch_variant=""
-ARG app_version
+FROM quay.io/simbelmas/fedora-minimal:37
+
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETVARIANT
+
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'www-data:x:82:' >> /etc/group \
@@ -14,7 +17,7 @@ RUN mkdir -p /app /app/data /etc/gotify \
     && echo "Selected tag: ${app_last_stable_release}" \
     && cd /app \
     && if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(curl -s https://api.github.com/repos/gotify/server/releases/latest | jq -r .tag_name) ; fi \
-    && if [ "${arch}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${arch}" ; fi \
+    && if [ "${TARGETARCH}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${TARGETARCH}" ; fi \
     && echo "Will download version ${app_last_stable_release} for arch ${build_arch}" \
     && wget https://github.com/gotify/server/releases/download/${app_last_stable_release}/gotify-linux-${build_arch}.zip \
     && unzip gotify-linux-${build_arch}.zip \

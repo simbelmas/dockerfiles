@@ -1,11 +1,14 @@
 FROM quay.io/simbelmas/alpine:latest@sha256:f271e74b17ced29b915d351685fd4644785c6d1559dd1f2d4189a5e851ef753a
 
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETVARIANT
 
 RUN apk add --no-cache sqlite-libs gcompat bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
 
 RUN export arch=$(uname -m) \
     && echo Installing jackett on arch $arch \
-    && if [ "$arch" = "x86_64" ] ; then export jackett_version="AMDx64" ; elif [ "$arch" == "armv7l" ] ; then export jackett_version="ARM32" ; fi \
+    && if [ "${TARGETARCH}" = "amd64" ] ; then export jackett_version="AMDx64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export jackett_version="ARM32" ; fi \
     && cd /opt \
     && wget -O - https://github.com/Jackett/Jackett/releases/download/v0.20.1907/Jackett.Binaries.LinuxMusl${jackett_version}.tar.gz | tar -zxf -
 

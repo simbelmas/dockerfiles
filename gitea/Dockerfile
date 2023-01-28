@@ -1,7 +1,9 @@
 FROM quay.io/simbelmas/fedora-minimal:37
-ARG arch=amd64
-ARG arch_variant=""
-ARG app_version
+
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETVARIANT
+
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'www-data:x:82:' >> /etc/group \
@@ -15,7 +17,7 @@ RUN chmod 750 /var/lib/gitea -R \
     && microdnf -y install jq wget git \
     && cd /usr/local/bin/ \
     && if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(curl -s https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
-    && if [ "${arch}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${arch}" ; fi \
+    && if [ "${TARGETARCH}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${TARGETARCH}" ; fi \
     && echo "Will download version ${app_last_stable_release} for arch ${build_arch}" \
     && wget -O gitea https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch} \
     && wget -O /tmp/gitea.asc https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch}.asc \

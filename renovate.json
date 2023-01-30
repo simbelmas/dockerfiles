@@ -24,11 +24,5 @@
       "matchPaths": ["bazarr/**"],
       "automerge": false
     }
-  ],
-  "docker": {
-    "digest": {
-      "enabled": true
-    }
-  },
   "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
 }

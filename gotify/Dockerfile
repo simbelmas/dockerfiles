@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.4
+FROM quay.io/simbelmas/fedora-minimal:v37.7
 
 ARG TARGETPLATFORM
 ARG TARGETARCH

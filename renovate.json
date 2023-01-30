@@ -9,8 +9,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["major"],
-      "automerge": false,
-      "ignoreTests": true
+      "automerge": false
     },
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],

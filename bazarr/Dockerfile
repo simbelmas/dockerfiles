@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.1
+FROM quay.io/simbelmas/fedora-minimal:v37.3
 
 RUN microdnf -y install python3-pip \
     && microdnf clean all

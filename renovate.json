@@ -23,6 +23,6 @@
     {
       "matchPaths": ["bazarr/**"],
       "automerge": false
-    }
+    },
   "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
 }

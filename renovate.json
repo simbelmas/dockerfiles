@@ -8,14 +8,6 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "packageRules": [
     {
-      "matchPackagePatterns": [".*fedora.*"],
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
-      "automerge": true,
-      "ignoreTests": true    
-    },
-    {
-      "excludePackagePatterns": [".*fedora.*"],
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "automerge": false,
@@ -38,5 +30,5 @@
       "enabled": true
     }
   },
-  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**"]
+  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
 }

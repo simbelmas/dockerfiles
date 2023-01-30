@@ -18,11 +18,12 @@
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
       "ignoreTests": true,
-      "pinDigests": true     
+      "pinDigests": true
     },
     {
       "matchPaths": ["bazarr/**"],
       "automerge": false
-    },
+    }
+  ],
   "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
 }

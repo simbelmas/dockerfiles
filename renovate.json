@@ -8,13 +8,11 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "automerge": false,
       "ignoreTests": true
     },
     {
-      "matchDatasources": ["docker"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
       "ignoreTests": true,

@@ -1,4 +1,4 @@
-From quay.io/fedora/fedora:38
+From quay.io/fedora/fedora:38@sha256:d53f05f087911aac90987f438104f02c8440e3e8a5f5e6af995a4c342b2e9bc3
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN rpm --setcaps shadow-utils 2>/dev/null \

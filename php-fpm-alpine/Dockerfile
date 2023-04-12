@@ -8,7 +8,8 @@ RUN apk --no-cache add php${php_version} php${php_version}-fpm php${php_version}
         php${php_version}-mbstring php${php_version}-openssl php${php_version}-posix php${php_version}-session \
         php${php_version}-simplexml php${php_version}-xmlwriter php${php_version}-xmlreader php${php_version}-zip \
         php${php_version}-common php${php_version}-pdo_mysql php${php_version}-fileinfo php${php_version}-bz2 php${php_version}-intl \
-        php${php_version}-ftp php${php_version}-bcmath php${php_version}-gmp php${php_version}-exif php${php_version}-pecl-redis php${php_version}-pcntl php${php_version}-phar \
+        php${php_version}-ftp php${php_version}-bcmath php${php_version}-gmp php${php_version}-exif php${php_version}-pcntl php${php_version}-phar \
+        php${php_version}-pecl-redis php${php_version}-pecl-apcu \
         php${php_version}-pecl-imagick php${php_version}-sysvsem \
         ffmpeg \
         curl \

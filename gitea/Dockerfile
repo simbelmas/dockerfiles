@@ -11,8 +11,6 @@ RUN echo 'www-data:x:82:' >> /etc/group \
 
 RUN mkdir -p /var/lib/gitea/{custom,data,git,log} /usr/share/gitea /var/lib/gitea/custom/public/css
 
-COPY ./theme-earl-grey/theme-earl-grey.css /usr/local/bin/custom/public/css/
-
 RUN chmod 750 /var/lib/gitea -R \
     && microdnf -y install jq wget git \
     && cd /usr/local/bin/ \

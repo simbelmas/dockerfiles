@@ -8,9 +8,11 @@ RUN apk add --no-cache sqlite-libs gcompat bash icu-libs krb5-libs libgcc libint
 
 RUN export arch=$(uname -m) \
     && echo Installing jackett on arch $arch \
-    && if [ "${TARGETARCH}" = "amd64" ] ; then export jackett_version="AMDx64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export jackett_version="ARM32" ; fi \
+    && if [ "${TARGETARCH}" = "amd64" ] ; then export jackett_arch="AMDx64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export jackett_arch="ARM32" ; fi \
     && cd /opt \
-    && wget -O - https://github.com/Jackett/Jackett/releases/download/v0.20.1907/Jackett.Binaries.LinuxMusl${jackett_version}.tar.gz | tar -zxf -
+    && export jackett_release=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
+    && echo Downloading Jackett release ${jackett_release} for arch ${jackett_arch} \
+    && wget -O - https://github.com/Jackett/Jackett/releases/download/${jackett_release}/Jackett.Binaries.LinuxMusl${jackett_arch}.tar.gz | tar -zxf -
 
 RUN addgroup -g 1001 jackett \
     && adduser -G jackett -D -h /opt/JackettData -u 1001 -s /bin/nologin jackett \

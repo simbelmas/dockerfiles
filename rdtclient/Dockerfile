@@ -4,7 +4,8 @@ RUN apk add --no-cache dotnet6-sdk
 
 RUN apk --no-cache -t dev_tools add unzip \
     && cd /opt \
-    && export download_url="https://github.com/rogerfar/rdt-client/releases/download/v2.0.17/RealDebridClient.zip" \
+    && export rdtclient_release=$(wget -q https://github.com/rogerfar/rdt-client/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
+    && export download_url="https://github.com/rogerfar/rdt-client/releases/download/${rdtclient_release}/RealDebridClient.zip" \
     && echo ${download_url} > software_downloaded_from \
     && wget -O rdtclient.zip "${download_url}" \
     && mkdir rdtclient \

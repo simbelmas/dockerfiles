@@ -5,7 +5,8 @@ RUN microdnf -y install python3-pip \
 
 RUN microdnf -y install python3-devel microdnf unzip wget gcc \
     && cd /opt \
-    && export download_url="https://github.com/morpheus65535/bazarr/releases/download/v1.1.1/bazarr.zip" \
+    && export bazarr_release=$(wget -q https://github.com/morpheus65535/bazarr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
+    && export download_url="https://github.com/morpheus65535/bazarr/releases/download/${bazarr_release}/bazarr.zip" \
     && echo ${download_url} > software_downloaded_from \
     && wget -O Bazarr.zip "${download_url}" \
     && wget -O rpmfusion-free.rpm https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \

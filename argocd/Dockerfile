@@ -21,10 +21,7 @@ ENV KUSTOMIZE_PLUGIN_PATH=$XDG_CONFIG_HOME/kustomize/plugin/
 ARG PKG_NAME=ksops
 
 # Override the default kustomize executable with the Go built version
-COPY --from=ksops-builder /go/bin/kustomize /usr/local/bin/kustomize
-
-# Copy the plugin to kustomize plugin path
-COPY --from=ksops-builder /go/bin/*  $KUSTOMIZE_PLUGIN_PATH/viaduct.ai/v1/${PKG_NAME}/
+COPY --from=ksops-builder /go/bin/* /usr/local/bin/
 
 # Switch back to non-root user
 USER 999

@@ -30,9 +30,9 @@ RUN chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
     && adduser -S -H -D -h /var/lib/php${php_version} -s /sbin/nologin -u 82 -G www-data www-data \
     && mkdir -p /var/run/php /var/www/html \
     && mkdir -p /etc/phpkube/php-conf.d /etc/phpkube/fpm-conf.d \
-    && chown -R www-data: /var/run/php /var/lib/php${php_version} /var/log/php${php_version} /var/www/html /etc/php${php_version} /etc/phpkube
+    && chown -R www-data: /var/run/php /var/log/php${php_version} /var/www/html /etc/php${php_version} /etc/phpkube
  
-USER 82
+#USER 82
 
 EXPOSE 9000
 

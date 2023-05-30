@@ -1,9 +1,9 @@
 FROM quay.io/simbelmas/fedora-minimal:v37.20@sha256:0afae7c6437395a805428f6d28d59089b41d5162decbc04f3c921b3b93f7cc7c
 
-RUN microdnf -y install python3-pip \
+RUN microdnf --no-docs -y install python3-pip \
     && microdnf clean all
 
-RUN microdnf -y install python3-devel microdnf unzip wget gcc \
+RUN microdnf --no-docs  -y install python3-devel unzip wget gcc \
     && cd /opt \
     && export bazarr_release=$(wget -q https://github.com/morpheus65535/bazarr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
     && export download_url="https://github.com/morpheus65535/bazarr/releases/download/${bazarr_release}/bazarr.zip" \
@@ -18,7 +18,7 @@ RUN microdnf -y install python3-devel microdnf unzip wget gcc \
     && unzip ../Bazarr.zip \
     && rm ../Bazarr.zip \
     && pip install -r requirements.txt \
-    && microdnf -y remove python3-devel unzip wget gcc \
+    && microdnf -y remove python3-devel unzip wget gcc -x systemd \
     && microdnf clean all
 
 RUN microdnf -y install unrar ffmpeg \

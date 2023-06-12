@@ -9,7 +9,7 @@ FROM quay.io/simbelmas/argocd:dockerio-ksops-latest-mirror@sha256:55d4d4f8986419
 #--------Build Custom Argo Image-------------#
 #--------------------------------------------#
 
-FROM quay.io/argoproj/argocd:v2.7.3@sha256:1779c395e352f3ec11471b26c8bc9eded5df7825a470d886a2cf0dedcd9655b4 as argocd
+FROM quay.io/argoproj/argocd:v2.7.4@sha256:25c5c096fa687141c845485b21ff06a71d79c2375b371cf4f20d14c4434001cf as argocd
 
 # Switch to root for the ability to perform install
 USER root

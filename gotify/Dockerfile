@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.20@sha256:0afae7c6437395a805428f6d28d59089b41d5162decbc04f3c921b3b93f7cc7c
+FROM quay.io/simbelmas/fedora-minimal:v37.21@sha256:bd1e28109e05b34036632ba2d1343482ec8f7492658a756fa02bd75fefb384cc
 
 ARG TARGETPLATFORM
 ARG TARGETARCH

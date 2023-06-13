@@ -8,9 +8,6 @@ RUN apt-get update \
     && apt-get -y --no-install-recommends install git jq gnupg2 wget \
     && mkdir /app_build
 
-## to delete when base image have ca-certificates
-RUN apt-get install -y ca-certificates
-
 WORKDIR /app_download
 
 ## Download gitea

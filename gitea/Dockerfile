@@ -1,44 +1,58 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.23@sha256:0d411666af0def8adb5b64e5ea4cfac1c120fe12cc0d2cf11f1b195ce3cf7e13
+FROM quay.io/simbelmas/ubuntu:v2304.4@sha256:33a265fb15011e9bf085d84346e6208b321a63b86919d968fb2f207b54c553ad AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-LABEL maintainer "Simon Belmas <slos@soket.fr>"
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install git jq gnupg2 wget \
+    && mkdir /app_build
 
-RUN echo 'www-data:x:82:' >> /etc/group \
-    && echo 'app:x:1001:82::/var/lib/gitea:/sbin/nologin' >> /etc/passwd
+## to delete when base image have ca-certificates
+RUN apt-get install -y ca-certificates
 
-RUN mkdir -p /var/lib/gitea/{custom,data,git,log} /usr/share/gitea /var/lib/gitea/custom/public/css
+WORKDIR /app_download
 
-RUN chmod 750 /var/lib/gitea -R \
-    && microdnf -y install jq wget git \
-    && cd /usr/local/bin/ \
-    && if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(curl -s https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
+## Download gitea
+RUN if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(wget -O - https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
+    && if [ -z "${app_last_stable_release}" ] ; then echo "Error in file release identification, exit" >&2 ; exit 2 ; fi \
     && if [ "${TARGETARCH}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${TARGETARCH}" ; fi \
     && echo "Will download version ${app_last_stable_release} for arch ${build_arch}" \
+    && set -x \
     && wget -O gitea https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch} \
-    && wget -O /tmp/gitea.asc https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch}.asc \
-    && gpg2 --keyserver keys.openpgp.org --recv 7C9E68152594688862D62AF62D9AE806EC1592E2 \
-    && gpg2 --verify /tmp/gitea.asc /usr/local/bin/gitea \
-    && rm /tmp/gitea.asc \
-    && chmod a+x gitea \
-    && chown 1001:82 /var/lib/gitea \
-    && chmod o-rwx /var/lib/gitea -R \
-    && microdnf -y remove jq wget \
-    && microdnf clean all \
-    && git clone --depth 1 --branch v${app_last_stable_release} https://github.com/go-gitea/gitea.git /gitea_build \
-    && mv /gitea_build/options /usr/share/gitea/ \
-    && mv /gitea_build/public /usr/share/gitea/ \
-    && mv /gitea_build/templates /usr/share/gitea/ \
-    && rm -rf /gitea_build 
+    && wget -O gitea.asc https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch}.asc \
+    && git clone --depth 1 --branch v${app_last_stable_release} https://github.com/go-gitea/gitea.git gitea_src
 
-RUN chown -Rv app:www-data /var/lib/gitea \
-    && chmod g+rwX /var/lib/gitea -R \
-    && chmod 750 /var/lib/gitea
+## Verify package
+RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
+    && gpg2 --keyserver  keys.openpgp.org --recv ${gpg_key_fingerprint} \
+    && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
+    && gpg2 --verify gitea.asc gitea
+    
+FROM quay.io/simbelmas/ubuntu:v2304.4@sha256:33a265fb15011e9bf085d84346e6208b321a63b86919d968fb2f207b54c553ad
+
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+RUN useradd -d /var/lib/gitea -u 1001 -s /usr/sbin/nologin svc \
+    && apt-get update \
+    && apt-get -y --no-install-recommends install git \
+    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+
+COPY --from=Downloader /app_download/gitea /usr/local/bin/gitea
+COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
+COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
+COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
+COPY app.ini /var/lib/gitea/custom/conf/app.ini
+
+RUN mkdir -p /var/lib/gitea/custom /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea /var/lib/gitea/custom/public/css \
+    && chown -R svc:svc /var/lib/gitea \
+    && chmod -R 750 /var/lib/gitea \ 
+    && chmod a+x /usr/local/bin/gitea
 
 WORKDIR /var/lib/gitea
+USER 1001
+
 ENTRYPOINT ["/usr/local/bin/gitea","web"]
 CMD ["-c", "/var/lib/gitea/custom/conf/app.ini"]
 
-USER 1001
+

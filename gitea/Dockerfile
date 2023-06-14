@@ -1,17 +1,17 @@
-FROM quay.io/simbelmas/ubuntu:v2310.2@sha256:ea834b1292187d2e08a90c6135881df9d60e9ce0ebe732c87695adc6dc974563 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v37.24 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
+ARG APP_VERSION
 
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install git jq gnupg2 wget \
+RUN dnf5 --quiet -y --no-docs install git jq gnupg2 wget \
     && mkdir /app_build
 
 WORKDIR /app_download
 
 ## Download gitea
-RUN if [ -n "${app_version}" ] ; then export app_last_stable_release="${app_version}" ; else export app_last_stable_release=$(wget -O - https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
+RUN if [ -n "${APP_VERSION}" ] ; then export app_last_stable_release="${APP_VERSION}" ; else export app_last_stable_release=$(wget -O - https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r .tag_name | sed 's/^v//') ; fi \
     && if [ -z "${app_last_stable_release}" ] ; then echo "Error in file release identification, exit" >&2 ; exit 2 ; fi \
     && if [ "${TARGETARCH}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${TARGETARCH}" ; fi \
     && echo "Will download version ${app_last_stable_release} for arch ${build_arch}" \
@@ -26,23 +26,23 @@ RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
     && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
     && gpg2 --verify gitea.asc gitea
     
-FROM quay.io/simbelmas/ubuntu:v2310.2@sha256:ea834b1292187d2e08a90c6135881df9d60e9ce0ebe732c87695adc6dc974563
+FROM quay.io/simbelmas/fedora-minimal:v37.24
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN useradd -d /var/lib/gitea -u 1001 -s /usr/sbin/nologin svc \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install git \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && dnf5 --quiet -y --no-docs install git gnupg2\
+    && dnf5 clean all
 
 COPY --from=Downloader /app_download/gitea /usr/local/bin/gitea
-COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
-COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
-COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
+#COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
+#COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
+#COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
 COPY app.ini /var/lib/gitea/custom/conf/app.ini
 
 RUN mkdir -p /var/lib/gitea/custom /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea /var/lib/gitea/custom/public/css \
-    && chown -R svc:svc /var/lib/gitea \
+    && chown -R app:app /var/lib/gitea \
     && chmod -R 750 /var/lib/gitea \ 
     && chmod a+x /usr/local/bin/gitea
 

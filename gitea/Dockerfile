@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2310.2@sha256:ea834b1292187d2e08a90c6135881df9d60e9ce0ebe732c87695adc6dc974563 AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2310.3@sha256:953b0a5a90cee8650783c8d771009559dec1522c00b3a40e612799fa887e6210 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -26,7 +26,7 @@ RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
     && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
     && gpg2 --verify gitea.asc gitea
     
-FROM quay.io/simbelmas/ubuntu:v2310.2@sha256:ea834b1292187d2e08a90c6135881df9d60e9ce0ebe732c87695adc6dc974563
+FROM quay.io/simbelmas/ubuntu:v2310.3@sha256:953b0a5a90cee8650783c8d771009559dec1522c00b3a40e612799fa887e6210
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

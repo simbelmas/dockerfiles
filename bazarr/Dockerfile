@@ -1,9 +1,9 @@
 FROM quay.io/simbelmas/fedora-minimal:v37.24@sha256:40cd55a969e99f5078b6cd8014b5e42752a3e19353f8ec632d75c4451139ee31
 
-RUN microdnf --no-docs -y install python3-pip \
-    && microdnf clean all
+RUN dnf5 --no-docs -y install python3-pip \
+    && dnf5 clean all
 
-RUN microdnf --no-docs  -y install python3-devel unzip wget gcc \
+RUN dnf5 --no-docs  -y install python3-devel unzip wget gcc \
     && cd /opt \
     && export bazarr_release=$(wget -q https://github.com/morpheus65535/bazarr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
     && export download_url="https://github.com/morpheus65535/bazarr/releases/download/${bazarr_release}/bazarr.zip" \
@@ -18,11 +18,11 @@ RUN microdnf --no-docs  -y install python3-devel unzip wget gcc \
     && unzip ../Bazarr.zip \
     && rm ../Bazarr.zip \
     && pip install -r requirements.txt \
-    && microdnf -y remove python3-devel unzip wget gcc -x systemd \
-    && microdnf clean all
+    && dnf5 -y remove python3-devel unzip wget gcc -x systemd \
+    && dnf5 clean all
 
-RUN microdnf -y install unrar ffmpeg \
-    && microdnf clean all
+RUN dnf5 -y install unrar ffmpeg \
+    && dnf5 clean all
 
 RUN useradd -U -m -d /opt/mediaData -u 1001 -s /bin/nologin media \
     && chown -Rv media: /opt/Bazarr

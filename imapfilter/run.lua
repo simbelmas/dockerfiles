@@ -1,5 +1,5 @@
 --load options and credetials
-dofile("/imapfilter/creds/creds.lua")
+dofile("/app/creds/creds.lua")
 
 --Run imapfilter configuration
-dofile("/imapfilter/config/config.lua")
+dofile("/app/config/config.lua")

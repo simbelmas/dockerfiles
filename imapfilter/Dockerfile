@@ -7,12 +7,12 @@ RUN apt-get update \
     && apt-get --no-install-recommends -y install imapfilter\
     && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
 
-RUN groupadd -g 1001 imapfilter \
-    && useradd -G imapfilter -d /imapfilter -u 1001 -s /bin/nologin imapfilter \
-    && mkdir -vp /imapfilter/creds /imapfilter/config \
-    && chown -Rv 1001:1001 /imapfilter
+RUN groupadd -g 1001 app \
+    && useradd -g app -d /app -u 1001 -s /usr/bin/nologin app \
+    && mkdir -vp /app/creds /app/config \
+    && chown -Rv 1001:1001 /app
 
-COPY --chown=1001:1001 run.lua /imapfilter/run.lua
+COPY --chown=1001:1001 run.lua /app/run.lua
 
 USER 1001
 

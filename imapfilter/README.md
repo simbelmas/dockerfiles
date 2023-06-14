@@ -14,8 +14,8 @@ By default, imapfilter tries to load /imapfilter/creds/creds.lua then /imapfilte
 Sample run :
 ```
 podman container run -t --rm \
-   -v ./sample/creds.lua:/imapfilter/creds/creds.lua \
-   -v ./sample/rules.lua:/imapfilter/rules/rules.lua \
-   -v ./sample/imapInteractive.lua:/imapfilter/config/config.lua \
+   -v ./sample/creds.lua:/app/creds/creds.lua \
+   -v ./sample/rules.lua:/app/rules/rules.lua \
+   -v ./sample/imapInteractive.lua:/app/config/config.lua \
    quay.io/simbelmas/imapfilter
 ```

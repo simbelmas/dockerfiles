@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2304.5@sha256:429439087cd58476727732292b15537a9ef802677eeb2c2ddf7830bef386984f AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2304.6@sha256:94a84c597cd7c41036e745aa22ef8b6cfd4539f95e4d2e07508444782287c94e AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -22,7 +22,7 @@ WORKDIR /app_build/src/code.gitea.io/gitea
 ## Build backend
 RUN make clean-all backend
 
-FROM quay.io/simbelmas/ubuntu:v2304.5@sha256:429439087cd58476727732292b15537a9ef802677eeb2c2ddf7830bef386984f
+FROM quay.io/simbelmas/ubuntu:v2304.6@sha256:94a84c597cd7c41036e745aa22ef8b6cfd4539f95e4d2e07508444782287c94e
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

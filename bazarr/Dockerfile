@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.24@sha256:40cd55a969e99f5078b6cd8014b5e42752a3e19353f8ec632d75c4451139ee31
+FROM quay.io/simbelmas/fedora-minimal:v38.1@sha256:04239c043250c1e113497fc85fda407e5965e9772194e765295240975f52fe88
 
 RUN dnf5 --no-docs -y install python3-pip \
     && dnf5 clean all

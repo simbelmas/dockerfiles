@@ -1,11 +1,11 @@
 
-From quay.io/fedora/fedora:38@sha256:add2f2878b383c6527a4f692c18f4aca039e7f24f5b24df1a6808f2a95280bbd
+From quay.io/simbelmas/fedora-minimal:v38.1
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN rpm --setcaps shadow-utils 2>/dev/null \
-    && dnf -y install buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux containers-common qemu-user-static \
-    && dnf -y clean all && rm -rf /var/cache /var/log/dnf* /var/log/yum.*
+RUN dnf5 --no-docs -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
+    && rpm --setcaps shadow-utils 2>/dev/null \
+    && dnf5 clean all
 
 ENV BUILDAH_ISOLATION=chroot
 
@@ -22,8 +22,7 @@ RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/li
     && mkdir -p /home/build/.local/share/containers \
     && chown -R build:build /home/build
 
-
+USER 1001
 WORKDIR /home/build
 ENTRYPOINT ["/bin/sh"]
 
-USER 1001

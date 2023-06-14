@@ -16,5 +16,5 @@ COPY --chown=1001:1001 run.lua /app/run.lua
 
 USER 1001
 
-ENTRYPOINT ["imapfilter", "-c", "/imapfilter/run.lua"]
+ENTRYPOINT ["imapfilter", "-c", "/app/run.lua"]
 CMD []

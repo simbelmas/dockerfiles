@@ -1,5 +1,5 @@
 #Imapfilter container
-Provides alpine container with [imapfilter](https://github.com/lefcha/imapfilter), email filter written in lua.
+Provides container with [imapfilter](https://github.com/lefcha/imapfilter), email filter written in lua.
 
 
 Imapfilter run rootless with user 1001 and the following directory structure is defined to allow mounting secrets/configs:

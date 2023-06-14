@@ -1,18 +1,14 @@
-FROM quay.io/simbelmas/alpine:latest@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
+
+FROM quay.io/simbelmas/ubuntu:v2310.3@sha256:953b0a5a90cee8650783c8d771009559dec1522c00b3a40e612799fa887e6210
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
-#Compile imapfilter
-RUN apk --no-cache add lua openssl pcre2\
-    && apk --no-cache  add -t dev_tools git lua-dev openssl-dev make gcc libc-dev pcre2-dev \
-    && git clone https://github.com/lefcha/imapfilter.git /imapfilter_build \
-    && cd /imapfilter_build \
-    && make \
-    && make install \
-    && rm -rf /imapfilter_build \
-    && apk del dev_tools
 
-RUN addgroup -g 1001 imapfilter \
-    && adduser -G imapfilter -D -H -h /imapfilter -u 1001 -s /bin/nologin imapfilter \
+RUN apt-get update \
+    && apt-get --no-install-recommends -y install imapfilter\
+    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+
+RUN groupadd -g 1001 imapfilter \
+    && useradd -G imapfilter -d /imapfilter -u 1001 -s /bin/nologin imapfilter \
     && mkdir -vp /imapfilter/creds /imapfilter/config \
     && chown -Rv 1001:1001 /imapfilter
 
@@ -20,5 +16,5 @@ COPY --chown=1001:1001 run.lua /imapfilter/run.lua
 
 USER 1001
 
-ENTRYPOINT ["/usr/local/bin/imapfilter", "-c", "/imapfilter/run.lua"]
+ENTRYPOINT ["imapfilter", "-c", "/imapfilter/run.lua"]
 CMD []

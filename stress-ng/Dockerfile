@@ -1,11 +1,13 @@
-FROM quay.io/simbelmas/alpine:latest@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
+FROM quay.io/simbelmas/ubuntu:v2310.3@sha256:953b0a5a90cee8650783c8d771009559dec1522c00b3a40e612799fa887e6210
+
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN apk --no-cache add \
-       stress-ng stress-ng-doc
-   
-RUN addgroup -g 1001 svc \
-    && adduser -G svc -D -H -u 1001 -s /bin/nologin svc
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y stress-ng \
+    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+
+RUN groupadd --gid 1001 svc \
+    && useradd --gid svc --home-dir /app -u 1001 -s /bin/nologin svc
 
 WORKDIR /tmp 
 

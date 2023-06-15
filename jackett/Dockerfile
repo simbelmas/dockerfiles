@@ -28,7 +28,7 @@ COPY --from=Downloader /build/Jackett /app
 
 RUN mkdir /opt/JackettData \
     && groupadd -g 1001 app \
-    && useradd -g app -h /opt/JackettData -u 1001 -s /usr/bin/nologin app \
+    && useradd -g app -d /opt/JackettData -u 1001 -s /usr/bin/nologin app \
     && chown -Rv 1001:1001 /opt/JackettData
 
 ENV JACKETT_DIR=/opt/JackettData

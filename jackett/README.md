@@ -1,2 +1,2 @@
 # Jackett
-jackett running on Alpine.
+jackett running on ubuntu.

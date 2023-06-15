@@ -1,0 +1,15 @@
+[server]
+general-log=TRUE
+general-log-file=/var/log/map_stdout
+log-error=/var/log/map_stdout
+pid-file=/var/run/mysqld/mysql.pid
+slow-query-log-file=/var/log/map_stdout
+
+[mysqld]
+#to allow mounting to an external dir on kube
+datadir=/var/lib/mysql/data
+
+[client-server]
+socket=/var/run/mysqld/mysql.sock
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ "$( ls -1 /etc/my.cnf.kube.d/*.cnf | wc -l )" -gt 0 ] ; then
+    cp -vf /etc/my.cnf.kube.d/*.cnf /etc/mysql/mariadb.conf.d//
+fi
+
+if [ "$(ls -1 /var/lib/mysql | wc -l)" -eq 0 ] ; then
+    set -xe
+    mysql_install_db --user=mysql --auth-root-authentication-method=socket --datadir=/var/lib/mysql/data --skip-test-db
+    /usr/sbin/mysqld &
+    mysqld_uid=$!
+    sleep 10
+    mysql <<EOSQL
+    use mysql;
+    delete from user where user='';
+    delete from user where user='root';
+EOSQL
+    mkdir /var/lib/mysql/backup
+    if [ -e '/etc/myscr' ] ; then
+        echo "GRANT LOCK TABLES, SELECT ON *.* TO '$(cat /etc/myscr/backup_usr)'@'%' IDENTIFIED BY '$(cat /etc/myscr/backup_password)';; flush privileges;" | mysq
+l mysql
+    fi
+
+    kill $mysqld_uid
+    sleep 10
+fi
+
+exec /usr/sbin/mysqld $*

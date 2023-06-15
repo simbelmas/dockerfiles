@@ -17,6 +17,7 @@ RUN mkdir /app \
     && chmod 750 /app
 
 USER 1001
+WORKDIR /app
 
 ENTRYPOINT ["/usr/local/bin/kubectl"]
 CMD ["--help"]

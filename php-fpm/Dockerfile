@@ -12,6 +12,7 @@ RUN dnf5 install --setopt=install_weak_deps=False --no-docs -y install \
         php-pecl-redis php-pecl-apcu \
         php-pecl-imagick php-sysvsem \
         php-soap \
+        php-sodium \
         ffmpeg \
         curl \
         freetype libpng libjpeg-turbo \

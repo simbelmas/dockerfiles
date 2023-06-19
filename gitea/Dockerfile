@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v37.24 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v38.1 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -26,7 +26,7 @@ RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
     && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
     && gpg2 --verify gitea.asc gitea
     
-FROM quay.io/simbelmas/fedora-minimal:v37.24
+FROM quay.io/simbelmas/fedora-minimal:v38.1
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

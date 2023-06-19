@@ -1,3 +1,15 @@
+From quay.io/simbelmas/fedora-minimal:v38.2 AS Builder
+
+RUN dnf5 --no-docs -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
+
+RUN git clone https://github.com/goodspb/pdlib.git /build
+
+WORKDIR /build
+RUN phpize \
+    && ./configure \
+    && make
+
+
 From quay.io/simbelmas/fedora-minimal:v38.2
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
@@ -30,8 +42,10 @@ COPY --chmod=666 run_php_command /usr/local/bin/
 COPY 00-php-fpm.conf /etc/php-fpm.d/
 COPY 00-fpm-www.conf /etc/php-fpm.d/
 COPY 000-container-php.ini /etc/php.d/
+COPY --from=Builder /build/modules/pdlib.so /usr/lib64/php/modules/pdlib.so
 
-RUN chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
+RUN echo -e '[pdlib]\nextension="pdlib.so"' > /etc/php.d/pdlib.ini\
+    && chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
     && useradd -d /var/www -s /sbin/nologin -u 1001 app \
     && mkdir -p /var/run/php-fpm /var/www/html \
     && mkdir -p /etc/phpkube/php-conf.d /etc/phpkube/fpm-conf.d \

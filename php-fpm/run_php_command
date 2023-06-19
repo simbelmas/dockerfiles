@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+if [ -d "/etc/phpkube/php-conf.d" ] && [ "$(ls -1 /etc/phpkube/php-conf.d/*.ini | wc -l)" -gt 0 ] ; then
+    cp -vf /etc/phpkube/php-conf.d/*.ini /etc/php.d
+fi
+if [ -d "/etc/phpkube/fpm-conf.d" ] && [ "$(ls -1 /etc/phpkube/fpm-conf.d/*.conf | wc -l)" -gt 0 ] ; then
+    cp -vf /etc/phpkube/fpm-conf.d/*.conf /etc/php/php-fpm.d/
+fi
+
+exec /usr/bin/php $*
+
+ 

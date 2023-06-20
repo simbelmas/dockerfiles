@@ -23,4 +23,4 @@ RUN chmod 755 /usr/local/bin/start_mariadb
 
 USER 1001
 
-ENTRYPOINT ["/usr/local/bin/start_mariadb"]
+ENTRYPOINT ["/usr/local/bin/start_mariadb","--skip-log-error"]

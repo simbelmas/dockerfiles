@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:dockerio-23.10-mirror@sha256:f38f426535f7af96f85b908b00bfc9c1326c46184e318b1d720923a719ce38dd
+FROM quay.io/simbelmas/ubuntu:v2310.5
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

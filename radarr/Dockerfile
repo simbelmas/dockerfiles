@@ -24,7 +24,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
 
 RUN echo 'app:x:1001:' >> /etc/group \
-    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && echo 'app:x:1001:1001::/opt/mediaData:/sbin/nologin' >> /etc/passwd \
+    && mkdir /opt/mediaData \
+    && chown 1001:1001 /opt/mediaData
 
 USER 1001
 WORKDIR /opt/mediaData

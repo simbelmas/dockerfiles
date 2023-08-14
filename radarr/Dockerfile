@@ -5,8 +5,7 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 
 RUN apt-get update \
-    && apt-get -y install curl sqlite3 wget \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+    && apt-get -y install sqlite3 wget
 
 RUN export arch=$(uname -m) \
     && if [ "${TARGETARCH}" = "amd64" ] ; then export software_arch="x64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export software_arch="arm" ; fi \

@@ -1,27 +1,34 @@
-FROM quay.io/simbelmas/alpine:latest@sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a
+FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:f8288c377055e3b28d2dceb48c5104851c34c5a41c7b32fb8eaaa0dbb02457b9 AS Downloader
 
-RUN apk add --no-cache dotnet6-sdk
 
-RUN apk --no-cache -t dev_tools add unzip \
-    && cd /opt \
+
+RUN apt-get update \
+    && apt-get -y install unzip wget \
+    && mkdir /opt/rdtclient \
+    && cd /opt/rdtclient \
     && export rdtclient_release=$(wget -q https://github.com/rogerfar/rdt-client/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
     && export download_url="https://github.com/rogerfar/rdt-client/releases/download/${rdtclient_release}/RealDebridClient.zip" \
-    && echo ${download_url} > software_downloaded_from \
-    && wget -O rdtclient.zip "${download_url}" \
-    && mkdir rdtclient \
-    && cd rdtclient \
-    && unzip ../rdtclient.zip \
-    && rm ../rdtclient.zip \
-    && apk del dev_tools
+    && wget -O ../rdtclient.zip "${download_url}" \
+    && unzip ../rdtclient.zip
 
 COPY appsettings.json /opt/rdtclient/
+RUN chown 1001:1001 -R /opt/rdtclient
 
-RUN adduser -G media -D -h /opt/mediaData -u 82 -s /bin/nologin -G www-data media \
-    && mkdir /opt/mediaData/db \
-    && chown -Rv media: /opt/rdtclient /opt/mediaData
+FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:f8288c377055e3b28d2dceb48c5104851c34c5a41c7b32fb8eaaa0dbb02457b9
 
-USER 82
+RUN apt-get update \
+    && apt-get -y install dotnet6 \
+    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+
+COPY --from=Downloader /opt/rdtclient /opt/rdtclient
+
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/opt/mediaData:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /opt/mediaData/db \
+    && chown 1001:1001 -R /opt/mediaData
+
+USER 1001
 WORKDIR /opt/rdtclient
 ENTRYPOINT ["dotnet", "/opt/rdtclient/RdtClient.Web.dll"]
 
-LABEL maintainer "Simon Belmas <slos@soket.fr"
+LABEL maintainer "Simon Belmas <slos@soket.fr>"

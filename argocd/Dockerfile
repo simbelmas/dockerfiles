@@ -3,7 +3,7 @@
 #--------Build KSOPS and Kustomize-----------#
 #--------------------------------------------#
 
-FROM quay.io/simbelmas/argocd:dockerio-ksops-latest-mirror@sha256:c12a11ec7a51498e42e0b71656d857cf80c0fcf11ce189e7ce69624b3b173813 as ksops-builder
+FROM quay.io/simbelmas/argocd:dockerio-ksops-latest-mirror@sha256:8a2dc8ab2383d97b140f9cf5803cf8c58a0421859d20bf86ce1c55b6b97a640f as ksops-builder
 
 #--------------------------------------------#
 #--------Build Custom Argo Image-------------#

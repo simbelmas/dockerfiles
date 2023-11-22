@@ -18,5 +18,5 @@
     }
   ],
   "pinDigests": true,
-  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**"]
+  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**","ubuntu/**"]
 }

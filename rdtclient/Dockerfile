@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:f8288c377055e3b28d2dceb48c5104851c34c5a41c7b32fb8eaaa0dbb02457b9 AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:2a83fb0f9e7748c4f02c224c1f3fa996a9edddab3db64c28b72db3bcddee4b26 AS Downloader
 
 
 
@@ -14,7 +14,7 @@ RUN apt-get update \
 COPY appsettings.json /opt/rdtclient/
 RUN chown 1001:1001 -R /opt/rdtclient
 
-FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:f8288c377055e3b28d2dceb48c5104851c34c5a41c7b32fb8eaaa0dbb02457b9
+FROM quay.io/simbelmas/ubuntu:v2310.11@sha256:2a83fb0f9e7748c4f02c224c1f3fa996a9edddab3db64c28b72db3bcddee4b26
 
 RUN apt-get update \
     && apt-get -y install dotnet6 \

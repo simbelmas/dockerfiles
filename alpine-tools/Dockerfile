@@ -9,6 +9,7 @@ RUN apk --no-cache add \
        python3 py3-pip \
        openssl libacl libattr \
        borgbackup \
+       zsh \
     && apk --no-cache  add -t dev_tools openssl-dev make gcc libc-dev pkgconf python3-dev acl-dev attr-dev linux-headers \
     && pip3 install --upgrade pip setuptools wheel \
     && pip3 install kubernetes jinja2-tools \

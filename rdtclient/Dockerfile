@@ -17,7 +17,7 @@ RUN chown 1001:1001 -R /opt/rdtclient
 FROM quay.io/simbelmas/ubuntu:v2310.12@sha256:ac820b9b5e632f15dfe67a982c102d74d9a83cbaf3c8c379b16275928f257d6c
 
 RUN apt-get update \
-    && apt-get -y install dotnet6 \
+    && apt-get -y install dotnet8 \
     && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
 
 COPY --from=Downloader /opt/rdtclient /opt/rdtclient

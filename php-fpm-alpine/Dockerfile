@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/alpine:latest@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978
+FROM quay.io/simbelmas/alpine:latest@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48
 
 ARG php_version=81
 

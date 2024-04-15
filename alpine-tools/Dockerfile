@@ -1,5 +1,4 @@
-FROM quay.io/simbelmas/alpine:latest@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48
-
+FROM quay.io/simbelmas/alpine:latest
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN apk --no-cache add \
@@ -15,6 +14,9 @@ RUN apk --no-cache add \
 
 RUN addgroup -g 1001 svc \
     && adduser -G svc -D -u 1001 -s /bin/nologin svc \
+    && mkdir /home/svc/.ssh \
+    && chmod 700 /home/svc/.ssh \
+    && chown svc: /home/svc/.ssh \
     && adduser -G www-data -D -u 82 -s /sbin/nologin www-data
 
 USER 1001

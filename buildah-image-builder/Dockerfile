@@ -22,7 +22,7 @@ RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/li
     && mkdir -p /home/build/.local/share/containers \
     && chown -R build:build /home/build
 
-USER 1001
+#USER 1001
 WORKDIR /home/build
 ENTRYPOINT ["/bin/sh"]
 

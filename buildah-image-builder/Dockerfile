@@ -17,7 +17,7 @@ RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/li
     && touch /var/lib/shared/vfs-images/images.lock \
     && touch /var/lib/shared/vfs-layers/layers.lock \
     && useradd -u 1001 build \
-    && echo -e "build:1:1001\nbuild:1002:64535" > /etc/subuid  \
+    && echo -e "build:1:1000\nbuild:1002:64535" > /etc/subuid  \
     && cp /etc/subuid /etc/subgid \
     && mkdir -p /home/build/.local/share/containers \
     && chown -R build:build /home/build

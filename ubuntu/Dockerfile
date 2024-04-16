@@ -1,7 +1,5 @@
 FROM quay.io/simbelmas/ubuntu:dockerio-23.10-mirror
 
-USER 0
-
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN apt-get update \

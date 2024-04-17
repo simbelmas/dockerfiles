@@ -3,7 +3,7 @@ From quay.io/simbelmas/fedora-minimal:v38.27@sha256:efb62a47a6ea8d3d584d607c30bf
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN dnf5 --no-docs -y install shadow-utils buildah podman skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
+RUN dnf5 --no-docs -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
     && rpm --setcaps shadow-utils 2>/dev/null \
     && dnf5 clean all
 

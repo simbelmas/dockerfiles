@@ -1,4 +1,4 @@
-From quay.io/simbelmas/fedora-minimal:v38.30@sha256:69ee396de6a81eb4e24f3f920097542d7fd932702e7e91edab3993de648f8d87 AS Builder
+From quay.io/simbelmas/fedora-minimal:v38.31@sha256:c011298f671ead1f28c16328d4464edd33f7a83d79069df9461f4338e53a5f10 AS Builder
 
 RUN dnf5 --no-docs -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
 
@@ -10,7 +10,7 @@ RUN phpize \
     && make
 
 
-From quay.io/simbelmas/fedora-minimal:v38.30@sha256:69ee396de6a81eb4e24f3f920097542d7fd932702e7e91edab3993de648f8d87
+From quay.io/simbelmas/fedora-minimal:v38.31@sha256:c011298f671ead1f28c16328d4464edd33f7a83d79069df9461f4338e53a5f10
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

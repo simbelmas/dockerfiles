@@ -21,15 +21,16 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
 
 COPY --from=Downloader /opt/rdtclient /opt/rdtclient
+COPY entrypoint.sh /opt/rdtclient/entrypoint.sh
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/opt/mediaData:/sbin/nologin' >> /etc/passwd \
     && mkdir -p /opt/mediaData/db \
-    && chown 1001:1001 -R /opt/mediaData \
-    && chown 1001:1001 /opt/rdtclient
+    && chmod a+rx /opt/rdtclient/entrypoint.sh \
+    && chown 1001:1001 -R /opt/mediaData
 
 USER 1001
 WORKDIR /opt/rdtclient
-ENTRYPOINT ["dotnet", "/opt/rdtclient/RdtClient.Web.dll"]
+ENTRYPOINT ["/opt/rdtclient/entrypoint.sh"]
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"

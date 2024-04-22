@@ -28,7 +28,7 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && chown 1001:1001 -R /opt/mediaData
 
 USER 1001
-WORKDIR /opt/rdtclient
+WORKDIR /opt/mediaData
 ENTRYPOINT ["dotnet", "/opt/rdtclient/RdtClient.Web.dll"]
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"

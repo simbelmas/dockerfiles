@@ -25,7 +25,8 @@ COPY --from=Downloader /opt/rdtclient /opt/rdtclient
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/opt/mediaData:/sbin/nologin' >> /etc/passwd \
     && mkdir -p /opt/mediaData/db \
-    && chown 1001:1001 -R /opt/mediaData
+    && chown 1001:1001 -R /opt/mediaData \
+    && chown 1001:1001 /opt/rdtclient
 
 USER 1001
 WORKDIR /opt/mediaData

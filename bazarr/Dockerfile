@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v38.32@sha256:ac6269eee7f05f86e43447b968f6369309fada7e8c9ed091840f85db733c1326 AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v38.33@sha256:5112d879c7c1e23363587b0df4b06fdeda122d78d760e47fd10474adca416ba5 AS Builder
 
 ## install build tools and libraries
 RUN dnf5 --no-docs  -y install python3-pip python3-devel unzip wget gcc
@@ -20,7 +20,7 @@ RUN  unzip Bazarr.zip \
      && rm Bazarr.zip \
      && pip install -r requirements.txt
 
-FROM quay.io/simbelmas/fedora-minimal:v38.32@sha256:ac6269eee7f05f86e43447b968f6369309fada7e8c9ed091840f85db733c1326
+FROM quay.io/simbelmas/fedora-minimal:v38.33@sha256:5112d879c7c1e23363587b0df4b06fdeda122d78d760e47fd10474adca416ba5
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v38.32@sha256:ac6269eee7f05f86e43447b968f6369309fada7e8c9ed091840f85db733c1326 AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v38.33@sha256:5112d879c7c1e23363587b0df4b06fdeda122d78d760e47fd10474adca416ba5 AS Builder
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -23,7 +23,7 @@ RUN export app_last_stable_release=$(wget -O - https://api.github.com/repos/goti
     && rm gotify-linux-${build_arch}.zip \
     && chmod 555 gotify
 
-FROM quay.io/simbelmas/fedora-minimal:v38.32@sha256:ac6269eee7f05f86e43447b968f6369309fada7e8c9ed091840f85db733c1326
+FROM quay.io/simbelmas/fedora-minimal:v38.33@sha256:5112d879c7c1e23363587b0df4b06fdeda122d78d760e47fd10474adca416ba5
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

@@ -36,9 +36,9 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && dnf5 clean all
 
 COPY --from=Downloader /app_download/gitea /usr/local/bin/gitea
-#COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
-#COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
-#COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
+COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
+COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
+COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
 COPY app.ini /var/lib/gitea/custom/conf/app.ini
 
 RUN mkdir -p /var/lib/gitea/custom /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea \

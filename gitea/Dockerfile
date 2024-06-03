@@ -16,8 +16,8 @@ RUN if [ -n "${APP_VERSION}" ] ; then export app_last_stable_release="${APP_VERS
     && if [ "${TARGETARCH}" = "aarch64" ] ; then export build_arch="arm64" ; else export build_arch="${TARGETARCH}" ; fi \
     && echo "Will download version ${app_last_stable_release} for arch ${build_arch}" \
     && set -x \
-    && wget -O gitea https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch} \
-    && wget -O gitea.asc https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch}.asc \
+    && wget -q -O gitea https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch} \
+    && wget -q -O gitea.asc https://dl.gitea.io/gitea/${app_last_stable_release}/gitea-${app_last_stable_release}-linux-${build_arch}.asc \
     && git clone --depth 1 --branch v${app_last_stable_release} https://github.com/go-gitea/gitea.git gitea_src
 
 ## Verify package

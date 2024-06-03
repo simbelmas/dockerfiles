@@ -25,7 +25,7 @@ RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
     && gpg2 --keyserver  keys.openpgp.org --recv ${gpg_key_fingerprint} \
     && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
     && gpg2 --verify gitea.asc gitea
-
+    
 FROM quay.io/simbelmas/fedora-minimal:v38.37@sha256:a906de06fc60014c1a78c3b337105f6872a25ad0a746404a497b7f6fbee932ba
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
@@ -36,12 +36,12 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && dnf5 clean all
 
 COPY --from=Downloader /app_download/gitea /usr/local/bin/gitea
-COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
-COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
-COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
+#COPY --from=Downloader /app_download/gitea_src/options /usr/share/gitea/options
+#COPY --from=Downloader /app_download/gitea_src/public /usr/share/gitea/public
+#COPY --from=Downloader /app_download/gitea_src/templates /usr/share/gitea/templates
 COPY app.ini /var/lib/gitea/custom/conf/app.ini
 
-RUN mkdir -p /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea /var/lib/gitea/custom/public/css \
+RUN mkdir -p /var/lib/gitea/custom /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea /var/lib/gitea/custom/public/css \
     && chown -R app:app /var/lib/gitea \
     && chmod -R 750 /var/lib/gitea \ 
     && chmod a+x /usr/local/bin/gitea

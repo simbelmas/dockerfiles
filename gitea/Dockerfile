@@ -50,6 +50,6 @@ WORKDIR /var/lib/gitea
 USER 1001
 
 ENTRYPOINT ["/usr/local/bin/gitea","web"]
-CMD ["-c", "/var/lib/gitea/custom/conf/app.ini"]
+CMD ["--config", "/var/lib/gitea/custom/conf/app.ini", "--custom-path", "/var/lib/gitea/custom"]
 
 

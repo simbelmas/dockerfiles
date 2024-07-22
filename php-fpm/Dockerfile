@@ -25,7 +25,7 @@ RUN dnf5 install --setopt=install_weak_deps=False --no-docs -y install \
         php-pecl-imagick php-sysvsem \
         php-soap \
         php-sodium \
-        ffmpeg perl-Image-ExifTool \
+        ffmpeg perl-Image-ExifTool openh264 \
         curl \
         freetype libpng libjpeg-turbo \
         libxml2 php-xml \

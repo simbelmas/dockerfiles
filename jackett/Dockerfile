@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2310.45@sha256:f99cf52434d6a2a8d627802724e591ea666762edff17ee1ede8abc768b08063b AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2310.49@sha256:4cff2440cfd4e29455db8cbe8fb0b4a0bdd3d4a4710070aa2816b8033978b412 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -18,7 +18,7 @@ RUN export arch=$(uname -m) \
     && wget -O - https://github.com/Jackett/Jackett/releases/download/${jackett_release}/Jackett.Binaries.Linux${jackett_arch}.tar.gz | tar -zxf -  \
     && chmod a+x Jackett/jackett
 
-FROM quay.io/simbelmas/ubuntu:v2310.45@sha256:f99cf52434d6a2a8d627802724e591ea666762edff17ee1ede8abc768b08063b
+FROM quay.io/simbelmas/ubuntu:v2310.49@sha256:4cff2440cfd4e29455db8cbe8fb0b4a0bdd3d4a4710070aa2816b8033978b412
 
 RUN apt-get update \
     && apt-get install -y libicu72 libssl3 \

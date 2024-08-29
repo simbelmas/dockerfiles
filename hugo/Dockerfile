@@ -3,44 +3,20 @@ From quay.io/simbelmas/fedora-minimal:v40.3@sha256:88f73543f2afc94e1a2573f1c9cdd
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN dnf5 install --setopt=install_weak_deps=False --no-docs -y install \
-         \
-        php-ctype php-curl php-dom php-gd gd php-iconv php-json \
-        php-mbstring php-openssl php-posix php-session \
-        php-simplexml php-xmlwriter php-xmlreader php-zip \
-        php-common php-pdo_mysql php-fileinfo php-bz2 php-intl \
-        php-ftp php-bcmath php-gmp php-exif php-pcntl php-phar \
-        php-pecl-redis php-pecl-apcu \
-        php-pecl-imagick php-sysvsem \
-        php-soap \
-        php-sodium \
-        ffmpeg perl-Image-ExifTool openh264 \
-        curl \
-        freetype libpng libjpeg-turbo \
-        libxml2 php-xml \
-        dlib \
-    # Crappy workatound to repopulaire /usr/share/zoneinfo
-    && dnf5 -y reinstall tzdata \
-    && dnf5 clean all \
-    #Remove defautl php-fpm pool
-    && rm /etc/php-fpm.d/www.conf \
-    && rm -rf /var/log/php-fpm
+    hugo git zsh tzdata \
+    && dnf5 clean all
 
-COPY --chmod=666 start_fpm /usr/local/bin/
-COPY --chmod=666 run_php_command /usr/local/bin/
-COPY 00-php-fpm.conf /etc/php-fpm.d/
-COPY 00-fpm-www.conf /etc/php-fpm.d/
-COPY 000-container-php.ini /etc/php.d/
-COPY --from=Builder /build/modules/pdlib.so /usr/lib64/php/modules/pdlib.so
-
-RUN echo -e '[pdlib]\nextension="pdlib.so"' > /etc/php.d/pdlib.ini\
-    && chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
-    && useradd -d /var/www -s /sbin/nologin -u 1001 app \
-    && mkdir -p /var/run/php-fpm /var/www/html \
-    && mkdir -p /etc/phpkube/php-conf.d /etc/phpkube/fpm-conf.d \
-    && chmod -R a+rwX /var/run/php-fpm /var/www /etc/php.d /etc/php-fpm.d /etc/phpkube /var/lib/php
+RUN mkdir -p /app/.ssh /app/hugosource
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod 755 /app/entrypoint.sh
+    && useradd -d /app -s /sbin/nologin -u 1001 app \
+    && chown -R 1001:1001 /app \
+    && chmod -R 700 /app
+    && mkdir -p /var/www/html \
+    && chown -R 1001:1001 /var/www/ \
+    && chmod -R 755 /var/www/
 
 USER 1001
+WORKDIR /var/www/hugo
 
-EXPOSE 9000
-
-CMD ["start_fpm"]
+ENTRYPOINT ["/app/entrypoint.sh"]

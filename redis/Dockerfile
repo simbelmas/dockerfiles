@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/redis:dockerio-latest-mirror@sha256:878983f8f5045b28384fc300268cec62bca3b14d5e1a448bec21f28cfcc7bf78
+FROM quay.io/simbelmas/redis:dockerio-latest-mirror@sha256:eadf354977d428e347d93046bb1a5569d701e8deb68f090215534a99dbcb23b9
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

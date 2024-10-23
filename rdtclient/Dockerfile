@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2310.57@sha256:0a7bf07938159b7cbc51250a6ce0bf5dfb447b2a32be50115c56f9588214975e AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2310.58@sha256:5165225137afaee61a51f893822e0027d90fa38747b0810ff0bfa5546ff9d7ac AS Downloader
 
 
 
@@ -14,7 +14,7 @@ RUN apt-get update \
 COPY appsettings.json /opt/rdtclient/
 RUN chown 1001:1001 -R /opt/rdtclient
 
-FROM quay.io/simbelmas/ubuntu:v2310.57@sha256:0a7bf07938159b7cbc51250a6ce0bf5dfb447b2a32be50115c56f9588214975e
+FROM quay.io/simbelmas/ubuntu:v2310.58@sha256:5165225137afaee61a51f893822e0027d90fa38747b0810ff0bfa5546ff9d7ac
 
 RUN apt-get update \
     && apt-get -y install dotnet8 \

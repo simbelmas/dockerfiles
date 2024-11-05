@@ -21,7 +21,7 @@ RUN export arch=$(uname -m) \
 FROM quay.io/simbelmas/ubuntu:v2310.60@sha256:93659a02c2d604cedf927045299be04a4ecdc7f19c8038410937ce934e02faec
 
 RUN apt-get update \
-    && apt-get install -y libicu72 libssl3 \
+    && apt-get install -y libicu74 libssl3 \
     && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
 
 COPY --from=Downloader /build/Jackett /app

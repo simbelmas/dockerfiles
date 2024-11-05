@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:dockerio-23.10-mirror
+FROM quay.io/simbelmas/ubuntu:dockerio-24.10-mirror
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

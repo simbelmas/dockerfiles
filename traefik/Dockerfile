@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2310.60@sha256:93659a02c2d604cedf927045299be04a4ecdc7f19c8038410937ce934e02faec AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2410.1@sha256:604aa5592be109b840e7bf6becdeea58ab0be01a7406147e7e9130df8d615c47 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -19,7 +19,7 @@ RUN mkdir /download \
     && tar -zxf app.tgz \
     && ls -al
 
-FROM quay.io/simbelmas/ubuntu:v2310.60@sha256:93659a02c2d604cedf927045299be04a4ecdc7f19c8038410937ce934e02faec
+FROM quay.io/simbelmas/ubuntu:v2410.1@sha256:604aa5592be109b840e7bf6becdeea58ab0be01a7406147e7e9130df8d615c47
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

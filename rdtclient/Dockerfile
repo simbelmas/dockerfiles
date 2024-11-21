@@ -1,9 +1,6 @@
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v40.11 AS Downloader
 
-
-
-RUN apt-get update \
-    && apt-get -y install unzip wget \
+RUN microdnf -y --nodocs install unzip wget2-wget \
     && mkdir /opt/rdtclient \
     && cd /opt/rdtclient \
     && export rdtclient_release=$(wget -q https://github.com/rogerfar/rdt-client/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
@@ -14,11 +11,10 @@ RUN apt-get update \
 COPY appsettings.json /opt/rdtclient/
 RUN chown 1001:1001 -R /opt/rdtclient
 
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354
+FROM quay.io/simbelmas/fedora-minimal:v40.11
 
-RUN apt-get update \
-    && apt-get -y install dotnet8 \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+RUN microdnf -y --nodocs install dotnet-sdk-9.0 \
+    && microdnf clean all
 
 COPY --from=Downloader /opt/rdtclient /opt/rdtclient
 COPY entrypoint.sh /opt/rdtclient/entrypoint.sh

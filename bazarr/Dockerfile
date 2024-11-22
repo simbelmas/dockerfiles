@@ -1,7 +1,7 @@
 FROM quay.io/simbelmas/fedora-minimal:v40.11@sha256:83e4f59cd8dc97fa4403a3ff3f9861ef0ecc35062ab25d12acec32c4017b7e55 AS Builder
 
 ## install build tools and libraries
-RUN microdnf --no-docs -y install python3-pip python3-devel unzip wget2-wget gcc
+RUN microdnf --no-docs -y install python3-pip python3-devel unzip wget gcc
 
 RUN mkdir /venv /build \
     && python -m venv /venv

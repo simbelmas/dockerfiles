@@ -8,10 +8,14 @@ RUN microdnf --nodocs -y install \
 
 RUN mkdir -p /app/.ssh /app/hugosource
 COPY ./entrypoint.sh /app/entrypoint.sh
+
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app \
+    && chown -R 700 /app \ 
+    && chown -R app:app /app
+
 RUN chmod 755 /app/entrypoint.sh \
-    && useradd -d /app -s /sbin/nologin -u 1001 app \
-    && chown -R 1001:1001 /app \
-    && chmod -R 700 /app \
     && mkdir -p /var/www/html \
     && chown -R 1001:1001 /var/www/ \
     && chmod -R 755 /var/www/

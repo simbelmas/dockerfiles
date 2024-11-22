@@ -2,7 +2,10 @@ FROM quay.io/simbelmas/fedora-minimal:v40.11@sha256:83e4f59cd8dc97fa4403a3ff3f98
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'app:x:1001:' >> /etc/group \
-    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app \
+    && chmod -R 700 /app \ 
+    && chown -R app:app /app
 
 RUN cd /usr/local/bin \
     && curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \

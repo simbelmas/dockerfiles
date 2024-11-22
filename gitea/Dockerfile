@@ -32,7 +32,10 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && microdnf --nodocs -y install git gnupg2\
+    && mkdir -p /app \
+    && chown -R app:app /app
+
+RUN microdnf --nodocs -y install git gnupg2\
     && microdnf clean all
 
 

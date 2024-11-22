@@ -5,7 +5,7 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG APP_VERSION
 
-RUN dnf5 --quiet -y --no-docs install git jq gnupg2 wget \
+RUN microdnf --nodocs -y install git jq gnupg2 wget \
     && mkdir /app_build
 
 WORKDIR /app_download
@@ -32,8 +32,8 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && dnf5 --quiet -y --no-docs install git gnupg2\
-    && dnf5 clean all
+    && microdnf --nodocs -y install git gnupg2\
+    && microdnf clean all
 
 
 RUN mkdir -p /var/lib/gitea/custom /var/lib/gitea/data /var/lib/gitea/git /var/lib/gitea/log /usr/share/gitea

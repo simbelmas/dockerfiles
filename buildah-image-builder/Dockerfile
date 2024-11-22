@@ -3,9 +3,9 @@ From quay.io/simbelmas/fedora-minimal:v40.11@sha256:83e4f59cd8dc97fa4403a3ff3f98
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN dnf5 --no-docs -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
+RUN microdnf --no-docs -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
     && rpm --setcaps shadow-utils 2>/dev/null \
-    && dnf5 clean all
+    && microdnf clean all
 
 ENV BUILDAH_ISOLATION=chroot
 

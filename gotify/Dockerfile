@@ -31,8 +31,11 @@ COPY --from=Builder /build/gotify /usr/local/bin
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && mkdir -p /app/data /etc/gotify \
-    && chown -R app:app /etc/gotify /app
+    && mkdir -p /app \
+    && chown -R app:app /app
+
+RUN mkdir -p /etc/gotify \
+    && chown -R app:app /etc/gotify
 
 WORKDIR /app
 

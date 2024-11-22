@@ -12,7 +12,7 @@ COPY ./entrypoint.sh /app/entrypoint.sh
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
     && mkdir -p /app \
-    && chown -R 700 /app \ 
+    && chmod -R 700 /app \ 
     && chown -R app:app /app
 
 RUN chmod 755 /app/entrypoint.sh \

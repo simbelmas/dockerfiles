@@ -1,11 +1,10 @@
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v40.11@sha256:83e4f59cd8dc97fa4403a3ff3f9861ef0ecc35062ab25d12acec32c4017b7e55 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN apt-get update \
-    && apt-get -y install wget \
+RUN microdnf --nodocs -y install wget tar \
     && mkdir /build
 
 WORKDIR /build
@@ -18,18 +17,18 @@ RUN export arch=$(uname -m) \
     && wget -O - https://github.com/Jackett/Jackett/releases/download/${jackett_release}/Jackett.Binaries.Linux${jackett_arch}.tar.gz | tar -zxf -  \
     && chmod a+x Jackett/jackett
 
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354
+FROM quay.io/simbelmas/fedora-minimal:v40.11@sha256:83e4f59cd8dc97fa4403a3ff3f9861ef0ecc35062ab25d12acec32c4017b7e55
 
-RUN apt-get update \
-    && apt-get install -y libicu74 libssl3 \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+RUN microdnf --nodocs -y install libicu74 libssl3 \
+    && microdnf clean all
 
 COPY --from=Downloader /build/Jackett /app
 
-RUN mkdir /opt/JackettData \
-    && groupadd -g 1001 app \
-    && useradd -g app -d /opt/JackettData -u 1001 -s /usr/bin/nologin app \
-    && chown -Rv 1001:1001 /opt/JackettData
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/opt/JackettData:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /opt/JackettData \
+    && chmod -R 700 /opt/JackettData \ 
+    && chown -R app:app /opt/JackettData
 
 ENV JACKETT_DIR=/opt/JackettData
 

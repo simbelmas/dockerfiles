@@ -5,7 +5,7 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 
 ## Install needed build tools
-RUN dnf5 -y install jq unzip wget
+RUN microdnf --nodocs -y install jq unzip wget
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN export app_last_stable_release=$(wget -O - https://api.github.com/repos/goti
     && wget https://github.com/gotify/server/releases/download/${app_last_stable_release}/gotify-linux-${build_arch}.zip \
      
 ## Build/install app
-    &&unzip gotify-linux-${build_arch}.zip \
+    && unzip gotify-linux-${build_arch}.zip \
     && mv gotify-linux-${build_arch} gotify \
     && rm gotify-linux-${build_arch}.zip \
     && chmod 555 gotify

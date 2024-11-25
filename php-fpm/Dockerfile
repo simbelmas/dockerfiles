@@ -1,6 +1,6 @@
 From quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad AS Builder
 
-RUN dnf5 --no-docs -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
+RUN microdnf --nodocs --best -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
 
 RUN git clone https://github.com/goodspb/pdlib.git /build
 
@@ -14,7 +14,7 @@ From quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6b
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN dnf5 install --setopt=install_weak_deps=False --no-docs -y install \
+RUN microdnf --nodocs --best -y install  \
         php php-fpm php-opcache \
         php-ctype php-curl php-dom php-gd gd php-iconv php-json \
         php-mbstring php-openssl php-posix php-session \
@@ -32,8 +32,8 @@ RUN dnf5 install --setopt=install_weak_deps=False --no-docs -y install \
         libxml2 php-xml \
         dlib \
     # Crappy workatound to repopulaire /usr/share/zoneinfo
-    && dnf5 -y reinstall tzdata \
-    && dnf5 clean all \
+    && microdnf -y reinstall tzdata \
+    && microdnf clean all \
     #Remove defautl php-fpm pool
     && rm /etc/php-fpm.d/www.conf \
     && rm -rf /var/log/php-fpm

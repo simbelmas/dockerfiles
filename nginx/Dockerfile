@@ -14,7 +14,7 @@ RUN echo 'app:x:1001:' >> /etc/group \
 RUN mkdir -p /var/lib/nginx/tmp /etc/nginx/kube \
     && cp -RL /usr/share/nginx/html /var/www/ \
     && chown -R app: /etc/nginx /var/lib/nginx /var/www \
-    && chmod a+rw /var/lib/nginx/tmp \
+    && chmod 777 /var/lib/nginx/tmp \
     && chmod a+rX /var/lib/nginx \
 
     #Configure logs and unprivileged access to files

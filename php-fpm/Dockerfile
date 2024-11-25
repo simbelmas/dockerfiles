@@ -14,7 +14,8 @@ From quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6b
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install  \
+RUN microdnf --nodocs --best -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \
+    && microdnf --nodocs --best -y install  \
         php php-fpm php-opcache \
         php-ctype php-curl php-dom php-gd gd php-iconv php-json \
         php-mbstring php-openssl php-posix php-session \
@@ -25,7 +26,7 @@ RUN microdnf --nodocs --best -y install  \
         php-pecl-imagick php-sysvsem \
         php-soap \
         php-sodium \
-        ffmpeg perl-Image-ExifTool openh264 \
+        ffmpeg perl-Image-ExifTool openh264 x265-libs \
         curl \
         which \
         freetype libpng libjpeg-turbo \

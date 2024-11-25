@@ -1,36 +1,38 @@
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354
+FROM quay.io/simbelmas/fedora-minimal:v41.1
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN apt-get update \
-    ## Install packages
-    && apt-get -y install libnginx-mod-http-geoip libnginx-mod-http-xslt-filter libnginx-mod-http-image-filter tzdata \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/* \
-    
-    ## remove ubuntu defauts dirs for sites management
-    && rm -rf /etc/nginx/sites-enabled /etc/nginx/sites-available \
+RUN microdnf --nodocs -y install nginx-mod-http-xslt-filter nginx-mod-http-image-filter tzdata \
+    && microdnf clean all
 
-    ## add user and change directory permissions
-    && useradd -d /var/www -s /sbin/nologin -u 1001 app \
-    && mkdir /var/lib/nginx/tmp /etc/nginx/kube \
-    && mv /var/www/html/index.nginx-debian.html /var/www/html/index.html \
-    && chown -R app: /etc/nginx /var/www \
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/var/www:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /var/www \
+    && chmod 755 /var/www \ 
+    && chown -R app:app /var/www
+
+RUN mkdir -p /var/lib/nginx/tmp /etc/nginx/kube \
+    && cp -RL /usr/share/nginx/html /var/www/ \
+    && chown -R app: /etc/nginx /var/lib/nginx /var/www \
     && chmod a+rw /var/lib/nginx/tmp \
     && chmod a+rX /var/lib/nginx \
 
     #Configure logs and unprivileged access to files
+    && sed -r 's#^(.*listen.*)80;$#\18080;#g' -i /etc/nginx/nginx.conf \
     && sed 's#^pid.*$#pid /tmp/nginx.pid;#' -i /etc/nginx/nginx.conf \
     && sed -r 's/^(user .*$)/#\1/g' -i /etc/nginx/nginx.conf \
     && sed -r 's#^error_log.*$#error_log /dev/stdout warn;#g' -i /etc/nginx/nginx.conf \
     && sed -r 's#^([\t ]*access_log).*$#\1 /dev/stdout combined;#g' -i  /etc/nginx/nginx.conf \
-    && sed -r 's#.*include.*sites-enabled.*$##' -i /etc/nginx/nginx.conf \
     && sed -r 's/([\t ]*)#.*(server_tokens ).*$/\1\2off;/' -i /etc/nginx/nginx.conf \
+    && sed -r 's#([\#]?[\t ]*).*(root ).*$#\1\2/var/www/html;#' -i /etc/nginx/nginx.conf \
 
     #Point to kube configuration in /etc/kube to avoid giving permissions to all users to /etc/nginx/conf.d
     && ln -sf /etc/nginx/kube/default.conf /etc/nginx/conf.d/default.conf 
 
 COPY site-default.conf /etc/nginx/kube/default.conf
 COPY temp-dir.conf /etc/nginx/conf.d/00-temp-dir.conf
+
+RUN cat /etc/nginx/nginx.conf
 
 WORKDIR /var/www
 USER 1001

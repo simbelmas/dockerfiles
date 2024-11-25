@@ -4,7 +4,7 @@ ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN microdnf --nodocs -y install wget tar \
+RUN microdnf --nodocs --best -y install wget tar \
     && mkdir /build
 
 WORKDIR /build
@@ -19,7 +19,7 @@ RUN export arch=$(uname -m) \
 
 FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad
 
-RUN microdnf --nodocs -y install libicu74 libssl3 \
+RUN microdnf --nodocs --best -y install libicu74 libssl3 \
     && microdnf clean all
 
 COPY --from=Downloader /build/Jackett /app

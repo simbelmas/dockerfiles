@@ -3,7 +3,7 @@ From quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6b
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --no-docs -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
+RUN microdnf --nodocs --best -y install shadow-utils buildah skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
     && rpm --setcaps shadow-utils 2>/dev/null \
     && microdnf clean all
 

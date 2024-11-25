@@ -5,7 +5,7 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 
 ## Install needed build tools
-RUN microdnf --nodocs -y install jq unzip wget
+RUN microdnf --nodocs --best -y install jq unzip wget
 
 WORKDIR /build
 

@@ -2,7 +2,7 @@ FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6b
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs -y install nginx-mod-http-xslt-filter nginx-mod-http-image-filter tzdata \
+RUN microdnf --nodocs --best -y install nginx-mod-http-xslt-filter nginx-mod-http-image-filter tzdata \
     && microdnf clean all
 
 RUN echo 'app:x:1001:' >> /etc/group \

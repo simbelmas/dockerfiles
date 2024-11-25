@@ -1,7 +1,7 @@
 FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad AS Builder
 
 ## install build tools and libraries
-RUN microdnf --no-docs -y install python3-pip python3-devel unzip wget gcc
+RUN microdnf --nodocs --best -y install python3-pip python3-devel unzip wget gcc
 
 RUN mkdir /venv /build \
     && python -m venv /venv
@@ -24,8 +24,8 @@ FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6b
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \ 
-    && microdnf --nodocs -y install python unrar ffmpeg \
+RUN microdnf --nodocs --best -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \ 
+    && microdnf --nodocs --best -y install python unrar ffmpeg \
     && microdnf clean all
 
 COPY --from=Builder /venv /venv

@@ -5,7 +5,7 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG APP_VERSION
 
-RUN microdnf --nodocs -y install git jq gnupg2 wget \
+RUN microdnf --nodocs --best -y install git jq gnupg2 wget \
     && mkdir /app_build
 
 WORKDIR /app_download
@@ -36,7 +36,7 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && chmod -R 700 /app \ 
     && chown -R app:app /app
 
-RUN microdnf --nodocs -y install git gnupg2\
+RUN microdnf --nodocs --best -y install git gnupg2\
     && microdnf clean all
 
 

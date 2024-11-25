@@ -32,8 +32,6 @@ RUN mkdir -p /var/lib/nginx/tmp /etc/nginx/kube \
 COPY site-default.conf /etc/nginx/kube/default.conf
 COPY temp-dir.conf /etc/nginx/conf.d/00-temp-dir.conf
 
-RUN cat /etc/nginx/nginx.conf
-
 WORKDIR /var/www
 USER 1001
 

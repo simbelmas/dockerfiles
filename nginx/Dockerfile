@@ -24,7 +24,8 @@ RUN mkdir -p /var/lib/nginx/tmp /etc/nginx/kube \
     && sed -r 's#^error_log.*$#error_log /dev/stdout warn;#g' -i /etc/nginx/nginx.conf \
     && sed -r 's#^([\t ]*access_log).*$#\1 /dev/stdout combined;#g' -i  /etc/nginx/nginx.conf \
     && sed -r 's/([\t ]*)#.*(server_tokens ).*$/\1\2off;/' -i /etc/nginx/nginx.conf \
-    && sed -r 's#^([\t ]*).*(root .*)$#\#\1\2#' -i /etc/nginx/nginx.conf \
+    && sed '/^ *server {/,/}/ s/^.*$/#&/' -i /etc/nginx/nginx.conf \
+    && rm -rf /etc/nginx/default.d \
 
     #Point to kube configuration in /etc/kube to avoid giving permissions to all users to /etc/nginx/conf.d
     && ln -sf /etc/nginx/kube/default.conf /etc/nginx/conf.d/default.conf 

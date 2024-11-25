@@ -1,16 +1,15 @@
-FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN apt-get update \
-    && apt-get install -y wget
+RUN microdnf --nodocs --best -y install wget tar
 RUN mkdir /download \
     && cd /download \
     && export traefik_release=$(wget -q https://github.com/traefik/traefik/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
-    && echo "latest traefik release is ${traefik_release} but use v2.11.2" \
-    && export traefik_release="v2.11.5" \
+    && echo "latest traefik release is ${traefik_release} but use v2.11.14" \
+    && export traefik_release="v2.11.14" \
     && echo tptf:${TARGETPLATFORM} tarc:${TARGETARCH} tvar:${TARGETVARIANT} \
     && if [ -n "$TARGETVARIANT" -a -n "$TARGETARCH" ] ; then dlarch=${TARGETARCH}${TARGETVARIANT} ; else dlarch=${TARGETARCH} ; fi  \
     && export download_url="https://github.com/traefik/traefik/releases/download/${traefik_release}/traefik_${traefik_release}_linux_${dlarch}.tar.gz" \
@@ -19,9 +18,15 @@ RUN mkdir /download \
     && tar -zxf app.tgz \
     && ls -al
 
-FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107
+FROM quay.io/simbelmas/fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app \
+    && chmod -R 700 /app \ 
+    && chown -R app:app /app
 
 COPY --from=Downloader /download/traefik /usr/local/bin
 

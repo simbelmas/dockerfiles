@@ -1,11 +1,10 @@
-FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107 AS Downloader
+FROM fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN apt-get update \
-    && apt-get -y install sqlite3 wget
+RUN microdnf --nodocs --best -y install sqlite3 wget tar
 
 RUN export arch=$(uname -m) \
     && if [ "${TARGETARCH}" = "amd64" ] ; then export software_arch="x64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export software_arch="arm" ; fi \
@@ -15,13 +14,12 @@ RUN export arch=$(uname -m) \
     && wget -O - "${download_url}" | tar -zxf -
 RUN chown 1001:1001 /opt/Radarr -R
 
-FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107
+FROM fedora-minimal:v41.2@sha256:7b0aa7c0c74aebdbeaeebbf4e8d6bdfe962fc9bc4b97927149ff211191cd11ad
 
 COPY --from=Downloader /opt/Radarr /opt/Radarr
 
-RUN apt-get update \
-    && apt-get -y install sqlite3 libicu-dev \
-    && rm -rf /var/lib/apt/lists/* /var/log/apt/* /var/cache/apt/*
+RUN microdnf --nodocs --best -y install sqlite3 libicu-devel \
+    && microdnf clean all
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/opt/mediaData:/sbin/nologin' >> /etc/passwd \

@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354 AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -15,7 +15,7 @@ RUN export arch=$(uname -m) \
     && wget -O - "${download_url}" | tar -zxf -
 RUN chown 1001:1001 /opt/Radarr -R
 
-FROM quay.io/simbelmas/ubuntu:v2410.2@sha256:7d2a1ccd4ebbfea2ed515582ad4aacbb737e4cbfbe2d4331fe97e2b3fdea5354
+FROM quay.io/simbelmas/ubuntu:v2410.3@sha256:475eb3970a5af9dfc24e4524e2ed620339511ac99b8ba1152d5c0ed2d2782107
 
 COPY --from=Downloader /opt/Radarr /opt/Radarr
 

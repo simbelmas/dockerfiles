@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v41.6@sha256:8f63ca35b55f0675e31ad7eba21e117300400bbab7d507ffbf331bfd16f395d0 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.7@sha256:6e03ae6a0b25f6bbf625b420209e8c23bab15a1659ffcb50f27bcc052ce4e681 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -18,7 +18,7 @@ RUN mkdir /download \
     && tar -zxf app.tgz \
     && ls -al
 
-FROM quay.io/simbelmas/fedora-minimal:v41.6@sha256:8f63ca35b55f0675e31ad7eba21e117300400bbab7d507ffbf331bfd16f395d0
+FROM quay.io/simbelmas/fedora-minimal:v41.7@sha256:6e03ae6a0b25f6bbf625b420209e8c23bab15a1659ffcb50f27bcc052ce4e681
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

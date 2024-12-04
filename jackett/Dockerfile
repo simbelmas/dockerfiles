@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v41.8@sha256:e4d0f456c200168a78a40bc41078154452979e2cec9efa7b2096d78e8394647b AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.9@sha256:29c8ba9cc55632ce6339c789f8f66f74f7efafdb58895123cb68951a37174dd2 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -17,7 +17,7 @@ RUN export arch=$(uname -m) \
     && wget -O - https://github.com/Jackett/Jackett/releases/download/${jackett_release}/Jackett.Binaries.Linux${jackett_arch}.tar.gz | tar -zxf -  \
     && chmod a+x Jackett/jackett
 
-FROM quay.io/simbelmas/fedora-minimal:v41.8@sha256:e4d0f456c200168a78a40bc41078154452979e2cec9efa7b2096d78e8394647b
+FROM quay.io/simbelmas/fedora-minimal:v41.9@sha256:29c8ba9cc55632ce6339c789f8f66f74f7efafdb58895123cb68951a37174dd2
 
 RUN microdnf --nodocs --best -y install libicu74 libssl3 \
     && microdnf clean all

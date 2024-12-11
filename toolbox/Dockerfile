@@ -22,6 +22,7 @@ RUN  microdnf --nodocs --best -y install \
        openssl libacl libattr \
        borgbackup \
        zsh \
+       time \
        python3-kubernetes \
        python3-jinja2-cli python3-jinja2 \
         && microdnf clean all

@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/ubuntu:v2410.10@sha256:e714981bd51cd91edc1a325d253e88e6d0d4bb0c8c4837354e7caf4c300e74e0 AS Downloader
+FROM quay.io/simbelmas/ubuntu:v2410.11@sha256:7e9d169d3d9da686bcd63b8513fe18f63626f607f005c0ca05196e696428d02a AS Downloader
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

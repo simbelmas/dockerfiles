@@ -23,6 +23,7 @@ RUN  microdnf --nodocs --best -y install \
        borgbackup \
        zsh \
        time \
+       netcat \
        python3-kubernetes \
        python3-jinja2-cli python3-jinja2 \
         && microdnf clean all

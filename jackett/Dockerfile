@@ -19,7 +19,7 @@ RUN export arch=$(uname -m) \
 
 FROM quay.io/simbelmas/fedora-minimal:v41.22@sha256:60a58e2d9dbccac877c4e96d06ecf3d3f456a6674de4cf6501f5b2025b104041
 
-RUN microdnf --nodocs --best -y install libicu74 libssl3 \
+RUN microdnf --nodocs --best -y install libicu \
     && microdnf clean all
 
 COPY --from=Downloader /build/Jackett /app

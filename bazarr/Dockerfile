@@ -1,7 +1,7 @@
 FROM quay.io/simbelmas/fedora-minimal:v41.18@sha256:aeb001a24985021436e901a891b5e5eaf8777072a1949c03fb64e308e7c5bd65 AS Builder
 
 ## install build tools and libraries
-RUN microdnf --nodocs --best -y install python3-pip python3-devel unzip wget gcc \
+RUN microdnf --nodocs --best -y install python3-pip python3-devel python3-distutils unzip wget gcc \
      libxml2 libxml2-devel libxslt libxslt-devel
 
 RUN mkdir /venv /build \
@@ -27,7 +27,7 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN microdnf --nodocs --best -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \ 
     && microdnf --nodocs --best -y install python unrar ffmpeg \
-        libxml2 libxslt\
+    python3-distutils libxml2 libxslt\
     && microdnf clean all
 
 COPY --from=Builder /venv /venv

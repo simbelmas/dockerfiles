@@ -4,7 +4,7 @@
     "config:base"
   ],
   "labels": ["renovatebot"],
-  "dependencyDashboard": false,
+  "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "packageRules": [
     {

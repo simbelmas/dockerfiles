@@ -15,10 +15,6 @@ RUN cd /usr/local/bin \
     && curl -o argocd -L https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 \
     && chmod a+x argocd
 
-RUN mkdir /app \
-    && chown -Rv app:app /app \
-    && chmod 750 /app
-
 USER 1001
 WORKDIR /app
 

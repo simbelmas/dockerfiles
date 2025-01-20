@@ -1,33 +1,35 @@
 FROM quay.io/simbelmas/fedora-minimal:v41.23@sha256:1ee0c51eba458fbc4f6310f7ac3caea7d7c87e48ac7738e14e6a8acc70518ca1 AS Builder
 
 ## install build tools and libraries
-RUN microdnf --nodocs --best -y install python3-pip python3-devel python3-distutils unzip wget gcc \
-     libxml2 libxml2-devel libxslt libxslt-devel
+RUN microdnf --setopt=install_weak_deps=false --nodocs --best -y install python3-pip python3-virtualenv unzip wget gcc \
+     libxml2 libxml2-devel libxslt libxslt-devel \
+     python3.12 python3.12-devel
 
 RUN mkdir /venv /build \
-    && python -m venv /venv
+    && virtualenv -p python3.12 /venv
 
 ENV PATH=/venv/bin:$PATH
 
 WORKDIR /build
 ## Grab release
 RUN export bazarr_release=$(wget -q https://github.com/morpheus65535/bazarr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
+    && export bazarr_release=v1.5.0 \
     && export download_url="https://github.com/morpheus65535/bazarr/releases/download/${bazarr_release}/bazarr.zip" \
     && echo -n 'Will download from:' ; echo ${download_url} | tee software_downloaded_from \
     && wget -O Bazarr.zip "${download_url}"
 
 ###Install  Bazarr
 RUN  unzip Bazarr.zip \
-     && rm Bazarr.zip \
-     && pip install -r requirements.txt
+     && rm Bazarr.zip
+
+RUN python --version \
+    && pip install -r requirements.txt
 
 FROM quay.io/simbelmas/fedora-minimal:v41.23@sha256:1ee0c51eba458fbc4f6310f7ac3caea7d7c87e48ac7738e14e6a8acc70518ca1
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \ 
-    && microdnf --nodocs --best -y install python unrar ffmpeg \
-    python3-distutils libxml2 libxslt\
+RUN microdnf --setopt=install_weak_deps=false --nodocs -y install python3.12 unrar ffmpeg-free\
     && microdnf clean all
 
 COPY --from=Builder /venv /venv

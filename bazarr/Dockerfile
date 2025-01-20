@@ -29,7 +29,7 @@ FROM quay.io/simbelmas/fedora-minimal:v41.23@sha256:1ee0c51eba458fbc4f6310f7ac3c
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --setopt=install_weak_deps=false --nodocs -y install python3.12 unrar ffmpeg-free\
+RUN microdnf --setopt=install_weak_deps=false --nodocs -y install python3.12 unar ffmpeg-free\
     && microdnf clean all
 
 COPY --from=Builder /venv /venv

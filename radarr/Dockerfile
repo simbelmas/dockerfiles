@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v41.28@sha256:c421b7a31449d5972098691a1f5868558d217f945df19f98f0325782202527a4 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.29@sha256:bdfe443866682ecd1283f0fc417b81a7af4a35507e114c1b41a89591d3e768e3 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -14,7 +14,7 @@ RUN export arch=$(uname -m) \
     && wget -O - "${download_url}" | tar -zxf -
 RUN chown 1001:1001 /opt/Radarr -R
 
-FROM quay.io/simbelmas/fedora-minimal:v41.28@sha256:c421b7a31449d5972098691a1f5868558d217f945df19f98f0325782202527a4
+FROM quay.io/simbelmas/fedora-minimal:v41.29@sha256:bdfe443866682ecd1283f0fc417b81a7af4a35507e114c1b41a89591d3e768e3
 
 COPY --from=Downloader /opt/Radarr /opt/Radarr
 

@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v41.30@sha256:e6dddacd6a2eb984298f5e67666a1aa09f312e8c91ecea024c8aecdab3a5c772 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.31@sha256:35d839993a17493f2a55dc6f4f8138cb5bd717775701cebb26d693677ca2a733 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -26,7 +26,7 @@ RUN export gpg_key_fingerprint=7C9E68152594688862D62AF62D9AE806EC1592E2 \
     && echo "${gpg_key_fingerprint}:6:" | gpg2 --import-ownertrust \
     && gpg2 --verify gitea.asc gitea
     
-FROM quay.io/simbelmas/fedora-minimal:v41.30@sha256:e6dddacd6a2eb984298f5e67666a1aa09f312e8c91ecea024c8aecdab3a5c772
+FROM quay.io/simbelmas/fedora-minimal:v41.31@sha256:35d839993a17493f2a55dc6f4f8138cb5bd717775701cebb26d693677ca2a733
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

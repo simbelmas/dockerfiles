@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v41.31@sha256:35d839993a17493f2a55dc6f4f8138cb5bd717775701cebb26d693677ca2a733 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v41.32@sha256:0a7a2b1c636a5d71b113372f468b2641a08ded102971ef81c646e80025c761a6 AS Downloader
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -17,7 +17,7 @@ RUN export arch=$(uname -m) \
     && wget -O - https://github.com/Jackett/Jackett/releases/download/${jackett_release}/Jackett.Binaries.Linux${jackett_arch}.tar.gz | tar -zxf -  \
     && chmod a+x Jackett/jackett
 
-FROM quay.io/simbelmas/fedora-minimal:v41.31@sha256:35d839993a17493f2a55dc6f4f8138cb5bd717775701cebb26d693677ca2a733
+FROM quay.io/simbelmas/fedora-minimal:v41.32@sha256:0a7a2b1c636a5d71b113372f468b2641a08ded102971ef81c646e80025c761a6
 
 RUN microdnf --nodocs --best -y install libicu \
     && microdnf clean all

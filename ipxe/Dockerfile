@@ -1,10 +1,10 @@
-FROM quay.io/simbelmas/nginx:stable
+FROM quay.io/simbelmas/nginx:v0.86
 
 USER 0
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install tftp-server zsh jq busybox sudo\
+RUN microdnf --nodocs --best -y install tftp-server zsh jq busybox sudo \
     && microdnf clean all
 
 COPY site-default.conf /etc/nginx/kube/default.conf

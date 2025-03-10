@@ -25,6 +25,7 @@ RUN  microdnf --nodocs --best -y install \
        time \
        netcat \
        jq \
+       yq \
        python3-kubernetes \
        python3-jinja2-cli python3-jinja2 \
         && microdnf clean all

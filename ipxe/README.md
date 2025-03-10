@@ -18,8 +18,9 @@ pxe dirextory structure:
 │   ├── machine-default.ipxe
 │   ├── machine-specific-chain.ipxe
 │   └── undionly.kpxe
-└── sample.domain.tld
-    └── launch.ipxe
+└── host
+    └── sample.domain.tld
+        └── launch.ipxe 
 ~~~
 
 Adding machine follows *sample.domain.tld* directory structure.

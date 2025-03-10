@@ -27,7 +27,7 @@ TFTP_SERVER_ADDRESS environment variable must be passed to container.
 This variable shoud contain protocol and server address to access ipxe files.
 
 Sample launch podman command:
-podman run -it --rm  -v /Users/sbelmasg/gits/redhat-labs/coreos-provisioning/ipxe_provsioning/assets:/var/www/html --name ipxe -p 69:8069/udp -p 80:8080 --env "TFTP_SERVER_ADDRESS=http://mypxe.local" quay.io/simbelmas/ipxe:stable manage_assets
+podman run -it --rm  -v /home/pxeuser/assets:/var/www/html --name ipxe -p 69:8069/udp -p 80:8080 --env "TFTP_SERVER_ADDRESS=http://mypxe.local" quay.io/simbelmas/ipxe:stable manage_assets
 EOF
     exit 2
 fi
@@ -42,7 +42,7 @@ dhcp
 
 echo
 echo Booting pxe from \${filename}
-echo Will chain to ${TFTP_SERVER_ADDRESS}/\${hostname}\${domain}/launch.ipxe
+echo Will chain to ${TFTP_SERVER_ADDRESS}/host/\${hostname}\${domain}/launch.ipxe
 echo 
 sleep 5
 

@@ -5,7 +5,7 @@ case "${1}" in
     ipxe)
         set -x
         nginx -g "daemon off;" &
-        dnsmasq &
+        dnsmasq --keep-in-foreground &
         wait
         ;;
     manage_assets)

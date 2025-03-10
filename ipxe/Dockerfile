@@ -4,7 +4,7 @@ USER 0
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install tftp-server zsh jq dnsmasq python3-jinja2-cli \
+RUN microdnf --nodocs --best -y install zsh jq dnsmasq python3-jinja2-cli \
     && microdnf clean all
 
     # debug tools

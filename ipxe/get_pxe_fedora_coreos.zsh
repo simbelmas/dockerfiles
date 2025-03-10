@@ -66,3 +66,6 @@ ls -1 "${coreos_assets_dir}" | grep -- 'kernel-' | sed -r 's/^.*-([a-zA-Z0-9_]+)
 
 echo -e "\nAvailable versions:\n${kept_versions} "
 
+## Put latest version in file to be used by others scripts
+echo "$(echo "${kept_versions}" | head -n 1)" > "${coreos_assets_dir}/coreos_latest_available_version"
+

@@ -37,16 +37,18 @@ temp_ipxe_chain_specific=$(mktemp)
 cat <<EOF >${temp_ipxe_chain_specific}
 #!ipxe
 
+set CHAINURL ${TFTP_SERVER_ADDRESS}/host/\${hostname}.\${domain}/launch.ipxe
+
 echo 
 dhcp
 
 echo
 echo Booting pxe from \${filename}
-echo Will chain to ${TFTP_SERVER_ADDRESS}/host/\${hostname}\${domain}/launch.ipxe
+echo Will chain to \${CHAINURL}
 echo 
 sleep 5
 
-chain ${TFTP_SERVER_ADDRESS}/host/\${hostname}\${domain}/launch.ipxe
+chain \${CHAINURL}
 EOF
 
 if [[ ! -f "${pxe_chain_machine_specific}" ]] || [[ "$(sha256sum "${pxe_chain_machine_specific}" | cut -f1 -d' ')" != "$(sha256sum "${temp_ipxe_chain_specific}" | cut -f1 -d' ')" ]] ; then

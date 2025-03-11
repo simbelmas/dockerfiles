@@ -13,10 +13,8 @@ case "${1}" in
         /var/www/get_pxe_fedora_coreos.zsh
         ;;
     *)
-        zsh -i
         echo "Service must be specified:"
-        echo "- webserver"
-        echo "- tftp"
+        echo "- ipxe"
         echo "- manage_assets"
         exit 1
         ;;

@@ -4,12 +4,14 @@ USER 0
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install zsh jq dnsmasq python3-jinja2-cli \
+RUN microdnf --nodocs --best -y install dnsmasq \
+    python3-jinja2-cli jq yq git butane \
+    zsh \
     && microdnf clean all
 
     # debug tools
-#RUN microdnf --nodocs --best -y install tftp iproute procps-ng \
-#    && microdnf clean all
+    #RUN microdnf --nodocs --best -y install tftp iproute procps-ng \
+    #    && microdnf clean all
 
 COPY site-default.conf /etc/nginx/kube/default.conf
 COPY zshrc /var/www/.zshrc

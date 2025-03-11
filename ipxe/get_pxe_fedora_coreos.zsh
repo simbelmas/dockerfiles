@@ -12,7 +12,6 @@ pxe_files=(
 keep_releases=3
 mirrored_arches=(
     x86_64
-    aarch64
 )
 
 if [[ ! -d "${coreos_assets_dir}" ]] ; then

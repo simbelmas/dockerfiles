@@ -12,7 +12,6 @@ pxe_files=(
 keep_releases=3
 mirrored_arches=(
     x86_64
-    aarch64
 )
 
 if [[ ! -d "${coreos_assets_dir}" ]] ; then
@@ -65,4 +64,7 @@ echo -e "\nAvailable arches:"
 ls -1 "${coreos_assets_dir}" | grep -- 'kernel-' | sed -r 's/^.*-([a-zA-Z0-9_]+)$/\1/'
 
 echo -e "\nAvailable versions:\n${kept_versions} "
+
+## Put latest version in file to be used by others scripts
+echo "$(echo "${kept_versions}" | head -n 1)" > "${coreos_assets_dir}/coreos_latest_available_version"
 

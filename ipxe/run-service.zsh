@@ -4,18 +4,17 @@ sudo_preserve_env=TFTP_SERVER_ADDRESS
 case "${1}" in
     ipxe)
         set -x
-        sudo -u app nginx -g "daemon off;" &
-        busybox syslogd -n -O /dev/stdout &
-        /usr/sbin/in.tftpd --foreground --secure --user app  --ipv4 --blocksize 1468 -vvv --address 0.0.0.0:8069 /var/www/html/
+        nginx -g "daemon off;" &
+        dnsmasq --keep-in-foreground &
+        wait
         ;;
     manage_assets)
-        sudo -u app --preserve-env=${sudo_preserve_env} /var/www/generate_ipxe_chainload.zsh
-        sudo -u app --preserve-env=${sudo_preserve_env} /var/www/get_pxe_fedora_coreos.zsh
+        /var/www/generate_ipxe_chainload.zsh
+        /var/www/get_pxe_fedora_coreos.zsh
         ;;
     *)
         echo "Service must be specified:"
-        echo "- webserver"
-        echo "- tftp"
+        echo "- ipxe"
         echo "- manage_assets"
         exit 1
         ;;

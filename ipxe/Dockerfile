@@ -1,4 +1,5 @@
-FROM quay.io/simbelmas/nginx:v0.87@sha256:aec04086bc85ad7751187257ff905c1973eb5e1b68c29572cd65191505724e25
+#FROM quay.io/simbelmas/nginx:v0.87@sha256:aec04086bc85ad7751187257ff905c1973eb5e1b68c29572cd65191505724e25
+FROM registry.fedoraproject.org/fedora-minimal:40
 
 USER 0
 

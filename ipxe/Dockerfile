@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/nginx:v0.86
+FROM quay.io/simbelmas/nginx:v0.86@sha256:693146589e3f071bac02d6064c96c56bc9e0be77dcf806d63bdce6e5e6e7884b
 
 USER 0
 

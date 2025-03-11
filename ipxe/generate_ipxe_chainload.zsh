@@ -46,7 +46,7 @@ echo Will chain to ${TFTP_SERVER_ADDRESS}/host/\${hostname}\${domain}/launch.ipx
 echo 
 sleep 5
 
-chain ${TFTP_SERVER_ADDRESS}/\${hostname}\${domain}/launch.ipxe
+chain ${TFTP_SERVER_ADDRESS}/host/\${hostname}\${domain}/launch.ipxe
 EOF
 
 if [[ ! -f "${pxe_chain_machine_specific}" ]] || [[ "$(sha256sum "${pxe_chain_machine_specific}" | cut -f1 -d' ')" != "$(sha256sum "${temp_ipxe_chain_specific}" | cut -f1 -d' ')" ]] ; then

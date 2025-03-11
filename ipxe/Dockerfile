@@ -1,12 +1,11 @@
-#FROM quay.io/simbelmas/nginx:v0.86
-FROM quay.io/simbelmas/fedora-minimal:v41.32@sha256:0a7a2b1c636a5d71b113372f468b2641a08ded102971ef81c646e80025c761a6
+FROM quay.io/simbelmas/nginx:v0.86
 
 USER 0
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN microdnf --nodocs -y install dnsmasq \
-    python3-jinja2-cli jq yq git butane \
+    python3-jinja2-cli jq yq git \
     zsh \
     && microdnf clean all
 

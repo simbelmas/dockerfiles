@@ -2,6 +2,8 @@ FROM quay.io/simbelmas/nginx:v0.87@sha256:aec04086bc85ad7751187257ff905c1973eb5e
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
+USER 0
+
 RUN microdnf --nodocs -y install dnsmasq \
     python3-jinja2-cli jq yq git \
     zsh \

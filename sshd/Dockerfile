@@ -13,7 +13,7 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && mkdir -p /app \
     && chmod -R 700 /app \ 
     && chown -R app:app /app \
-    && sed -E 's/^.*PasswordAuthentication.*$/PasswordAuthentication no/g' -i /etc/ssd/sshd_config
+    && sed -r 's/^.*PasswordAuthentication.*$/PasswordAuthentication no/g' -i /etc/ssh/sshd_config
 
 WORKDIR /app
 

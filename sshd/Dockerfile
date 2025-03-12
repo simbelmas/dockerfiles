@@ -12,8 +12,9 @@ RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
     && mkdir -p /app \
     && chmod -R 700 /app \ 
-    && chown -R app:app /app
+    && chown -R app:app /app \
+    && sed -E 's/^.*PasswordAuthentication.*$/PasswordAuthentication no/g' -i /etc/ssd/sshd_config
 
 WORKDIR /app
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/sbin/sshd","-D"]

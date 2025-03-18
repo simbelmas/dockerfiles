@@ -3,8 +3,7 @@ From quay.io/simbelmas/fedora-minimal:v41.36@sha256:af8a63af42f71059ef4ffea5f629
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install shadow-utils podman skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
-    && podman system reset -f \
+RUN microdnf --nodocs --best -y install podman shadow-utils skopeo fuse-overlayfs ucpp jq --exclude container-selinux \
     && rpm --setcaps shadow-utils 2>/dev/null \
     && microdnf clean all
 
@@ -21,7 +20,12 @@ RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/li
     && mkdir -p /home/build/.local/share/containers \
     && chown -R build:build /home/build
 
+
 USER 1001
+
+ENV _CONTAINERS_USERNS_CONFIGURED="" \
+    BUILDAH_ISOLATION=chroot
+
 WORKDIR /home/build
 ENTRYPOINT ["/bin/sh"]
 

@@ -3,8 +3,8 @@ From quay.io/simbelmas/fedora-minimal:v41.35@sha256:de452fd3d9316b7d14619062b0e6
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install podman skopeo fuse-overlayfs ucpp jq --exclude container-selinux \
-    && podman system reset -f \
+RUN microdnf --nodocs --best -y install podman shadow-utils skopeo fuse-overlayfs ucpp jq --exclude container-selinux \
+    && rpm --setcaps shadow-utils 2>/dev/null \
     && microdnf clean all
 
 RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /usr/share/containers/storage.conf > /etc/containers/storage.conf \

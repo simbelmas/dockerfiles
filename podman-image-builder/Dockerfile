@@ -4,7 +4,7 @@ From quay.io/simbelmas/fedora-minimal:v41.35@sha256:de452fd3d9316b7d14619062b0e6
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN microdnf --nodocs --best -y install shadow-utils podman skopeo fuse-overlayfs cpp jq --exclude container-selinux,qemu-user-static \
-    && podman system reset \
+    && podman system reset -f \
     && rpm --setcaps shadow-utils 2>/dev/null \
     && microdnf clean all
 

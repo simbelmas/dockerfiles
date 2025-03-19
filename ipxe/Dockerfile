@@ -16,7 +16,6 @@ RUN microdnf --nodocs -y install dnsmasq \
 COPY site-default.conf /etc/nginx/kube/default.conf
 COPY zshrc /var/www/.zshrc
 COPY run-service.zsh /var/www/run-service.zsh
-COPY get_pxe_fedora_coreos.zsh /var/www/get_pxe_fedora_coreos.zsh
 COPY generate_ipxe_chainload.zsh /var/www/generate_ipxe_chainload.zsh
 COPY dnsmasq-tftp.conf /etc/dnsmasq.conf
 

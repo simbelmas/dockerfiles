@@ -10,7 +10,6 @@ case "${1}" in
         ;;
     manage_assets)
         /var/www/generate_ipxe_chainload.zsh
-        /var/www/get_pxe_fedora_coreos.zsh
         ;;
     *)
         echo "Service must be specified:"

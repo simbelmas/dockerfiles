@@ -1,0 +1,30 @@
+From quay.io/simbelmas/fedora-minimal:v41.38@sha256:95629013a62814850a48dfc9656687eeb257484c51616dce02138b1cb57dd406 AS Base
+
+From Base as Builder
+
+
+RUN microdnf --nodocs --best -y install go \
+    && microdnf clean all
+RUN mkdir app && cd /app \
+    && go install -v github.com/flatcar/fleetlock@latest \
+    && ls -al
+RUN echo gopath $GOPATH
+
+FROM Base
+
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app \
+    && chmod -R 755 /app \ 
+    && chown -R app:app /app 
+
+COPY --from=Builder --chmod=0755 /root/go/bin/fleetlock /usr/local/bin/fleetlockctl
+
+USER 1001
+
+WORKDIR /app
+
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+ENTRYPOINT ["fleetlockctl"]
+#CMD ['--help']

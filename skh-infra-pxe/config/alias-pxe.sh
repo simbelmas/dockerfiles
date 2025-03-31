@@ -1,0 +1,2 @@
+alias pxejournal="journalctl -u pxe-configuration-ipxe_server.service -u pxe-configuration-manage-assets.service -u pxe-configuration-update-manager.service -u pxe-configuration-generate-pxe-chain.service  -o cat -f"
+alias cdpxe="cd /var/srv/containers/pxe"

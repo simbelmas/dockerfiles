@@ -1,0 +1,24 @@
+[Unit]
+Description=Manage hosts pxe configuration
+After=local-fs.target
+After=network-online.target
+
+[Container]
+Environment=PXE_CONF_GIT=https://gitea.soket.fr/Sok3t/skh-infra.git
+Environment=INFRASTRUCTURE_CONFIG_FILENAME=skh-infra-definition.yaml
+Environment=RUNNING_HOST=%H
+Image=quay.io/simbelmas/ipxe:stable
+Exec=ipxe
+Pull=newer
+PublishPort=80:8080/tcp
+PublishPort=69:69/udp
+Volume=/var/srv/containers/pxe:/var/www/html
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
+
+[Service]
+Restart=always
+RuntimeMaxSec=1d
+RestartSec=10s

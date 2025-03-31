@@ -2,3 +2,42 @@ FROM olareg.soket.fr/skh-infra-base:stable AS Base
 
 FROM Base
 
+RUN microdnf --nodocs --best -y install \
+        python3 &&\
+    microdnf clean all
+
+COPY --chmod=0755 scripts/rrsync /usr/local/bin/
+COPY users/backup_users.conf /usr/lib/sysusers.d
+## skh user
+RUN mkdir -p /var/home/skh/.ssh &&\
+    chmod 0700 /var/home/skh &&\
+    chown 1001:1001 -R /var/home/skh
+COPY --chown=1001:1001 --chmod=0600 users/authorized_keys /var/home/skh/.ssh/authorized_keys
+## francois user
+RUN mkdir -p /var/home/francois/.ssh &&\
+    chmod 0700 /var/home/francois &&\
+    chown 1002:1002 -R /var/home/francois
+COPY --chown=1002:1002 --chmod=0600 users/authorized_keys /var/home/francois/.ssh/authorized_keys
+
+## Copy Pxe scripts and configurations
+COPY --chmod=0644 config/alias-pxe.sh /usr/etc/profile.d/
+
+## Systemd management
+COPY systemd-units/var-mnt-backup.automount /usr/lib/systemd/system/
+COPY systemd-units/pxe-configuration-generate-pxe-chain.container /usr/share/containers/systemd/
+COPY systemd-units/pxe-configuration-generate-pxe-chain.timer /usr/lib/systemd/system/
+COPY systemd-units/pxe-configuration-ipxe-server.container /usr/share/containers/systemd/
+COPY systemd-units/pxe-configuration-manage-assets.container /usr/share/containers/systemd/
+COPY systemd-units/pxe-configuration-update-manager.container /usr/share/containers/systemd/
+
+RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
+    ln -vrs ../var-mnt-backup.automount ./var-mnt-backup.automount &&\
+    ln -vrs ../pxe-configuration-generate-pxe-chain.timer ./pxe-configuration-generate-pxe-chain.timer
+
+RUN mkdir -p /var/srv/containers/pxe /var/srv/containers/pxe-utils &&\
+    chmod 0755 /var/srv/containers/pxe /var/srv/containers/pxe-utils
+
+## Manage static files update
+COPY systemd-units/static-pxe-utils.conf /usr/lib/systemd/system/update-static-files.service.d/
+COPY --chown=root --chmod=0755 scripts/get_pxe_fedora_bootc.zsh /usr/local/share/
+COPY --chown=root --chmod=0755 scripts/pxe-configuration-update-manager.zsh /usr/local/share/

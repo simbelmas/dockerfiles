@@ -8,7 +8,7 @@ ConditionPathExists=!/var/lib/%N.stamp
 [Service]
 ExecStart=/usr/bin/timedatectl set-timezone Europe/Paris
 ExecStart=/bin/touch /var/lib/%N.stamp
-RemainAfterExit=false
+RemainAfterExit=true
 Type=oneshot
 
 [Install]

@@ -1,0 +1,38 @@
+FROM olareg.soket.fr/fedora-bootc:41 AS Base
+
+FROM Base
+
+RUN microdnf --nodocs --best -y install \
+        zsh \
+        vim-enhanced tmux &&\
+    microdnf clean all
+
+## Users management
+#Users homedir are only configured at install time and nnot on updates
+COPY users/mgmt_user.conf /usr/lib/sysusers.d
+RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
+    mkdir -p /var/home/mgr/.ssh &&\
+    chmod 0700 /var/home/mgr &&\
+    chown 1000:1000 -R /var/home/mgr
+COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /var/home/mgr/.ssh/authorized_keys
+COPY --chown=1000:1000 --chmod=0600 users/.zshrc /var/home/mgr/.zshrc
+
+# Copy RO configuration files and scripts
+COPY --chmod=0644 scripts/shell_utilities_functions.zsh /usr/local/lib/
+COPY --chmod=0700 scripts/reboot-to-pxe-install /usr/local/sbin/
+COPY --chmod=0644 config/sysctl-ipv6.conf /usr/etc/sysctl.d/ipv6.conf
+COPY --chmod=0644 config/zz-default-editor.sh /usr/etc/profile.d/
+COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
+
+## Manage systemd services
+COPY systemd-units/set-timezone.service /usr/lib/systemd/system/
+COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
+RUN mkdir /usr/lib/systemd/system/update-static-files.service.d &&\
+    cd /usr/lib/systemd/system/multi-user.target.wants &&\
+    ln -vrs ../set-timezone.service ./set-timezone.service &&\
+    ln -vrs ../update-static-files.service ./update-static-files.service
+
+## Manage static files update
+COPY --chown=root --chmod=0644 config/chrony.conf /usr/local/share/chrony.conf
+COPY systemd-units/static-file-chrony.conf /usr/lib/systemd/system/update-static-files.service.d/
+#RUN bootc container lint

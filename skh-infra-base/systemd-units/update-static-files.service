@@ -1,0 +1,14 @@
+[Unit]
+Description=Update static files
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+RemainAfterExit=false
+Type=oneshot
+## Sample usage, Add a drop in with required actions
+#ExecStart=/usr/local/sbin/update-static-file /usr/local/share/chrony.conf /etc/chrony.conf
+#ExecStart=/usr/bin/systemctl restart chronyd.service
+
+[Install]
+WantedBy=multi-user.target

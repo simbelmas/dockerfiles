@@ -8,7 +8,7 @@ RUN microdnf --nodocs --best -y install \
     microdnf clean all
 
 ## Users management
-#Users homedir are only configured at install time and nnot on updates
+#Users homedir are only configured at install time and not on updates
 COPY users/mgmt_user.conf /usr/lib/sysusers.d
 RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
     mkdir -p /var/home/mgr/.ssh &&\

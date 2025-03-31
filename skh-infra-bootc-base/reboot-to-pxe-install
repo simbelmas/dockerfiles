@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+if [[ "${USER}" != "root" ]] ; then
+        echo "Script must be run as root, exiting ..."
+        exit 1
+fi
+
+if [[ ! -e /dev/disk/by-partlabel ]] ; then
+        echo Seems disk is already wiped, exiting
+        exit 0
+fi
+
+wipe_partitions=(
+        BIOS-BOOT
+        boot
+)
+### Trashing mbr
+echo "Changing Bootnext for efi"
+if efibootmgr 2>/dev/null ; then
+  pxe_boot_entry=$(efibootmgr | awk 'tolower($0) ~ /ipv4|lan|pxe/{print gensub(/Boot(.*)\*/,"\\1","g",$1)}')
+  efibootmgr --bootnext ${pxe_boot_entry}
+else
+  echo -e "\n## Wipe partitions for legacy bios"
+  for partition in ${wipe_partitions[@]} ; do
+          echo -n "Wiping ${partition}: "
+          partitions_by_label_dir=/dev/disk/by-partlabel
+          partition_by_label=${partitions_by_label_dir}/${partition}
+          if [[ ! -L "${partition_by_label}" ]] ; then
+                  continue
+          fi
+          partition_device=$(readlink -f ${partition_by_label})
+          echo "Wiping partition '${partition}' referencing device '${partition_device}'"
+          set +e
+          (
+            set -x
+            dd if=/dev/zero of=${partition_device} bs=8M status=progress
+          )
+          set -e
+          echo
+  done
+fi
+
+if [[ "${1}" == "--poweroff" ]] ; then
+        poweroff
+fi
+
+if [[ "${1}" == "--reboot" ]] ; then
+        reboot
+else
+        echo "Wiped bootloader, reboot to reinstall"
+fi
+
+#wipefs --all /dev/sda --force ; dd if=/dev/zero of=/dev/sda bs=10M count=1 ; reboot

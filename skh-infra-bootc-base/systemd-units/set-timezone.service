@@ -1,0 +1,15 @@
+[Unit]
+Description=Set the time zone
+Wants=network-online.target
+After=network-online.target
+After=chronyd.service
+ConditionPathExists=!/var/lib/%N.stamp
+
+[Service]
+ExecStart=/usr/bin/timedatectl set-timezone Europe/Paris
+ExecStart=/bin/touch /var/lib/%N.stamp
+RemainAfterExit=false
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

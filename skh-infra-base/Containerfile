@@ -8,16 +8,6 @@ RUN microdnf --nodocs --best -y install \
         vim-enhanced tmux &&\
     microdnf clean all
 
-## Users management
-#Users homedir are only configured at install time and not on updates
-COPY users/mgmt_user.conf /usr/lib/sysusers.d
-RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
-    mkdir -p /var/home/mgr/.ssh &&\
-    chmod 0700 /var/home/mgr &&\
-    chown 1000:1000 -R /var/home/mgr
-COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /var/home/mgr/.ssh/authorized_keys
-COPY --chown=1000:1000 --chmod=0600 users/.zshrc /var/home/mgr/.zshrc
-
 # Copy RO configuration files and scripts
 COPY --chmod=0644 scripts/shell_utilities_functions.zsh /usr/local/lib/
 COPY --chmod=0700 scripts/pxe-install /usr/local/sbin/
@@ -36,4 +26,15 @@ RUN mkdir /usr/lib/systemd/system/update-static-files.service.d &&\
 ## Manage static files update
 COPY --chown=root --chmod=0644 config/chrony.conf /usr/local/share/chrony.conf
 COPY systemd-units/static-file-chrony.conf /usr/lib/systemd/system/update-static-files.service.d/
+
+## Users management
+COPY users/mgmt_user.conf /usr/lib/sysusers.d
+RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
+    mkdir -p /usr/local/share/mgr/.ssh &&\
+    chmod 0700 /usr/local/share/mgr &&\
+    chown 1000:1000 -R /usr/local/share/mgr
+COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /usr/local/share/mgr/.ssh/authorized_keys
+COPY --chown=1000:1000 --chmod=0600 users/.zshrc /usr/local/share/mgr/.zshrc
+COPY systemd-units/mgr-user-homedir.conf /usr/lib/systemd/system/update-static-files.service.d/
+
 #RUN bootc container lint

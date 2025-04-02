@@ -1,2 +1,1 @@
-command="rrsync /mnt/backup/skh" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLjNbcGMpAue77hcyywIIqp9dTjRqUJDy4LbHeqD6oV sok3t@Soket-M
-command="rrsync /mnt/backup/skh" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOPVaXpjeGe4PwbkrjnCY5S+/HAn/IDg8Gfv2GnmBUSy backuper@kube
+command="rrsync /var/srv/backup/skh" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOPVaXpjeGe4PwbkrjnCY5S+/HAn/IDg8Gfv2GnmBUSy backuper@kube

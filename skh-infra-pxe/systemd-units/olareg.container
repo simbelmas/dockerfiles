@@ -1,0 +1,20 @@
+[Unit]
+Description=Manage hosts pxe configuration
+After=local-fs.target
+After=network-online.target
+
+[Container]
+Image=ghcr.io/olareg/olareg:latest
+Exec=serve --dir=/home/appuser/registry
+Pull=newer
+PublishPort=5000:5000/tcp
+Volume=/var/srv/containers/olareg:/home/appuser/registry
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
+
+[Service]
+Restart=always
+RuntimeMaxSec=1d
+RestartSec=10s

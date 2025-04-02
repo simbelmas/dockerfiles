@@ -7,7 +7,7 @@ OnSuccess=pxe-configuration-update-manager.service
 [Container]
 Environment=TFTP_SERVER_ADDRESS=http://%H
 Environment=RUNNING_HOST=%H
-Environment=ASSETS_DIR=/var/www/html/images
+Environment=ASSETS_DIR=/var/www/html/images/fedora-bootc
 Image=quay.io/simbelmas/ipxe:stable
 Pull=newer
 Entrypoint=/scripts/get_pxe_fedora_bootc.zsh

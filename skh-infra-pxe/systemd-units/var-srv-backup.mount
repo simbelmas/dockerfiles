@@ -1,13 +1,13 @@
 [Unit]
 Before=local-fs.target
-#Requires=systemd-fsck@dev-mapper-data\x2dbackup.service
-#After=systemd-fsck@dev-mapper-data\x2dbackup.service
+Requires=systemd-fsck@dev-mapper-data\x2dbackup.service
+After=systemd-fsck@dev-mapper-data\x2dbackup.service
 After=blockdev@dev-mapper-data\x2dbackup.target
 After=var.mount
 
 [Mount]
 What=/dev/mapper/data-backup
-Where=/var/mnt/backup
+Where=/var/srv/backup
 Type=ext4
 Options=noauto,defaults
 TimeoutSec=20s

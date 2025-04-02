@@ -1,5 +1,5 @@
 [Automount]
-Where=/var/mnt/backup
+Where=/var/srv/backup
 DirectoryMode=0755
 TimeoutIdleSec=0
 

@@ -14,7 +14,8 @@ COPY users/backup_users.conf /usr/lib/sysusers.d
 COPY --chmod=0644 config/alias-pxe.sh /usr/etc/profile.d/
 
 ## Systemd management
-COPY systemd-units/var-mnt-backup.automount /usr/lib/systemd/system/
+COPY systemd-units/var-srv-backup.automount /usr/lib/systemd/system/
+COPY systemd-units/var-srv-backup.mount /usr/lib/systemd/system/
 COPY systemd-units/pxe-configuration-generate-pxe-chain.container /usr/share/containers/systemd/
 COPY systemd-units/pxe-configuration-generate-pxe-chain.timer /usr/lib/systemd/system/
 COPY systemd-units/pxe-configuration-ipxe-server.container /usr/share/containers/systemd/
@@ -23,7 +24,7 @@ COPY systemd-units/pxe-configuration-update-manager.container /usr/share/contain
 COPY systemd-units/olareg.container /usr/share/containers/systemd/
 
 RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
-    ln -vrs ../var-mnt-backup.automount ./var-mnt-backup.automount &&\
+    ln -vrs ../var-srv-backup.automount ./var-srv-backup.automount &&\
     ln -vrs ../pxe-configuration-generate-pxe-chain.timer ./pxe-configuration-generate-pxe-chain.timer
 
 ## Manage static files update

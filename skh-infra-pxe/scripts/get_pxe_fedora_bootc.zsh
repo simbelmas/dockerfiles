@@ -24,7 +24,7 @@ mirrored_arches=(
 )
 
 if [[ ! -d "${assets_dir}" ]] ; then
-    mkdir "${assets_dir}"
+    mkdir -p "${assets_dir}"
 fi
 
 ## download all active versions

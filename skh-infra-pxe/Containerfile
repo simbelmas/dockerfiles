@@ -1,4 +1,4 @@
-FROM olareg.soket.fr/skh-infra-base:stable AS Base
+FROM olareg.soket.fr/skh-infra-base:v0.1 AS Base
 
 FROM Base
 

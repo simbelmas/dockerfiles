@@ -8,6 +8,10 @@ RUN microdnf --nodocs --best -y install \
         vim-enhanced tmux &&\
     microdnf clean all
 
+RUN rm -rvf /opt &&\
+    ln -s /var/opt /opt &&\
+    mkdir -p /usr/etc/systemd/system/multi-user.target.wants/
+
 # Copy RO configuration files and scripts
 COPY --chmod=0644 scripts/shell_utilities_functions.zsh /usr/local/lib/
 COPY --chmod=0700 scripts/pxe-install /usr/local/sbin/
@@ -19,9 +23,8 @@ COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
 COPY systemd-units/set-timezone.service /usr/lib/systemd/system/
 COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
 RUN mkdir /usr/lib/systemd/system/update-static-files.service.d &&\
-    cd /usr/lib/systemd/system/multi-user.target.wants &&\
-    ln -vrs ../set-timezone.service ./set-timezone.service &&\
-    ln -vrs ../update-static-files.service ./update-static-files.service
+    ln -s /usr/lib/systemd/system/set-timezone.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
+    ln -s /usr/lib/systemd/system/update-static-files.service /usr/etc/systemd/system/multi-user.target.wants/
 
 ## Manage static files update
 COPY --chown=root --chmod=0644 config/chrony.conf /usr/etc/chrony.conf
@@ -29,7 +32,8 @@ COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/etc/contain
 
 ## Users management
 COPY users/mgmt_user.conf /usr/lib/sysusers.d
-RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel_no_password &&\
+RUN mkdir /usr/etc/sudoers.d &&\
+    echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel_no_password &&\
     mkdir -p /usr/local/share/mgr/.ssh &&\
     chmod 0700 /usr/local/share/mgr &&\
     chown 1000:1000 -R /usr/local/share/mgr &&\
@@ -38,4 +42,7 @@ RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /usr/etc/sudoers.d/whee
 COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /usr/local/share/mgr/.ssh/authorized_keys
 COPY --chown=1000:1000 --chmod=0600 users/.zshrc /usr/local/share/mgr/.zshrc
 COPY systemd-units/mgr-user.conf /usr/lib/systemd/system/update-static-files.service.d/
+
+
+
 #RUN bootc container lint

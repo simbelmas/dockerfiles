@@ -1,0 +1,13 @@
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+  - resources:
+      - secrets
+      - configmaps
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: aKmP3K+8eKsUg9VueE214qb/PzON5CxPs9x98LZP7SA=
+              # use 'openssl rand -base64 32'
+      - identity: {}

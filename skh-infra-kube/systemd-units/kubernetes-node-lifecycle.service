@@ -1,0 +1,8 @@
+[Unit]
+Description=Manage kubernetes node lifecycle
+After=kubelet.service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/lib/manage-node-lifecycle.zsh

@@ -1,0 +1,17 @@
+#!/bin/zsh
+set -e
+source /etc/kubernetes/fedora-kube.d/post-install-script.conf
+
+if [[ -n "$1" ]] ; then
+  download_url="${1}"
+else
+  download_url="${KUBE_POSTINSTALL_SCRIPT_URL}"
+fi
+
+if [[ -z "${download_url}" ]] ; then
+  echo "Environment variable KUBE_POSTINSTALL_SCRIPT_URL is not available and no script is provided, exiting"
+  exit 1
+fi
+
+curl -so /tmp/post-install.sh "${download_url}"
+/bin/bash - /tmp/post-install.sh

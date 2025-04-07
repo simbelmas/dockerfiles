@@ -24,14 +24,12 @@ RUN mkdir /usr/lib/systemd/system/update-static-files.service.d &&\
     ln -vrs ../update-static-files.service ./update-static-files.service
 
 ## Manage static files update
-COPY --chown=root --chmod=0644 config/chrony.conf /usr/local/share/chrony.conf
-COPY systemd-units/static-file-chrony.conf /usr/lib/systemd/system/update-static-files.service.d/
-COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/local/share/skh-infra-registries.conf
-COPY systemd-units/static-file-registries.conf /usr/lib/systemd/system/update-static-files.service.d/
+COPY --chown=root --chmod=0644 config/chrony.conf /usr/etc/chrony.conf
+COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/etc/containers/registries.conf.d/skh-infra-registries.conf
 
 ## Users management
 COPY users/mgmt_user.conf /usr/lib/sysusers.d
-RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
+RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel_no_password &&\
     mkdir -p /usr/local/share/mgr/.ssh &&\
     chmod 0700 /usr/local/share/mgr &&\
     chown 1000:1000 -R /usr/local/share/mgr &&\

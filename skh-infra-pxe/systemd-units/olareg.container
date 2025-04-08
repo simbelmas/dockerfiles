@@ -5,7 +5,7 @@ After=network-online.target
 
 [Container]
 Image=ghcr.io/olareg/olareg:latest
-Exec=serve --dir=/home/appuser/registry
+Exec=serve --dir=/home/appuser/registry --api-delete=true --api-blob-delete=true
 Pull=newer
 PublishPort=5000:5000/tcp
 Volume=/var/srv/containers/olareg:/home/appuser/registry

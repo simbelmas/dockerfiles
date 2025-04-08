@@ -24,8 +24,8 @@ COPY systemd-units/pxe-configuration-update-manager.container /usr/share/contain
 COPY systemd-units/olareg.container /usr/share/containers/systemd/
 
 RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
-    ln -vrs ../var-srv-backup.automount ./var-srv-backup.automount &&\
-    ln -vrs ../pxe-configuration-generate-pxe-chain.timer ./pxe-configuration-generate-pxe-chain.timer
+    ln -vs /usr/lib/systemd/system/var-srv-backup.automount /usr/etc/systemd/system/multi-user.target.wants/ &&\
+    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/
 
 ## Manage static files update
 # users homedirs
@@ -44,7 +44,8 @@ COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-sta
 # pxe dirs
 RUN mkdir -p /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/pxe/ /usr/local/share/containers/olareg &&\
     chmod 0755 -R /usr/local/share/containers &&\
-    chmod 0700 /usr/local/share/containers/olareg
+    chmod 0700 /usr/local/share/containers/olareg &&\
+    chown 1000:1000 /usr/local/share/containers/olareg
 
 COPY --chown=root --chmod=0755 scripts/get_pxe_fedora_bootc.zsh /usr/local/share/containers/pxe-utils/
 COPY --chown=root --chmod=0755 scripts/pxe-configuration-update-manager.zsh /usr/local/share/containers/pxe-utils/

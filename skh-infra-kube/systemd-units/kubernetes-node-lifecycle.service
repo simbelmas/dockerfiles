@@ -5,4 +5,6 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+Type=oneshot
 ExecStart=/usr/local/lib/manage-node-lifecycle.zsh
+Restart=on-failure

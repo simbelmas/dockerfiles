@@ -23,6 +23,7 @@ COPY ./config/crio-bridge.conflist /usr/etc/cni/net.d/100-crio-bridge.conflist
 
 COPY ./systemd-units/kubernetes-node-lifecycle.service /usr/lib/systemd/system/
 COPY --chmod=0700 ./scripts/kube-node-postinstall /usr/sbin/
+COPY --chmod=0700 ./scripts/manage_kubernetes_controlplane_lifecycle.sh /usr/local/lib/
 COPY --chmod=0700 ./scripts/manage_kubernetes_worker_lifecycle.zsh /usr/local/lib/
 COPY --chmod=0700 ./scripts/manage-node-lifecycle.zsh /usr/local/lib/
 RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi-user.target.wants/ &&\

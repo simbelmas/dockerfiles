@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+set -e
+source /usr/local/lib/shell_utilities_functions.zsh
+
+upgrade_in_progress_flag=/var/skh-infra-node-updating
+
+if [[ -z "${NODE_UPGRADE_FLEETLOCK_GROUP}" ]] ; then
+    echo "NODE_UPGRADE_FLEETLOCK_GROUP variable must be set to upgrade using fleetlock"
+    exit 1
+fi
+
+## Releasing lease if flag exists
+if [[ -e "${upgrade_in_progress_flag}" ]] ; then
+    echo "Upgrade in progress flag is set while starting service, release lock then stop"
+    release_reboot_lease "${NODE_UPGRADE_FLEETLOCK_GROUP}"
+    rm -f ${upgrade_in_progress_flag}
+    exit 0
+fi
+
+
+if [[ -n $(bootc upgrade --check | grep 'No changes in') ]] ; then
+    echo "No upgrade detected, exiting"
+    exit 0
+fi
+
+echo "Download update without applying"
+bootc upgrade --quiet
+
+## Request lock
+echo -n "Requesting lease to apply upgrade"
+request_reboot_lease "${NODE_UPGRADE_FLEETLOCK_GROUP}"
+touch "${upgrade_in_progress_flag}"
+echo Ok
+echo "Applying upgrade"
+bootc upgrade apply --quiet

@@ -18,6 +18,7 @@ COPY --chmod=0700 scripts/pxe-install /usr/local/sbin/
 COPY --chmod=0644 config/sysctl-ipv6.conf /usr/etc/sysctl.d/ipv6.conf
 COPY --chmod=0644 config/zz-default-editor.sh /usr/etc/profile.d/
 COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
+COPY --chmod=0700 scripts/bootc-fleetlock-fetch-apply-upgrade /usr/local/sbin/
 
 ## Manage systemd services
 COPY systemd-units/set-timezone.service /usr/lib/systemd/system/

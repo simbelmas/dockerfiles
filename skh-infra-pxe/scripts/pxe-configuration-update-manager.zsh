@@ -51,7 +51,7 @@ attempt=1
 set +e
 while [[ "${attempt}" -le 1 ]] ; do
     echo Pulling attempt ${attempt} ...
-    timeout 20 git pull -f  origin bootc
+    timeout 20 git pull -f  origin main
     pull_rc=$?
     if [[ "${pull_rc}" != 0 ]] ; then
         sleep 5

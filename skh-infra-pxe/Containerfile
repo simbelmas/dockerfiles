@@ -21,7 +21,7 @@ COPY systemd-units/pxe-configuration-generate-pxe-chain.timer /usr/lib/systemd/s
 COPY systemd-units/pxe-configuration-ipxe-server.container /usr/share/containers/systemd/
 COPY systemd-units/pxe-configuration-manage-assets.container /usr/share/containers/systemd/
 COPY systemd-units/pxe-configuration-update-manager.container /usr/share/containers/systemd/
-COPY systemd-units/olareg.container /usr/share/containers/systemd/
+#COPY systemd-units/olareg.container /usr/share/containers/systemd/
 
 RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
     ln -vs /usr/lib/systemd/system/var-srv-backup.automount /usr/etc/systemd/system/multi-user.target.wants/ &&\

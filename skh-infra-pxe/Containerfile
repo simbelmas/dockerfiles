@@ -50,3 +50,5 @@ RUN mkdir -p /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/
 COPY --chown=root --chmod=0755 scripts/get_pxe_fedora_bootc.zsh /usr/local/share/containers/pxe-utils/
 COPY --chown=root --chmod=0755 scripts/pxe-configuration-update-manager.zsh /usr/local/share/containers/pxe-utils/
 COPY systemd-units/static-pxe-utils.conf /usr/lib/systemd/system/update-static-files.service.d/
+
+RUN ln -sv /usr/lib/systemd/system/bootc-fetch-apply-updates.timer /usr/etc/systemd/system/timers.target.wants/

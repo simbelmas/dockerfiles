@@ -42,8 +42,8 @@ manage_reboot_lease_nonblocking() {
     fi
 
     #https://github.com/lucab/zincati/blob/17d5e2adf13ee9a98cebc662735a2084949e589b/src/identity/mod.rs#L9
-    systemd_id128_zincati_machineid=$(systemd-id128 ${machine_id} -a de35106b6ec24688b63afddaa156679b)
-    podman run --rm quay.io/simbelmas/fleetlock-client:stable "${command}" --group="${group}" --url="${endpoint}" --id="${systemd_id128_zincati_machineid}"
+    systemd_id128_zincati_machineid=$(systemd-id128 machine-id -a de35106b6ec24688b63afddaa156679b)
+    podman run --network=host --rm quay.io/simbelmas/fleetlock-client:stable "${command}" --group="${group}" --url="${endpoint}" --id="${systemd_id128_zincati_machineid}"
     return $?
 }
 request_reboot_lease_nonblocking() {

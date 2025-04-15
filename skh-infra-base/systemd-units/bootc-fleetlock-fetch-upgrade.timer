@@ -1,0 +1,12 @@
+[Unit]
+Description=Apply bootc updates using fleetlock
+ConditionPathExists=/run/ostree-booted
+
+[Timer]
+OnBootSec=1h
+# This time is relatively arbitrary and obviously expected to be overridden/changed
+OnUnitInactiveSec=1d
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target

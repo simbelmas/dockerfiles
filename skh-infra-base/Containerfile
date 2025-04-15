@@ -23,9 +23,12 @@ COPY --chmod=0700 scripts/bootc-fleetlock-fetch-apply-upgrade /usr/local/sbin/
 ## Manage systemd services
 COPY systemd-units/set-timezone.service /usr/lib/systemd/system/
 COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
+COPY systemd-units/bootc-fleetlock-fetch-upgrade.service /usr/lib/systemd/system/
+
 RUN mkdir /usr/lib/systemd/system/update-static-files.service.d &&\
     ln -s /usr/lib/systemd/system/set-timezone.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -s /usr/lib/systemd/system/update-static-files.service /usr/etc/systemd/system/multi-user.target.wants/
+
 
 ## Manage static files update
 COPY --chown=root --chmod=0644 config/chrony.conf /usr/etc/chrony.conf

@@ -26,8 +26,7 @@ COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.timer /usr/lib/systemd/system/
 
-RUN  &&\
-    ln -s /usr/lib/systemd/system/set-timezone.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
+RUN ln -s /usr/lib/systemd/system/set-timezone.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -s /usr/lib/systemd/system/update-static-files.service /usr/etc/systemd/system/multi-user.target.wants/
 
 

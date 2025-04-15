@@ -49,6 +49,9 @@ manage_reboot_lease_nonblocking() {
 request_reboot_lease_nonblocking() {
     manage_reboot_lease_nonblocking recursive-lock "${1}"
 }
+release_reboot_lease_nonblocking() {
+    manage_reboot_lease_nonblocking unlock-if-held "${1}"
+}
 request_reboot_lease() {
     local poll_sec=10
     if [[ -z "$1" ]] ; then
@@ -57,8 +60,6 @@ request_reboot_lease() {
     fi
 
     while ! $(request_reboot_lease_nonblocking "${1}") ; do
-        $(return 3)
-        return_code=$?
         echo "$(date): Cannot obtain reboot lease, wait ${poll_sec} to retry" >&2
         sleep ${poll_sec}
     done
@@ -72,8 +73,6 @@ release_reboot_lease(){
     fi
 
     while ! $(manage_reboot_lease_nonblocking unlock-if-held "${1}") ; do
-        $(return 3)
-        return_code=$?
         echo "$(date): Cannot obtain reboot lease, wait ${poll_sec} to retry" >&2
         sleep ${poll_sec}
     done    

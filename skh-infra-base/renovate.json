@@ -9,16 +9,9 @@
   "prHourlyLimit": 50,
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin"],
-      "automerge": false
-    },
-    {
-      "matchUpdateTypes": ["digest"],
-      "automerge": true,
-      "ignoreTests": true,
-      "digest": {
-        "enabled": true
-      }
+      "matchPackagePatterns": ["quay.io/fedora/fedora-bootc"],
+      "matchCurrentVersion": "41",
+      "pinDigests": true
     }
   ]
 }

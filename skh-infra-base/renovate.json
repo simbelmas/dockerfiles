@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "labels": ["renovatebot"],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "prHourlyLimit": 50,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin"],
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["digest"],
+      "automerge": true,
+      "ignoreTests": true,
+      "digest": {
+        "enabled": true
+      }
+    }
+  ]
+}

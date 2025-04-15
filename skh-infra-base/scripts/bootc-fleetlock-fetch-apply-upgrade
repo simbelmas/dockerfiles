@@ -33,4 +33,4 @@ request_reboot_lease "${NODE_UPGRADE_FLEETLOCK_GROUP}"
 touch "${upgrade_in_progress_flag}"
 echo Ok
 echo "Applying upgrade"
-bootc upgrade apply --quiet
+bootc upgrade --apply --quiet

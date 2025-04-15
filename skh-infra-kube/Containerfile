@@ -31,5 +31,3 @@ RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi
     ln -sv /usr/lib/systemd/system/kubernetes-node-lifecycle.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.timer /usr/etc/systemd/system/timers.target.wants/
-
-RUN touch /etc/a

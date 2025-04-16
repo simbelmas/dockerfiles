@@ -19,7 +19,7 @@ if [[ -e "${upgrade_in_progress_flag}" ]] ; then
 fi
 
 
-if [[ -n $(bootc upgrade --check | grep 'No changes in') ]] ; then
+if [[ -n "$(bootc upgrade --check | grep 'No changes in')" ]] ; then
     echo "No upgrade detected, exiting"
     exit 0
 fi

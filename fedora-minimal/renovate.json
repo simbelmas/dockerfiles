@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "labels": ["renovatebot"],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "prHourlyLimit": 50,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["quay.io/fedora/fedora-minimal"],
+      "matchCurrentVersion": "41",
+      "pinDigests": true
+    }
+  ]
+}

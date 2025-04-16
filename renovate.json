@@ -19,5 +19,5 @@
     }
   ],
   "pinDigests": true,
-  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","fedora-minimal/**","ubuntu/**","tekton-test/**","stress-ng/**","alpinetex/**"]
+  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","ubuntu/**","tekton-test/**","stress-ng/**","alpinetex/**","hugo/**"]
 }

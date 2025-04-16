@@ -1,3 +1,2 @@
 PLATFORMS=linux/amd64
-SQUASH_LAYERS=false
 DST_IMAGE_REGISTRY=olareg.soket.fr

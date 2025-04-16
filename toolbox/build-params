@@ -1,4 +1,4 @@
 PLATFORMS=linux/amd64
 RENOVATE=gitea-all-repos
-SQUASH_LAYERS=true
+SQUASH_LAYERS=false
 DST_IMAGE_REGISTRY=quay.io/simbelmas

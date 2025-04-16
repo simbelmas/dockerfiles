@@ -27,7 +27,7 @@ update_file_if_changed() {
 manage_reboot_lease_nonblocking() {
     local group
     local systemd_id128_zincati_machineid
-    local endpoint='http://skh.fleetlock.soket.fr'
+    local endpoint='https://skh.fleetlock.soket.fr'
 
     if [[ "$1" != "recursive-lock" ]] && [[ "$1" != "unlock-if-held" ]] ; then
         echo "please provide command as first parameter: unlock-if-held|recursive-lock" >&2

@@ -11,6 +11,7 @@ Image=quay.io/simbelmas/ipxe:stable
 Entrypoint=/scripts/pxe-configuration-update-manager.zsh
 Volume=/var/srv/containers/pxe:/var/www/html
 Volume=/var/srv/containers/pxe-utils:/scripts
+Volume=/var/srv/containers/gitea_ssh:/root/.ssh
 Pull=newer
 
 [Service]

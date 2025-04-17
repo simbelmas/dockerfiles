@@ -24,13 +24,15 @@ if [[ -n "$(bootc upgrade --check | grep 'No changes in')" ]] ; then
     exit 0
 fi
 
-echo "Download update without applying"
-bootc upgrade --quiet
-
-## Request lock
+## Requesting lease before download to let time to reschedule pods gracefuly
 echo -n "Requesting lease to apply upgrade"
 request_reboot_lease "${NODE_UPGRADE_FLEETLOCK_GROUP}"
 touch "${upgrade_in_progress_flag}"
 echo Ok
+
 echo "Applying upgrade"
 bootc upgrade --apply --quiet
+
+
+
+

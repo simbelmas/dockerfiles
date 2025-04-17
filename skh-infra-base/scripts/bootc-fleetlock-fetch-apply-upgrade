@@ -19,20 +19,20 @@ if [[ -e "${upgrade_in_progress_flag}" ]] ; then
 fi
 
 
-if [[ -n "$(bootc upgrade --check | grep 'No changes in')" ]] ; then
+if [[ -n "$(bootc upgrade --check | grep 'No changes in')" ]] &&  [[ -z "$(bootc upgrade --quiet | grep 'Staged update present')" ]] ; then
     echo "No upgrade detected, exiting"
     exit 0
 fi
 
-## Requesting lease before download to let time to reschedule pods gracefuly
+echo "Download update without applying"
+bootc upgrade --quiet
+
+## Request lock
 echo -n "Requesting lease to apply upgrade"
 request_reboot_lease "${NODE_UPGRADE_FLEETLOCK_GROUP}"
 touch "${upgrade_in_progress_flag}"
 echo Ok
-
+echo Waiting 30 seconds to let pods be rescheduled
+sleep 30
 echo "Applying upgrade"
 bootc upgrade --apply --quiet
-
-
-
-

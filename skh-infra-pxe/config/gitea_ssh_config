@@ -1,4 +1,4 @@
 Host gitea.soket.fr
-    User git
+    User gitea
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/id_ed25519

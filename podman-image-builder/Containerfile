@@ -20,6 +20,7 @@ RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/li
     && mkdir -p /home/build/.local/share/containers \
     && chown -R build:build /home/build
 
+COPY --chmod=0744 config/dnf5-cache.conf /etc/dnf/libdnf5.conf.d/
 
 USER 1001
 

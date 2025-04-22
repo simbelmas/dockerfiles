@@ -47,8 +47,8 @@ COPY 00-fpm-www.conf /etc/php-fpm.d/
 COPY 000-container-php.ini /etc/php.d/
 #COPY --from=Builder /build/modules/pdlib.so /usr/lib64/php/modules/pdlib.so
 
-RUN echo -e '[pdlib]\nextension="pdlib.so"' > /etc/php.d/pdlib.ini\
-    && chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
+#RUN echo -e '[pdlib]\nextension="pdlib.so"' > /etc/php.d/pdlib.ini\
+RUN chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \
     && useradd -d /var/www -s /sbin/nologin -u 1001 app \
     && mkdir -p /var/run/php-fpm /var/www/html \
     && mkdir -p /etc/phpkube/php-conf.d /etc/phpkube/fpm-conf.d \

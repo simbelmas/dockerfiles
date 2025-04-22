@@ -1,15 +1,15 @@
-From quay.io/simbelmas/fedora-minimal:v41.50@sha256:eeb52ebf3e9731ee2766f8194970e125861d4d33517bf9c724f998c41ebabb77 AS Builder
-
-RUN microdnf --nodocs --best -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
-
-RUN git clone https://github.com/goodspb/pdlib.git /build
-
-WORKDIR /build
-RUN phpize \
-    && ./configure \
-    && make
-
-
+#From quay.io/simbelmas/fedora-minimal:v41.50@sha256:eeb52ebf3e9731ee2766f8194970e125861d4d33517bf9c724f998c41ebabb77 AS Builder
+#
+#RUN microdnf --nodocs --best -y install git php-devel make gcc-c++ libX11-devel dlib-devel 
+#
+#RUN git clone https://github.com/goodspb/pdlib.git /build
+#
+#WORKDIR /build
+#RUN phpize \
+#    && ./configure \
+#    && make
+#
+#
 From quay.io/simbelmas/fedora-minimal:v41.50@sha256:eeb52ebf3e9731ee2766f8194970e125861d4d33517bf9c724f998c41ebabb77
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
@@ -45,7 +45,7 @@ COPY --chmod=666 run_php_command /usr/local/bin/
 COPY 00-php-fpm.conf /etc/php-fpm.d/
 COPY 00-fpm-www.conf /etc/php-fpm.d/
 COPY 000-container-php.ini /etc/php.d/
-COPY --from=Builder /build/modules/pdlib.so /usr/lib64/php/modules/pdlib.so
+#COPY --from=Builder /build/modules/pdlib.so /usr/lib64/php/modules/pdlib.so
 
 RUN echo -e '[pdlib]\nextension="pdlib.so"' > /etc/php.d/pdlib.ini\
     && chmod 755 /usr/local/bin/start_fpm /usr/local/bin/run_php_command \

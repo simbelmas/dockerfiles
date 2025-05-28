@@ -1,4 +1,4 @@
-From quay.io/simbelmas/fedora-minimal:v41.58@sha256:25b355381f8c7b3c1dfd3b51369f86ff409cfcb531a0fa2191b0159246c4afa4 AS Base
+From quay.io/simbelmas/fedora-minimal:v41.59@sha256:a65394a34fc25966ba13a6c2cadcb6d825804c6fe88023cccde97e2552ef7a16 AS Base
 
 From Base as Builder
 

@@ -1,4 +1,4 @@
-FROM olareg.soket.fr/skh-infra-base:v0.36@sha256:ba8d058f726b3b200e2d07c0dd32eaaa92f5209b75bf455c52c83cf554521ce1 AS Base
+FROM olareg.soket.fr/skh-infra-base:v0.37@sha256:da5d38e07014d2ae7e2c4cd63d48e67a60f310a18c93b991254919a5490e2571 AS Base
 
 FROM Base
 ENV KUBERNETES_MINOR_VERSION=1.32

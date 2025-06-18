@@ -1,4 +1,4 @@
-FROM olareg.soket.fr/skh-infra-base:v0.38@sha256:4af319c3a2a972604213418d9211b13a12dcabc85e18f49ba00a7576d1896f47 AS Base
+FROM olareg.soket.fr/skh-infra-base:v0.39@sha256:ae9e792c2e5cb19c0296fb069350ddbc48195301efa4f267ce3aae9836a04a86 AS Base
 
 FROM Base
 

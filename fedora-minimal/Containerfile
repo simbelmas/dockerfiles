@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:41@sha256:efbcdbc6f5e51bcf24df7ed7d3dd1b1303a64883d66ef4536b1795d0759b450b
+FROM registry.fedoraproject.org/fedora-minimal:41@sha256:abdf702d873f3b7a4e7da4614cb8e469f975505a4026fc601fb669b2e91a735f
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

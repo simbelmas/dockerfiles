@@ -1,8 +1,7 @@
-FROM quay.io/fedora/fedora-minimal:41@sha256:807602c3e4d3c51eef7f2ef6069b3bf792d24d0c57467219f1035ac500e460f7
+FROM quay.io/fedora/fedora-minimal:42
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 #RUN echo -e "fastestmirror=True\nmax_parallel_downloads=10" >> /etc/dnf/dnf.conf \
-
 
 

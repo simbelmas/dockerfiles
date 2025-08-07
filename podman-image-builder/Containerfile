@@ -6,7 +6,9 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 RUN microdnf --nodocs --best -y install podman shadow-utils skopeo fuse-overlayfs ucpp jq --exclude container-selinux \
     && rpm --setcaps shadow-utils 2>/dev/null \
     && microdnf clean all
-
+    
+RUN setcap cap_setuid+ep /usr/bin/newuidmap \
+    && setcap cap_setgid+ep /usr/bin/newgidmap
 RUN sed -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /usr/share/containers/storage.conf > /etc/containers/storage.conf \
     && chmod 644 /etc/containers/storage.conf \
     && mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers \

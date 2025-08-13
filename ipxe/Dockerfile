@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/nginx:v0.124@sha256:66f4c08710cbb2d2080045b667aa704b8dcd4d8ef786b38cd47fd207da65c5b5
+FROM quay.io/simbelmas/nginx:v0.125@sha256:66b33c8cc8947f9b4b402d79f3b6305a2035a0ff7e81e83f83bc651150d8e971
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

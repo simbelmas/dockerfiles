@@ -1,0 +1,17 @@
+FROM quay.io/simbelmas/fedora-minimal:v42.11@sha256:c6088af7f8ec0807d4a672f76c387e3b3c7dd3c44f17375b524b5ff2cb03ef40
+
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+RUN microdnf --nodocs --best -y install socat \
+    && microdnf clean all
+
+RUN echo 'app:x:1001:' >> /etc/group \
+    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app /app/creds /app/config \
+    && chown -Rv app:app /app \
+    && chmod -R 755 /app
+
+USER 1001
+
+ENTRYPOINT ["socat"]
+CMD ["-h"]

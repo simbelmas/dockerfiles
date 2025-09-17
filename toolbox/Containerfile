@@ -33,5 +33,6 @@ RUN  microdnf --nodocs --best -y install \
        python3-jinja2-cli python3-jinja2 \
         && microdnf clean all
 
+RUN sed -i 's@^Include /etc/ssh@#Include /etc/ssh@' /etc/ssh/ssh_config
 USER 1001
 

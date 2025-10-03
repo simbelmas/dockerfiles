@@ -10,7 +10,7 @@
 #    && make
 #
 #
-From quay.io/simbelmas/fedora-minimal:v42.17@sha256:e13f425a760844a7df4ff94020dff51028bfc940bb727920e669397a9aa05b7e
+From quay.io/simbelmas/fedora-minimal:v42.18@sha256:b08a3399587393f30f0803c517c7ecbd41bcc40b1bacf18b62635319da8b2666
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

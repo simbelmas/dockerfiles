@@ -3,13 +3,17 @@
   "extends": [
     "config:base"
   ],
-  "labels": ["renovatebot"],
+  "labels": [
+    "renovatebot"
+  ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "prHourlyLimit": 50,
   "packageRules": [
     {
-      "matchPackagePatterns": ["quay.io/fedora/fedora-bootc"],
+      "matchPackagePatterns": [
+        "quay.io/fedora/fedora-bootc"
+      ],
       "matchCurrentVersion": "42",
       "pinDigests": true
     }

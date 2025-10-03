@@ -1,2 +1,2 @@
 # Jackett
-jackett running on ubuntu.
+jackett running on fedora.

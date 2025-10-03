@@ -1,0 +1,8 @@
+# https://mariadb.org/download/
+[mariadb]
+name = MariaDB-11.4
+# baseurl = https://rpm.mariadb.org/11.4/fedora/$releasever/$basearch
+baseurl = https://mirrors.ircam.fr/pub/mariadb/yum/11.4/fedora/$releasever/$basearch
+# gpgkey= https://rpm.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgkey=https://mirrors.ircam.fr/pub/mariadb/yum/RPM-GPG-KEY-MariaDB
+gpgcheck=1

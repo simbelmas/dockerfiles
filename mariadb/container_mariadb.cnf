@@ -8,5 +8,4 @@ datadir=/var/lib/mysql/data
 
 [client-server]
 socket=/var/run/mysqld/mysql.sock
-!includedir /etc/mysql/conf.d/
 !includedir /etc/mysql/mariadb.conf.d/

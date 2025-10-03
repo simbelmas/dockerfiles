@@ -1,23 +1,41 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "labels": ["renovatebot"],
+  "labels": [
+    "renovatebot"
+  ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "prHourlyLimit": 50,
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false
     },
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true,
       "ignoreTests": true
     }
   ],
   "pinDigests": true,
-  "ignorePaths": ["transmission/**","mosquitto/**","home-assistant/**","ubuntu/**","tekton-test/**","stress-ng/**","alpinetex/**","hugo/**"]
+  "ignorePaths": [
+    "transmission/**",
+    "mosquitto/**",
+    "home-assistant/**",
+    "ubuntu/**",
+    "tekton-test/**",
+    "stress-ng/**",
+    "alpinetex/**",
+    "hugo/**"
+  ]
 }

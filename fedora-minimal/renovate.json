@@ -10,7 +10,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["quay.io/fedora/fedora-minimal"],
-      "matchCurrentVersion": "41",
+      "matchCurrentVersion": "42",
       "pinDigests": true
     }
   ]

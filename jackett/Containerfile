@@ -4,7 +4,7 @@ ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN microdnf --nodocs --best -y install wget tar \
+RUN microdnf --nodocs --best -y install wget tar gzip \
     && mkdir /build
 
 WORKDIR /build

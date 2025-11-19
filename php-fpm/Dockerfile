@@ -31,7 +31,6 @@ RUN microdnf --nodocs --best -y install https://mirrors.rpmfusion.org/free/fedor
         which \
         freetype libpng libjpeg-turbo \
         libxml2 php-xml \
-        dlib \
         aria2c \
     # Crappy workatound to repopulaire /usr/share/zoneinfo
     && microdnf -y reinstall tzdata \

@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-bootc:42@sha256:105d987175a92d601e61cad83ec866ef749a7a3ba47e0e0f39de823988b30cdb AS Base
+FROM quay.io/fedora/fedora-bootc:42@sha256:9353798ec704a3c4226faea0997faf3a244ce4a834798c519ee10fd6351cdc23 AS Base
 
 FROM Base
 

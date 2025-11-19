@@ -4,7 +4,7 @@ ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN microdnf --nodocs --best -y install sqlite3 wget tar
+RUN microdnf --nodocs --best -y install sqlite3 wget tar gzip
 
 RUN export arch=$(uname -m) \
     && if [ "${TARGETARCH}" = "amd64" ] ; then export software_arch="x64" ; elif [ "${TARGETARCH}" == "arm" -a "${TARGETVARIANT}" == "v7" ] ; then export software_arch="arm" ; fi \

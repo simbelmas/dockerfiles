@@ -1,6 +1,10 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.2@sha256:4377ed82a0df4cd3d9921a478bab047ee67a4bd667f0d913ab7e60d2ebacc055
+FROM quay.io/simbelmas/fedora-minimal:v42.26@sha256:8632e9f6356749019120ef0e3082fe5bbbce37bee6c292eb8377b3936e3ba342
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
+## Mariadb upgrade procedure
+# Review supported Mariadb and os versions here: https://mariadb.com/docs/server/server-management/install-and-upgrade-mariadb/installing-mariadb/binary-packages/mariadb-package-repository-setup-and-usage#mariadb-community-server-repository
+# update MariaDB.repo + FROM directive accordingly
+# update last-built-tag to reflect mariadb version.
 
 COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
 RUN rpm --import https://mirrors.ircam.fr/pub/mariadb/yum/RPM-GPG-KEY-MariaDB
@@ -13,6 +17,8 @@ RUN set -x \
     && mkdir -p /var/run/mysqld /etc/my.cnf.kube.d /etc/mysql/mariadb.conf.d \
     && ln -s /dev/stdout /var/log/map_stdout  \
     && ln -s /dev/stdout /var/log/map_stdout.err \
+    && rm -rf /var/lib/mysql/* \
+    && mkdir /var/lib/mysql/data \
     && chown -R mysql: /var/lib/mysql /run/mysqld /etc/mysql /etc/my.cnf.kube.d \
     && rm -rf /etc/my.cnf /etc/my.cnf.d /etc/mysql/*cnf
 

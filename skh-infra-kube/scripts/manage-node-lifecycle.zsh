@@ -7,19 +7,29 @@ echo ## Manage Environment variables
 if [[ ! -d "/etc/systemd/system/bootc-fleetlock-fetch-upgrade.service.d" ]] ; then
     mkdir -p /etc/systemd/system/bootc-fleetlock-fetch-upgrade.service.d
 fi
-
+configureNodeUpgradeFleetlockGroup() {
+    local group_name
+    if [[ -z "$1" ]] ; then
+        echo "NodeUpgradeFleetlockGroup Must be set" >&2
+        return 1
+    else
+        group_name="$1"
+    fi
+    echo -e "[Service]\nEnvironment=NODE_UPGRADE_FLEETLOCK_GROUP=${group_name}" > /etc/systemd/system/bootc-fleetlock-fetch-upgrade.service.d/kube-node.conf    
+    systemctl daemon-reload
+}
 case "${KUBERNETES_NODE_ROLE}" in
     worker)
         (
             set -x
-            echo -e '[Service]\nEnvironment=NODE_UPGRADE_FLEETLOCK_GROUP=node' > /etc/systemd/system/bootc-fleetlock-fetch-upgrade.service.d/kube-node.conf    
+            configureNodeUpgradeFleetlockGroup node
         )
         exec /usr/local/lib/manage_kubernetes_worker_lifecycle.zsh
     ;;
     controlplane)
         (
             set -x
-            echo -e '[Service]\nEnvironment=NODE_UPGRADE_FLEETLOCK_GROUP=node' > /etc/systemd/system/bootc-fleetlock-fetch-upgrade.service.d/kube-node.conf
+            configureNodeUpgradeFleetlockGroup node
         )
         exec /usr/local/lib/manage_kubernetes_controlplane_lifecycle.sh
     ;;

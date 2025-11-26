@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v42.26@sha256:8632e9f6356749019120ef0e3082fe5bbbce37bee6c292eb8377b3936e3ba342
+FROM quay.io/simbelmas/fedora-minimal:v43.4@sha256:f2199e9f5d4fa87fe39aa86d008a76eef7712d5aef6c46724ff45b15fcebdb25
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 ## Mariadb upgrade procedure

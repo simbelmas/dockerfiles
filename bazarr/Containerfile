@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.4@sha256:f2199e9f5d4fa87fe39aa86d008a76eef7712d5aef6c46724ff45b15fcebdb25 AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v43.6@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS Builder
 
 ## install build tools and libraries
 RUN microdnf --setopt=install_weak_deps=false --nodocs --best -y install python3-pip python3-virtualenv unzip wget gcc \
@@ -25,7 +25,7 @@ RUN  unzip Bazarr.zip \
 RUN python --version \
     && pip install -r requirements.txt
 
-FROM quay.io/simbelmas/fedora-minimal:v43.4@sha256:f2199e9f5d4fa87fe39aa86d008a76eef7712d5aef6c46724ff45b15fcebdb25
+FROM quay.io/simbelmas/fedora-minimal:v43.6@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

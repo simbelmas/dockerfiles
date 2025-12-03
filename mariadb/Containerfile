@@ -1,14 +1,8 @@
-FROM quay.io/simbelmas/fedora-minimal:v42.26@sha256:8632e9f6356749019120ef0e3082fe5bbbce37bee6c292eb8377b3936e3ba342
+FROM quay.io/simbelmas/fedora-minimal:v43.6@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
-## Mariadb upgrade procedure
-# Review supported Mariadb and os versions here: https://mariadb.com/docs/server/server-management/install-and-upgrade-mariadb/installing-mariadb/binary-packages/mariadb-package-repository-setup-and-usage#mariadb-community-server-repository
-# update MariaDB.repo + FROM directive accordingly
-# update last-built-tag to reflect mariadb version.
 
-COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
-RUN rpm --import https://mirrors.ircam.fr/pub/mariadb/yum/RPM-GPG-KEY-MariaDB
-RUN microdnf --nodocs --best -y install MariaDB-server MariaDB-client MariaDB-backup MariaDB-common
+RUN microdnf --nodocs --best -y install mariadb mariadb-server mariadb-client-utils
 
 RUN set -x \
     && userdel mysql \

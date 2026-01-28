@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.18@sha256:746f088ddf146ae9de2b031bb002262ba796dd21ca5e8dbeede503df7fda69cb
+FROM quay.io/simbelmas/fedora-minimal:v43.20@sha256:5f2fc4f6810da9cf7cae8b76e569f7b59e791d0a49fd15316fd4203dafabc090
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

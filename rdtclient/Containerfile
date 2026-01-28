@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.17@sha256:e2ee2eff7bf2a177be880bf7198374f186c20123546fe5b98676a9bc38fe55f2 AS Downloader
+FROM quay.io/simbelmas/fedora-minimal:v43.18@sha256:746f088ddf146ae9de2b031bb002262ba796dd21ca5e8dbeede503df7fda69cb AS Downloader
 
 RUN microdnf --nodocs --best -y install unzip wget2-wget \
     && mkdir /opt/rdtclient \
@@ -11,7 +11,7 @@ RUN microdnf --nodocs --best -y install unzip wget2-wget \
 COPY appsettings.json /opt/rdtclient/
 RUN chown 1001:1001 -R /opt/rdtclient
 
-FROM quay.io/simbelmas/fedora-minimal:v43.17@sha256:e2ee2eff7bf2a177be880bf7198374f186c20123546fe5b98676a9bc38fe55f2
+FROM quay.io/simbelmas/fedora-minimal:v43.18@sha256:746f088ddf146ae9de2b031bb002262ba796dd21ca5e8dbeede503df7fda69cb
 
 RUN microdnf --nodocs --best -y install dotnet-sdk-9.0 \
     && microdnf clean all

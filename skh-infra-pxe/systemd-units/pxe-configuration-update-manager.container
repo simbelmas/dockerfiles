@@ -4,7 +4,7 @@ After=local-fs.target
 After=network-online.target
 
 [Container]
-Environment=PXE_CONF_GIT=ssh://gitea@gitea.soket.fr:30003/Sok3t/skh-infra.git
+Environment=PXE_CONF_GIT=ssh://gitea@git.spdnova.xyz:30003/Sok3t/skh-infra.git
 Environment=INFRASTRUCTURE_CONFIG_FILENAME=skh-infra-definition.yaml
 Environment=RUNNING_HOST=%H
 Image=quay.io/simbelmas/ipxe:stable

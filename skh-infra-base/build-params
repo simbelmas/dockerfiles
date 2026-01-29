@@ -1,4 +1,4 @@
 PLATFORMS=linux/amd64
 RENOVATE=gitea-dockerfiles
 SQUASH_LAYERS=false
-DST_IMAGE_REGISTRY=olareg.soket.fr
+DST_IMAGE_REGISTRY=olareg.skh.spdnova.xyz

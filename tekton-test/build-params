@@ -1,2 +1,2 @@
 PLATFORMS=linux/amd64
-DST_IMAGE_REGISTRY=olareg.soket.fr
+DST_IMAGE_REGISTRY=olareg.skh.spdnova.xyz

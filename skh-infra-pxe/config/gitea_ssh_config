@@ -1,4 +1,4 @@
-Host gitea.soket.fr
+Host git.spdnova.xyz
     User gitea
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/id_ed25519

@@ -31,6 +31,7 @@ RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi
     ln -sv /usr/lib/systemd/system/kubernetes-node-lifecycle.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.timer /usr/etc/systemd/system/timers.target.wants/ &&\
-    rm -vf /usr/etc/systemd/system/timers.target.wants/bootc-fleetlock-fetch-upgrade.timer
+    ln -vs /dev/null /usr/etc/systemd/system/bootc-fetch-apply-updates.timer &&\
+    ln -vs /dev/null /usr/etc/systemd/system/bootc-fetch-apply-updates.service 
 
 RUN mkdir -p /var/lib/kubelet/pods

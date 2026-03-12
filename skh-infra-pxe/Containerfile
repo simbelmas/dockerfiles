@@ -34,7 +34,7 @@ COPY systemd-units/seaweedfs.container /usr/share/containers/systemd/
 ## Enabling previous configuration in systemd
 RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
     ln -vs /usr/lib/systemd/system/var-srv-backup.automount /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/ &&\
+    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/
 
 ## Manage static files update
 # users homedirs

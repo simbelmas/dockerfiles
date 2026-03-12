@@ -15,10 +15,10 @@ COPY --chmod=0644 config/alias-pxe.sh /usr/etc/profile.d/
 RUN mkdir -p /usr/local/share/gitea_ssh/.ssh &&\
     chown 0700 -R /usr/local/share/gitea_ssh 
 COPY --chmod=0600 config/gitea_ssh_config /usr/local/share/gitea_ssh/.ssh/config
-COPY --chmod=0600 config/gitea_known_hosts usr/local/share/gitea_ssh/.ssh/known_hosts
+COPY --chmod=0600 config/gitea_known_hosts /usr/local/share/gitea_ssh/.ssh/known_hosts
 COPY systemd-units/static-gitea-ssh.conf /usr/lib/systemd/system/update-static-files.service.d/
 
-## Systemd management
+## Systemd PXE management
 COPY systemd-units/var-srv-backup.automount /usr/lib/systemd/system/
 COPY systemd-units/var-srv-backup.mount /usr/lib/systemd/system/
 COPY systemd-units/pxe-configuration-generate-pxe-chain.container /usr/share/containers/systemd/
@@ -28,9 +28,13 @@ COPY systemd-units/pxe-configuration-manage-assets.container /usr/share/containe
 COPY systemd-units/pxe-configuration-update-manager.container /usr/share/containers/systemd/
 COPY systemd-units/olareg.container /usr/share/containers/systemd/
 
+## Seasweedfs Management
+COPY systemd-units/seaweedfs.container /usr/share/containers/systemd/
+
+## Enabling previous configuration in systemd
 RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
     ln -vs /usr/lib/systemd/system/var-srv-backup.automount /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/
+    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/ &&\
 
 ## Manage static files update
 # users homedirs
@@ -39,12 +43,19 @@ RUN mkdir -p /usr/local/share/skh/.ssh &&\
     chmod 0700 /usr/local/share/skh &&\
     chown 1001:1001 -R /usr/local/share/skh
 COPY --chown=1001:1001 --chmod=0600 users/authorized_keys /usr/local/share/skh/.ssh/authorized_keys
+
 ## francois user
 RUN mkdir -p /usr/local/share/francois/.ssh &&\
     chmod 0700 /usr/local/share/francois &&\
     chown 1002:1002 -R /usr/local/share/francois
 COPY --chown=1002:1002 --chmod=0600 users/authorized_keys /usr/local/share/francois/.ssh/authorized_keys
 COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-static-files.service.d/
+
+## seaweedfs user
+RUN mkdir -p /usr/local/share/seaweedfs/.config/seasweedfs &&\
+    chmod 0700 /usr/local/share/seaweedfs &&\
+    chown 1003:1003 -R /usr/local/share/seaweedfs
+
 
 # pxe dirs
 RUN mkdir -p /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/pxe/ /usr/local/share/containers/olareg &&\

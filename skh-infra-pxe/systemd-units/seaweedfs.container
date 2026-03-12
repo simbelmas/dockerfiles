@@ -8,9 +8,6 @@ Requires=var-srv-backup.mount
 Image=docker.io/chrislusf/seaweedfs:latest
 ContainerName=seaweedfs
 
-User=seaweedfs
-Group=seaweedfs
-
 Exec=server \
   -master.port=9333 \
   -volume.port=8080 \
@@ -23,12 +20,14 @@ Exec=server \
   -master.dir=/data/master
 
 Volume=/var/srv/backup/seaweedfs:/data:Z
-Volume=~seaweedfs/.config/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+Volume=/var/srv/backup/seaweedfs/seaweedfs_s3.json:/etc/seaweedfs/s3.json:ro
 
 PublishPort=8333:8333
-PublishPort=9333:9333
+#PublishPort=9333:9333
 
 AutoUpdate=registry
+User=1003
+Group=1003
 
 [Service]
 Restart=always

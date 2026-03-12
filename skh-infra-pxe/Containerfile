@@ -49,13 +49,15 @@ RUN mkdir -p /usr/local/share/francois/.ssh &&\
     chmod 0700 /usr/local/share/francois &&\
     chown 1002:1002 -R /usr/local/share/francois
 COPY --chown=1002:1002 --chmod=0600 users/authorized_keys /usr/local/share/francois/.ssh/authorized_keys
-COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-static-files.service.d/
+
 
 ## seaweedfs user
-RUN mkdir -p /usr/local/share/seaweedfs/.config/seasweedfs &&\
+RUN mkdir -p /usr/local/share/seaweedfs/.config/seaweedfs &&\
     chmod 0700 /usr/local/share/seaweedfs &&\
     chown 1003:1003 -R /usr/local/share/seaweedfs
 
+##sync homedirs
+COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-static-files.service.d/
 
 # pxe dirs
 RUN mkdir -p /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/pxe/ /usr/local/share/containers/olareg &&\

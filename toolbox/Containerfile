@@ -31,6 +31,7 @@ RUN  microdnf --nodocs --best -y install \
        jq yq \
        python3-kubernetes \
        python3-jinja2-cli python3-jinja2 \
+       s3cmd \
         && microdnf clean all
 
 RUN sed -i 's@^Include /etc/ssh@#Include /etc/ssh@' /etc/ssh/ssh_config

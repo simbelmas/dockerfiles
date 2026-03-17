@@ -75,3 +75,8 @@ fi
 if [[ -n "$(kubectl get node $(hostname) -o jsonpath='{.metadata.labels}' | grep node.kubernetes.io/exclude-from-external-load-balancers)" ]] ; then
     kubectl label node $(hostname) node.kubernetes.io/exclude-from-external-load-balancers-
 fi
+
+## Expose etcd metrics
+if ! grep -q 'listen-metrics-urls=http://0.0.0.0:2381' /etc/kubernetes/manifests/etcd.yaml; then
+  sed -i 's|listen-metrics-urls=http://127.0.0.1:2381|listen-metrics-urls=http://0.0.0.0:2381|' /etc/kubernetes/manifests/etcd.yaml
+fi

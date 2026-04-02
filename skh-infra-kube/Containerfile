@@ -7,6 +7,7 @@ ENV KUBERNETES_PATCH_VERSION=""
 
 RUN microdnf --nodocs -y install \
         python3 policycoreutils-python-utils \
+        nvtop \
         cri-o${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}-kubeadm${KUBERNETES_PATCH_VERSION} \
         qemu-user-static qemu-user-binfmt &&\
     microdnf clean all

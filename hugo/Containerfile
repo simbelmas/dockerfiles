@@ -1,19 +1,41 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677
+FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS hugo-fetch
+
+ARG HUGO_ARCH=amd64
+RUN microdnf --nodocs --best -y install \
+    curl tar gzip ca-certificates
+
+# Dernière release Hugo **extended** (API GitHub) → binaire dans PATH
+# PLATFORMS actuel : linux/amd64 (voir build-params). Pour arm64 : remplacer amd64 par arm64 dans l’URL.
+RUN set -eux; \
+    TAG="$(curl -sSL -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+      https://api.github.com/repos/gohugoio/hugo/releases/latest \
+      | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\(v[^"]*\)".*/\1/p' | head -n1)"; \
+    test -n "${TAG}"; \
+    VER="${TAG#v}"; \
+    curl -sSL "https://github.com/gohugoio/hugo/releases/download/${TAG}/hugo_extended_${VER}_linux-${HUGO_ARCH}.tar.gz" -o /tmp/hugo.tgz; \
+    tar -xzf /tmp/hugo.tgz -C /tmp hugo; \
+    mv /tmp/hugo /hugo; \
+    chmod 755 /hugo; \
+    rm -f /tmp/hugo.tgz; \
+    /hugo version
+
+FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS hugo-runtime
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
 RUN microdnf --nodocs --best -y install \
-    hugo git zsh tzdata \
+    git zsh tzdata ca-certificates \
     && microdnf clean all
 
-RUN mkdir -p /app/.ssh /app/hugosource
-COPY ./entrypoint.sh /app/entrypoint.sh
+COPY --from=hugo-fetch /hugo /usr/local/bin/hugo
+
+RUN mkdir -p /app/.ssh /app/hugosource \ 
+    && chmod -R 700 /app \
+    && chown -R 1001:1001 /app
+COPY --chmod=0700 --chown=1001:1001 ./entrypoint.sh /app/entrypoint.sh
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && mkdir -p /app \
-    && chmod -R 700 /app \ 
-    && chown -R app:app /app
 
 RUN chmod 755 /app/entrypoint.sh \
     && mkdir -p /var/www/html \

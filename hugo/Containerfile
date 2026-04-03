@@ -23,26 +23,20 @@ FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef207411
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-RUN microdnf --nodocs --best -y install \
-    git zsh tzdata ca-certificates \
-    && microdnf clean all
-
 COPY --from=hugo-fetch /hugo /usr/local/bin/hugo
-
-RUN mkdir -p /app/.ssh /app/hugosource \ 
-    && chmod -R 700 /app \
-    && chown -R 1001:1001 /app
-COPY --chmod=0700 --chown=1001:1001 ./entrypoint.sh /app/entrypoint.sh
 
 RUN echo 'app:x:1001:' >> /etc/group \
     && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
+    && mkdir -p /app/hugosource \ 
+    && chmod -R 777 /app \
+    && chown -R 1001:1001 /app
 
-RUN chmod 755 /app/entrypoint.sh \
-    && mkdir -p /var/www/html \
+RUN mkdir -p /var/www/html \
     && chown -R 1001:1001 /var/www/ \
-    && chmod -R 755 /var/www/
+    && chmod -R 777 /var/www/
 
 USER 1001
-WORKDIR /var/www/hugo
+WORKDIR /app/hugosource
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT [ "/usr/local/bin/hugo" ]
+CMD [ "--gc", "--destination=/var/www/html",  "--cleanDestinationDir" ]

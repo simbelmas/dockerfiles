@@ -1,23 +1,19 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.32@sha256:a6ead4000f1a06d90f39a52f7c084e4d967e2221ebeb559999ce51b68a0f19e6
+FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS builder
+RUN mkdir /target
+RUN dnf -y --installroot=/target \
+    --setopt=install_weak_deps=False \
+    --use-host-config \
+    install \
+    imapfilter python3-jinja2-cli\
+    && dnf --installroot=/target clean all
 
-LABEL maintainer "Simon Belmas <slos@soket.fr>"
+# Stage 2: Final image
+FROM scratch
+COPY --from=builder /target /
 
-RUN microdnf --nodocs --best -y install imapfilter \
-    && microdnf clean all
-
-RUN echo 'app:x:1001:' >> /etc/group \
-    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && mkdir -p /app \
-    && chmod -R 700 /app \ 
-    && chown -R app:app /app
-
-RUN mkdir -vp /app/creds /app/config \
-    && chown -Rv app:app /app \
-    && chmod -R 700 /app
-
-COPY --chown=1001:1001 run.lua /app/run.lua
+COPY --chmod=0444 run.lua /app/run.lua
 
 USER 1001
 
-ENTRYPOINT ["imapfilter", "-c", "/app/run.lua"]
-CMD []
+ENTRYPOINT ["/usr/bin/imapfilter"]
+CMD ["-c", "/app/run.lua"]

@@ -1,8 +1,16 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS hugo-fetch
+FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS Builder
 
 ARG HUGO_ARCH=amd64
 RUN microdnf --nodocs --best -y install \
     curl tar gzip ca-certificates
+
+RUN mkdir /target
+RUN dnf -y --installroot=/target \
+    --setopt=install_weak_deps=False \
+    --use-host-config \
+    install \
+    ca-certificates glibc libstdc++ libgcc tzdata \
+    && dnf --installroot=/target clean all
 
 # Dernière release Hugo **extended** (API GitHub) → binaire dans PATH
 # PLATFORMS actuel : linux/amd64 (voir build-params). Pour arm64 : remplacer amd64 par arm64 dans l’URL.
@@ -14,29 +22,17 @@ RUN set -eux; \
     VER="${TAG#v}"; \
     curl -sSL "https://github.com/gohugoio/hugo/releases/download/${TAG}/hugo_extended_${VER}_linux-${HUGO_ARCH}.tar.gz" -o /tmp/hugo.tgz; \
     tar -xzf /tmp/hugo.tgz -C /tmp hugo; \
-    mv /tmp/hugo /hugo; \
-    chmod 755 /hugo; \
-    rm -f /tmp/hugo.tgz; \
-    /hugo version
+    mv /tmp/hugo /target/usr/local/bin/hugo; \
+    chmod 755 /target/usr/local/bin/hugo; \
+    rm -f /tmp/hugo.tgz
 
-FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS hugo-runtime
+FROM scratch
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
-COPY --from=hugo-fetch /hugo /usr/local/bin/hugo
-
-RUN echo 'app:x:1001:' >> /etc/group \
-    && echo 'app:x:1001:1001::/app:/sbin/nologin' >> /etc/passwd \
-    && mkdir -p /app/hugosource \ 
-    && chmod -R 777 /app \
-    && chown -R 1001:1001 /app
-
-RUN mkdir -p /var/www/html \
-    && chown -R 1001:1001 /var/www/ \
-    && chmod -R 777 /var/www/
-
+COPY --from=Builder /target /
 USER 1001
-WORKDIR /app/hugosource
+WORKDIR /hugosource
 
 ENTRYPOINT [ "/usr/local/bin/hugo" ]
-CMD [ "--gc", "--destination=/var/www/html",  "--cleanDestinationDir" ]
+CMD [ "--gc", "--destination=/output",  "--cleanDestinationDir" ]

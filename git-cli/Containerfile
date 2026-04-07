@@ -1,0 +1,16 @@
+# Stage 1: Build the rootfs
+FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS builder
+RUN mkdir /target
+RUN dnf -y --installroot=/target \
+    --setopt=install_weak_deps=False \
+    --use-host-config \
+    install \
+    git-core git-crypt ca-certificates \
+    && dnf --installroot=/target clean all
+
+# Stage 2: Final image
+FROM scratch
+COPY --from=builder /target /
+USER 1001
+ENTRYPOINT ["/usr/bin/git"]
+CMD ["--help"]

@@ -27,6 +27,8 @@ COPY --chmod=0700 ./scripts/manage_kubernetes_controlplane_lifecycle.sh /usr/loc
 COPY --chmod=0700 ./scripts/manage_kubernetes_worker_lifecycle.zsh /usr/local/lib/
 COPY --chmod=0700 ./scripts/manage-node-lifecycle.zsh /usr/local/lib/
 
+
+
 RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/crio.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
     ln -sv /usr/lib/systemd/system/kubernetes-node-lifecycle.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
@@ -36,3 +38,6 @@ RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi
     ln -vs /dev/null /usr/etc/systemd/system/bootc-fetch-apply-updates.service 
 
 RUN mkdir -p /var/lib/kubelet/pods
+
+## Gpu selinux
+RUN echo 'd /var/run/cdi 0755 root root - system_u:object_r:container_file_t:s0' > /usr/lib/tmpfiles.d/cdi.conf

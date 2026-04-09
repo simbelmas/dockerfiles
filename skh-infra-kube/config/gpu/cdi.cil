@@ -1,0 +1,10 @@
+;; Kubernetes CDI specs (e.g. Intel GPU device plugin writes under /var/run/cdi).
+;; Replaces typepermissive container_device_plugin_t with explicit TE rules.
+
+;; Ensure both symlink-equivalent paths label as container_var_run_t (matches kube hostPath).
+(filecon "/run/cdi(/.*)?" any (system_u object_r container_var_run_t ((s0)(s0))))
+(filecon "/var/run/cdi(/.*)?" any (system_u object_r container_var_run_t ((s0)(s0))))
+
+;; intel_gpu_device_plugin runs as container_device_plugin_t (see Intel DaemonSet seLinuxOptions).
+(allow container_device_plugin_t container_var_run_t (dir (add_name getattr open read remove_name search setattr write)))
+(allow container_device_plugin_t container_var_run_t (file (append create getattr ioctl lock map open read rename setattr unlink write)))

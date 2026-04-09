@@ -1,0 +1,18 @@
+[Unit]
+Description=Apply conditional rpm-ostree kernel arguments for this hardware (reboot if staged)
+Documentation=https://coreos.github.io/rpm-ostree/administrator-handbook/
+
+# After ostree/rpm-ostree are usable; before long-running workloads.
+After=local-fs.target
+Requires=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/bootc-node-kargs.sh
+RemainAfterExit=yes
+TimeoutStartSec=300
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

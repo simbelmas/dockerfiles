@@ -5,21 +5,28 @@ ENV KUBERNETES_MINOR_VERSION=1.34
 ## KUBERNETES_PATCH_VERSION: when empty follows fedora release lifecycle for patches
 ENV KUBERNETES_PATCH_VERSION=""
 
-RUN microdnf --nodocs -y install \
+RUN dnf5 --nodocs -y install \
         python3 policycoreutils-python-utils \
         nvtop \
         cri-o${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}-kubeadm${KUBERNETES_PATCH_VERSION} \
         qemu-user-static qemu-user-binfmt &&\
-    microdnf clean all
+    dnf5 clean all &&\
+    rm -rf /run/dnf /var/cache/* /var/lib/dnf /var/log/dnf5.log &&\
+    rm -rf /var/lib/containers /var/lib/kubelet
 
-COPY ./config/modules.crio-o.conf /usr/etc/modules-load.d/cri-o.conf
-COPY ./config/sysctl-kubernetes.conf /usr/etc/sysctl.d/kubernetes.conf
-COPY ./config/profile.sh /usr/etc/profile.d/
-RUN mkdir -p /usr/etc/kubernetes/{kube-api-config,fedora-kube.d} &&\
-    echo "KUBERNETES_DESIRED_VERSION=${KUBERNETES_MINOR_VERSION}" > /usr/etc/kubernetes/fedora-kube.d/fedora-kube-cluster.conf 
-COPY --chmod=0600 ./config/admission-control-config.yaml /usr/etc/kubernetes/kube-api-config/
-COPY --chmod=0600 ./config/encryption-at-rest-configuration.yaml /usr/etc/kubernetes/kube-api-config/
-COPY ./config/crio-bridge.conflist /usr/etc/cni/net.d/100-crio-bridge.conflist
+COPY systemd-units/var-lib-kubelet.conf /usr/lib/tmpfiles.d/
+## mapping /opt is needed for crio to run
+RUN rm -rvf /opt &&\
+    ln -s /var/opt /opt
+
+COPY ./config/modules.crio-o.conf /usr/lib/modules-load.d/cri-o.conf
+COPY ./config/sysctl-kubernetes.conf /usr/lib/sysctl.d/kubernetes.conf
+COPY ./config/profile.sh /etc/profile.d/
+RUN mkdir -p /etc/kubernetes/{kube-api-config,fedora-kube.d} &&\
+    echo "KUBERNETES_DESIRED_VERSION=${KUBERNETES_MINOR_VERSION}" > /etc/kubernetes/fedora-kube.d/fedora-kube-cluster.conf 
+COPY --chmod=0600 ./config/admission-control-config.yaml /etc/kubernetes/kube-api-config/
+COPY --chmod=0600 ./config/encryption-at-rest-configuration.yaml /etc/kubernetes/kube-api-config/
+COPY ./config/crio-bridge.conflist /etc/cni/net.d/100-crio-bridge.conflist
 
 COPY ./systemd-units/kubernetes-node-lifecycle.service /usr/lib/systemd/system/
 COPY --chmod=0700 ./scripts/kube-node-postinstall /usr/sbin/
@@ -27,17 +34,36 @@ COPY --chmod=0700 ./scripts/manage_kubernetes_controlplane_lifecycle.sh /usr/loc
 COPY --chmod=0700 ./scripts/manage_kubernetes_worker_lifecycle.zsh /usr/local/lib/
 COPY --chmod=0700 ./scripts/manage-node-lifecycle.zsh /usr/local/lib/
 
+RUN --mount=type=tmpfs,target=/run \
+    for service in \
+        kubelet.service \
+        crio.service \
+        kubernetes-node-lifecycle.service \
+        bootc-fleetlock-fetch-upgrade.service \
+        bootc-fleetlock-fetch-upgrade.timer \
+    ; do \
+        echo "Checking svc ${service}"; \
+        systemd-analyze verify "/usr/lib/systemd/system/${service}" || exit 1 ; \
+        systemctl enable "${service}" || exit 1; \
+    done
 
+RUN systemctl disable bootc-fetch-apply-updates.timer &&\
+    systemctl mask bootc-fetch-apply-updates.service
 
-RUN ln -sv /usr/lib/systemd/system/kubelet.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -sv /usr/lib/systemd/system/crio.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -sv /usr/lib/systemd/system/kubernetes-node-lifecycle.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -sv /usr/lib/systemd/system/bootc-fleetlock-fetch-upgrade.timer /usr/etc/systemd/system/timers.target.wants/ &&\
-    ln -vs /dev/null /usr/etc/systemd/system/bootc-fetch-apply-updates.timer &&\
-    ln -vs /dev/null /usr/etc/systemd/system/bootc-fetch-apply-updates.service 
+RUN rm /usr/lib/systemd/system/default.target.wants/bootc-fetch-apply-updates.timer
+    
+## Gpu selinux /var/lib/cdi
+COPY config/gpu/cdi.cil /tmp/cdi.cil
+RUN semodule -i /tmp/cdi.cil \
+    && rm /tmp/cdi.cil
+    
+# BMAX kargs i915 kernel module
+# uses systemd service and a script to position kernel argument on specific nodes.
+COPY --chmod=0755 config/gpu/bootc-node-kargs.sh /usr/libexec/
+COPY config/gpu/bootc-node-kargs.service /usr/lib/systemd/system/
+COPY config/gpu/90-bootc-node-kargs.preset /usr/lib/systemd/system-preset/
+RUN --mount=type=tmpfs,target=/run \
+    systemd-analyze verify "/usr/lib/systemd/system/bootc-node-kargs.service" &&\
+    systemctl enable bootc-node-kargs.service
 
-RUN mkdir -p /var/lib/kubelet/pods
-
-## Gpu selinux
-RUN echo 'd /var/run/cdi 0755 root root - system_u:object_r:container_file_t:s0' > /usr/lib/tmpfiles.d/cdi.conf
+RUN bootc container lint --fatal-warnings

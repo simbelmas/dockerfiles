@@ -8,3 +8,7 @@ After=network-online.target
 Type=oneshot
 ExecStart=/usr/local/lib/manage-node-lifecycle.zsh
 Restart=on-failure
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

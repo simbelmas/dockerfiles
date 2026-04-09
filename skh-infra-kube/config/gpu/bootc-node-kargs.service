@@ -5,6 +5,7 @@ Documentation=https://coreos.github.io/rpm-ostree/administrator-handbook/
 # After ostree/rpm-ostree are usable; before long-running workloads.
 After=local-fs.target
 Requires=local-fs.target
+Before=kubernetes-node-lifecycle.service
 
 [Service]
 Type=oneshot

@@ -2,21 +2,18 @@ FROM quay.io/fedora/fedora-bootc:43@sha256:9d7a12d886dd2a50589d141b3d71d5dad520b
 
 FROM Base
 
-RUN microdnf --nodocs --best -y install \
+RUN dnf5 --nodocs --best -y install \
         zsh \
         rsync \
         vim-enhanced tmux &&\
-    microdnf clean all
-
-RUN rm -rvf /opt &&\
-    ln -s /var/opt /opt &&\
-    mkdir -p /usr/etc/systemd/system/multi-user.target.wants/
+    dnf5 clean all \
+    && rm -rf /run/dnf /var/cache/* /var/lib/dnf /var/log/dnf5.log
 
 # Copy RO configuration files and scripts
 COPY --chmod=0644 scripts/shell_utilities_functions.zsh /usr/local/lib/
 COPY --chmod=0700 scripts/pxe-install /usr/local/sbin/
-COPY --chmod=0644 config/sysctl-ipv6.conf /usr/etc/sysctl.d/ipv6.conf
-COPY --chmod=0644 config/zz-default-editor.sh /usr/etc/profile.d/
+COPY --chmod=0644 config/sysctl-ipv6.conf /usr/lib/sysctl.d/ipv6.conf
+COPY --chmod=0644 config/zz-default-editor.sh /etc/profile.d/
 COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
 COPY --chmod=0700 scripts/bootc-fleetlock-fetch-apply-upgrade /usr/local/sbin/
 
@@ -26,19 +23,17 @@ COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.timer /usr/lib/systemd/system/
 
-RUN mkdir /usr/etc/systemd/system/timers.target.wants &&\
-    ln -s /usr/lib/systemd/system/set-timezone.service /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -s /usr/lib/systemd/system/update-static-files.service /usr/etc/systemd/system/multi-user.target.wants/
+RUN systemctl enable set-timezone.service &&\
+    systemctl enable update-static-files.service
 
 
 ## Manage static files update
-COPY --chown=root --chmod=0644 config/chrony.conf /usr/etc/chrony.conf
-COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/etc/containers/registries.conf.d/skh-infra-registries.conf
+COPY --chown=root --chmod=0644 config/chrony.conf /etc/chrony.conf
+COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/share/containers/registries.conf.d/skh-infra-registries.conf
 
 ## Users management
 COPY users/mgmt_user.conf /usr/lib/sysusers.d
-RUN mkdir /usr/etc/sudoers.d &&\
-    echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel_no_password &&\
+RUN echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/wheel_no_password &&\
     mkdir -p /usr/local/share/mgr/.ssh &&\
     chmod 0700 /usr/local/share/mgr &&\
     chown 1000:1000 -R /usr/local/share/mgr &&\
@@ -46,8 +41,9 @@ RUN mkdir /usr/etc/sudoers.d &&\
     cp /usr/local/share/subuid /usr/local/share/subgid
 COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /usr/local/share/mgr/.ssh/authorized_keys
 COPY --chown=1000:1000 --chmod=0600 users/.zshrc /usr/local/share/mgr/.zshrc
-COPY systemd-units/mgr-user.conf /usr/lib/systemd/system/update-static-files.service.d/
+COPY systemd-units/static-0-mgr-user.conf /usr/lib/systemd/system/update-static-files.service.d/
 
+#RUN systemd-sysusers &&\
+#    echo 'mgr:test' | chpasswd 
 
-
-#RUN bootc container lint
+RUN bootc container lint --fatal-warnings

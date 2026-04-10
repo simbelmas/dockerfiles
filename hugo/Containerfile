@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v43.7@sha256:278ba5d3892629ef5699eef2074114a80356f34f9351c28bf0342bb880581677 AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v43.35@sha256:c202c4a234b3792992d3cb7e1c763607a70c7514089ea208abeeef9805d257fc AS Builder
 
 ARG HUGO_ARCH=amd64
 RUN microdnf --nodocs --best -y install \

@@ -1,0 +1,10 @@
+{
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "**/*.container"
+      ],
+      "pinDigests": false
+    }
+  ]
+}

@@ -1,2 +1,3 @@
 PLATFORMS=linux/amd64
 DST_IMAGE_REGISTRY=quay.io/simbelmas
+RENOVATE=gitea-all-repos

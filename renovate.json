@@ -9,7 +9,13 @@
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "prHourlyLimit": 50,
+  "pinDigests": true,
   "packageRules": [
+    {
+      "description": "Generic rule for all Quadlet files: allow tag updates but disable digest pinning",
+      "matchFileNames": ["**/*.container"],
+      "pinDigests": false
+    },
     {
       "matchUpdateTypes": [
         "major"
@@ -27,7 +33,6 @@
       "ignoreTests": true
     }
   ],
-  "pinDigests": true,
   "ignorePaths": [
     "transmission/**",
     "mosquitto/**",

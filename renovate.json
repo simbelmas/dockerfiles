@@ -40,7 +40,6 @@
     "ubuntu/**",
     "tekton-test/**",
     "stress-ng/**",
-    "alpinetex/**",
-    "hugo/**"
+    "alpinetex/**"
   ]
 }

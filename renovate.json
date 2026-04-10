@@ -6,7 +6,7 @@
   "labels": [
     "renovatebot"
   ],
-  "dependencyDashboard": true,
+  "dependencyDashboard": false,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "prHourlyLimit": 50,
   "packageRules": [

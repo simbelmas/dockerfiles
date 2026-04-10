@@ -13,7 +13,6 @@ ENV PATH=/venv/bin:$PATH
 WORKDIR /build
 ## Grab release
 RUN export bazarr_release=$(wget -q https://github.com/morpheus65535/bazarr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4) \
-    && export bazarr_release=v1.5.0 \
     && export download_url="https://github.com/morpheus65535/bazarr/releases/download/${bazarr_release}/bazarr.zip" \
     && echo -n 'Will download from:' ; echo ${download_url} | tee software_downloaded_from \
     && wget -O Bazarr.zip "${download_url}"

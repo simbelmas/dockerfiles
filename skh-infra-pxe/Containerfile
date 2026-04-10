@@ -5,13 +5,14 @@ FROM Base
 RUN microdnf --nodocs --best -y install \
         python3 \
         rsync &&\
-    microdnf clean all
+    microdnf clean all &&\
+    rm -rf /run/dnf /var/cache/* /var/lib/dnf /var/log/dnf5.log
 
 COPY --chmod=0755 scripts/rrsync /usr/local/bin/
 COPY users/backup_users.conf /usr/lib/sysusers.d
 
 ## Pxe scripts and configurations
-COPY --chmod=0644 config/alias-pxe.sh /usr/etc/profile.d/
+COPY --chmod=0644 config/alias-pxe.sh /etc/profile.d/
 RUN mkdir -p /usr/local/share/gitea_ssh/.ssh &&\
     chown 0700 -R /usr/local/share/gitea_ssh 
 COPY --chmod=0600 config/gitea_ssh_config /usr/local/share/gitea_ssh/.ssh/config
@@ -29,9 +30,12 @@ COPY systemd-units/pxe-configuration-update-manager.container /usr/share/contain
 COPY systemd-units/olareg.container /usr/share/containers/systemd/
 
 ## Enabling previous configuration in systemd
-RUN cd /usr/lib/systemd/system/multi-user.target.wants &&\
-    ln -vs /usr/lib/systemd/system/var-srv-backup.automount /usr/etc/systemd/system/multi-user.target.wants/ &&\
-    ln -vs /usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer /usr/etc/systemd/system/multi-user.target.wants/
+RUN --mount=type=tmpfs,target=/run \
+    systemd-analyze verify "/usr/lib/systemd/system/var-srv-backup.automount" &&\
+    systemctl enable var-srv-backup.automount &&\
+    systemd-analyze verify "/usr/lib/systemd/system/pxe-configuration-generate-pxe-chain.timer" &&\
+    systemctl enable pxe-configuration-generate-pxe-chain.timer
+
 
 ## Manage static files update
 # users homedirs
@@ -54,4 +58,8 @@ COPY --chown=root --chmod=0755 scripts/get_pxe_fedora_bootc.zsh /usr/local/share
 COPY --chown=root --chmod=0755 scripts/pxe-configuration-update-manager.zsh /usr/local/share/containers/pxe-utils/
 COPY systemd-units/static-pxe-utils.conf /usr/lib/systemd/system/update-static-files.service.d/
 
-RUN ln -sv /usr/lib/systemd/system/bootc-fetch-apply-updates.timer /usr/etc/systemd/system/timers.target.wants/
+RUN --mount=type=tmpfs,target=/run \
+    systemd-analyze verify "/usr/lib/systemd/system/bootc-fetch-apply-updates.timer" &&\
+    systemctl enable bootc-fetch-apply-updates.timer
+
+RUN bootc container lint --fatal-warnings

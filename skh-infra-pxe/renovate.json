@@ -4,7 +4,8 @@
       "matchFileNames": [
         "**/*.container"
       ],
-      "pinDigests": false
+      "matchUpdateTypes":["pinDigest"],
+      "enabled": false
     }
   ]
 }

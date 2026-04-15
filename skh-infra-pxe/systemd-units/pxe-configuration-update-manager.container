@@ -10,13 +10,12 @@ Environment=INFRASTRUCTURE_CONFIG_FILENAME=skh-infra-definition.yaml
 Environment=RUNNING_HOST=%H
 Image=quay.io/simbelmas/ipxe:stable
 Entrypoint=/scripts/pxe-configuration-update-manager.zsh
-Volume=/var/srv/containers/pxe:/var/www/html:Z,U
-Volume=/var/srv/containers/pxe-utils:/scripts:Z,U
-Volume=/var/srv/containers/gitea_ssh:/root/.ssh:Z,U
-Volume=/var/srv/containers/pxe-nginx:/pxe-nginx:Z,U
-User=0
+Volume=/var/srv/containers/pxe:/var/www/html
+Volume=/var/srv/containers/pxe-utils:/scripts
+Volume=/var/srv/containers/gitea_ssh:/root/.ssh
+Volume=/var/srv/containers/pxe-nginx:/pxe-nginx
+
 Pull=newer
-RemapUsers=keep-id
 
 [Service]
 Restart=on-failure

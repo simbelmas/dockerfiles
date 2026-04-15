@@ -11,10 +11,8 @@ Environment=ASSETS_DIR=/var/www/html/images/fedora-bootc
 Image=quay.io/simbelmas/ipxe:stable
 Pull=newer
 Entrypoint=/scripts/get_pxe_fedora_bootc.zsh
-Volume=/var/srv/containers/pxe:/var/www/html:Z,U
-Volume=/var/srv/containers/pxe-utils:/scripts:Z,U
-User=0
-RemapUsers=keep-id
+Volume=/var/srv/containers/pxe:/var/www/html
+Volume=/var/srv/containers/pxe-utils:/scripts
 
 [Service]
 Restart=on-failure

@@ -12,10 +12,8 @@ Exec=ipxe
 Pull=newer
 PublishPort=80:8080/tcp
 PublishPort=69:69/udp
-Volume=/var/srv/containers/pxe:/var/www/html:Z,U
-Volume=/var/srv/containers/pxe-nginx:/etc/nginx/kube/:Z,U
-User=0
-RemapUsers=keep-id
+Volume=/var/srv/containers/pxe:/var/www/html
+Volume=/var/srv/containers/pxe-nginx:/etc/nginx/kube/
 
 [Install]
 # Start by default on boot

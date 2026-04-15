@@ -69,4 +69,5 @@ else
 fi
 
 ## Chaining to host generation
-exec ${pxe_conf_dir}/utilities/generate-hosts-configuration.zsh
+${pxe_conf_dir}/utilities/generate-hosts-configuration.zsh
+${pxe_conf_dir}/utilities/generate-nginx-configuration.zsh

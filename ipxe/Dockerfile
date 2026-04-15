@@ -5,7 +5,7 @@ LABEL maintainer "Simon Belmas <slos@soket.fr>"
 USER 0
 
 RUN microdnf --nodocs -y install dnsmasq \
-    python3-jinja2-cli jq yq git butane pykickstart \
+    python3-jinja2-cli jq yq git git-crypt butane pykickstart \
     zsh \
     && microdnf clean all
 

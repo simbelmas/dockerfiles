@@ -50,9 +50,9 @@ COPY --chown=1001:1001 --chmod=0600 users/authorized_keys /usr/local/share/skh/.
 COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-static-files.service.d/
 
 # pxe dirs
-RUN mkdir -p /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/pxe/ /usr/local/share/containers/olareg &&\
+RUN mkdir -p /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx,olareg} &&\
     chmod 0755 -R /usr/local/share/containers &&\
-    chmod 0700 /usr/local/share/containers/pxe-utils/ /usr/local/share/containers/pxe/ &&\
+    chmod 0700 /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx} &&\
     chmod 0700 /usr/local/share/containers/olareg &&\
     chown 1000:1000 /usr/local/share/containers/olareg
 

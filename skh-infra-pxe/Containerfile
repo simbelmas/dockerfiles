@@ -58,7 +58,7 @@ RUN mkdir -p /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx,olareg} &&\
 
 COPY --chown=root --chmod=0755 scripts/get_pxe_fedora_bootc.zsh /usr/local/share/containers/pxe-utils/
 COPY --chown=root --chmod=0755 scripts/pxe-configuration-update-manager.zsh /usr/local/share/containers/pxe-utils/
-COPY systemd-units/static-pxe-utils.conf /usr/lib/systemd/system/update-static-files.service.d/
+COPY systemd-units/static-0-pxe-utils.conf /usr/lib/systemd/system/update-static-files.service.d/
 
 RUN --mount=type=tmpfs,target=/run \
     systemd-analyze verify "/usr/lib/systemd/system/bootc-fetch-apply-updates.timer" &&\

@@ -29,7 +29,7 @@ RUN systemctl enable set-timezone.service &&\
 
 ## Manage static files update
 COPY --chown=root --chmod=0644 config/chrony.conf /etc/chrony.conf
-COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /usr/share/containers/registries.conf.d/skh-infra-registries.conf
+COPY --chown=root --chmod=0644 config/skh-infra-registries.conf /etc/containers/registries.conf.d/skh-infra-registries.conf
 
 ## Users management
 COPY users/mgmt_user.conf /usr/lib/sysusers.d

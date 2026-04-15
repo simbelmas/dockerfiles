@@ -43,6 +43,9 @@ COPY --chown=1000:1000 --chmod=0600 users/authorized_keys /usr/local/share/mgr/.
 COPY --chown=1000:1000 --chmod=0600 users/.zshrc /usr/local/share/mgr/.zshrc
 COPY systemd-units/static-0-mgr-user.conf /usr/lib/systemd/system/update-static-files.service.d/
 
+# Fix registries missconfiguration
+COPY systemd-units/static-force-registry-conf-upgrade.conf /usr/lib/systemd/system/update-static-files.service.d/
+
 #RUN systemd-sysusers &&\
 #    echo 'mgr:test' | chpasswd 
 

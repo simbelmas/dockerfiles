@@ -14,9 +14,8 @@ Volume=/var/srv/containers/pxe:/var/www/html
 Volume=/var/srv/containers/pxe-utils:/scripts
 Volume=/var/srv/containers/gitea_ssh:/root/.ssh
 Volume=/var/srv/containers/pxe-nginx:/pxe-nginx
+
 Pull=newer
-User=root
-RemapUsers=keep-id
 
 [Service]
 Restart=on-failure

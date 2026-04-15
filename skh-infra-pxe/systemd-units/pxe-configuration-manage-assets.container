@@ -13,8 +13,6 @@ Pull=newer
 Entrypoint=/scripts/get_pxe_fedora_bootc.zsh
 Volume=/var/srv/containers/pxe:/var/www/html
 Volume=/var/srv/containers/pxe-utils:/scripts
-User=root
-RemapUsers=keep-id
 
 [Service]
 Restart=on-failure

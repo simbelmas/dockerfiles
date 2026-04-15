@@ -11,8 +11,6 @@ Image=quay.io/simbelmas/ipxe:stable
 Pull=newer
 Exec=manage_assets
 Volume=/var/srv/containers/pxe:/var/www/html
-User=root
-RemapUsers=keep-id
 
 [Service]
 Restart=on-failure

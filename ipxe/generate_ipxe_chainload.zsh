@@ -8,7 +8,7 @@ fi
 
 ipxe_modules=(
     http://boot.ipxe.org/undionly.kpxe
-    http://boot.ipxe.org/ipxe.efi
+    http://boot.ipxe.org/x86_64-efi/ipxe.efi
 )
 
 for pxe_module in ${ipxe_modules[@]} ; do

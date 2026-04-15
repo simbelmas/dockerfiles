@@ -10,7 +10,9 @@ Environment=RUNNING_HOST=%H
 Image=quay.io/simbelmas/ipxe:stable
 Pull=newer
 Exec=manage_assets
-Volume=/var/srv/containers/pxe:/var/www/html
+Volume=/var/srv/containers/pxe:/var/www/html:Z,U
+User=0
+RemapUsers=keep-id
 
 [Service]
 Restart=on-failure

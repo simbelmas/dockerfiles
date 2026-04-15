@@ -9,8 +9,6 @@ Exec=serve --dir=/home/appuser/registry --gc-frequency=30m --gc-grace-period=15m
 Pull=newer
 PublishPort=5000:5000/tcp
 Volume=/var/srv/containers/olareg:/home/appuser/registry
-RemapUsers=keep-id
-User=mgr
 
 [Install]
 # Start by default on boot

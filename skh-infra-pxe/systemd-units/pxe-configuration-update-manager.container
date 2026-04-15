@@ -8,7 +8,6 @@ OnSuccess=pxe-configuration-restart-ipxe-server.service
 Environment=PXE_CONF_GIT=ssh://gitea@git.spdnova.xyz:30003/Sok3t/skh-infra.git
 Environment=INFRASTRUCTURE_CONFIG_FILENAME=skh-infra-definition.yaml
 Environment=RUNNING_HOST=%H
-Environment=
 Image=quay.io/simbelmas/ipxe:stable
 Entrypoint=/scripts/pxe-configuration-update-manager.zsh
 Volume=/var/srv/containers/pxe:/var/www/html

@@ -1,4 +1,4 @@
-FROM olareg.skh.spdnova.xyz/skh-infra-kube:v43.38@sha256:8bea89497c6602c922166fe55c33880c5676d17dd2ba107dc90dc7a7017da925 AS Base
+FROM olareg.skh.spdnova.xyz/skh-infra-kube:v43.39@sha256:523383e352f75100630a5996354a76a71395f3e219fb97e5a52230e040884aab AS Base
 
 FROM Base
 ENV CEPH_RELEASE=20.2.0

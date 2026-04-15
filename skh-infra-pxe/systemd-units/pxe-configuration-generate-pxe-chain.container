@@ -12,6 +12,7 @@ Image=quay.io/simbelmas/ipxe:stable
 Pull=newer
 Exec=manage_assets
 Volume=/var/srv/containers/pxe:/var/www/html
+Volume=/var/srv/containers/pxe-nginx:/pxe-nginx
 
 [Service]
 Restart=on-failure

@@ -52,7 +52,7 @@ COPY systemd-units/backup-users-homedirs.conf /usr/lib/systemd/system/update-sta
 # pxe dirs
 RUN mkdir -p /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx,olareg} &&\
     chmod 0755 -R /usr/local/share/containers &&\
-    chmod 0700 /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx} &&\
+    chmod 0755 /usr/local/share/containers/{pxe-utils,pxe,pxe-nginx} &&\
     chmod 0700 /usr/local/share/containers/olareg &&\
     chown 1000:1000 /usr/local/share/containers/olareg
 

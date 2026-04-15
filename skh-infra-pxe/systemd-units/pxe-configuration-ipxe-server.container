@@ -14,6 +14,8 @@ PublishPort=80:8080/tcp
 PublishPort=69:69/udp
 Volume=/var/srv/containers/pxe:/var/www/html
 Volume=/var/srv/containers/pxe-nginx:/etc/nginx/kube/
+User=root
+RemapUsers=keep-id
 
 [Install]
 # Start by default on boot

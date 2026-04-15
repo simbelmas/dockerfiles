@@ -3,6 +3,7 @@ Description=Manage hosts pxe configuration
 After=local-fs.target
 After=network-online.target
 OnSuccess=pxe-configuration-manage-assets.service
+OnSuccess=pxe-configuration-restart-ipxe-server.service
 
 [Container]
 Environment=TFTP_SERVER_ADDRESS=http://%H

@@ -28,6 +28,7 @@ COPY systemd-units/pxe-configuration-ipxe-server.container /usr/share/containers
 COPY systemd-units/pxe-configuration-manage-assets.container /usr/share/containers/systemd/
 COPY systemd-units/pxe-configuration-update-manager.container /usr/share/containers/systemd/
 COPY systemd-units/olareg.container /usr/share/containers/systemd/
+COPY systemd-units/pxe-configuration-restart-ipxe-server.service /usr/lib/systemd/system/
 
 ## Enabling previous configuration in systemd
 RUN --mount=type=tmpfs,target=/run \

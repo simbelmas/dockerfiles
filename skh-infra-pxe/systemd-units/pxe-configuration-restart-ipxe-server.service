@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart pxe-configuration-ipxe-server.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/usr/bin/systemctl restart pxe-configuration-ipxe-server.service

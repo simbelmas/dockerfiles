@@ -10,3 +10,6 @@ Type=oneshot
 Environment=REGISTRY_AUTH_FILE=/tmp/registryauth
 ExecStart=/usr/local/sbin/bootc-fleetlock-fetch-apply-upgrade
 ## this service had to be enhanced with drop ins to provide NODE_UPGRADE_FLEETLOCK_GROUP and installed into a target
+
+[Install]
+WantedBy=multi-user.target

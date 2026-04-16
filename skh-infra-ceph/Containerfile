@@ -5,6 +5,6 @@ ENV CEPH_RELEASE=20.2.0
 
 RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.com/rpm-${CEPH_RELEASE}/el9/noarch/cephadm \
     && chmod 555 /usr/sbin/cephadm
-RUN echo 'alias ceph=cephadm shell -- ceph' >>  /etc/profile.d/ceph_alias.sh
+RUN echo 'alias ceph="cephadm shell -- ceph"' >>  /etc/profile.d/ceph_alias.sh
 
 RUN bootc container lint --fatal-warnings

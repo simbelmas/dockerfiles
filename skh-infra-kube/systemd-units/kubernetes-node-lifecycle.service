@@ -4,6 +4,7 @@ After=kubelet.service
 Wants=network-online.target
 After=network-online.target
 After=pxe-post-install.service
+Requires=pxe-post-install.service
 
 [Service]
 Type=oneshot

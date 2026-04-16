@@ -23,8 +23,6 @@ if ! pxe_src_mac=$(ip link show ${pxe_src_iface} | grep -oP 'link/\S+ \K\S+' | t
 fi
 export pxe_src_mac
 
-set -x
-
 temp_post_install=$(mktemp)
 if ! curl --silent --fail "http://${tftp_server_ip}/host/${current_hostname}/secret/post-install.sh?mac=${pxe_src_mac}" -o ${temp_post_install} ; then
     echo Failed to get post install script, exiting ... >&2

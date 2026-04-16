@@ -69,4 +69,7 @@ if [[ -n "$(kubectl get node $(hostname) -o jsonpath='{.metadata.labels}' | grep
     kubectl label node $(hostname) node.kubernetes.io/exclude-from-external-load-balancers-
 fi
 
+# apply node configuration
+kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml
+
 echo "Worker node configuration done."

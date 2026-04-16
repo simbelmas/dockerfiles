@@ -60,7 +60,7 @@ done
 echo "Done downloading, ... cleaning up"
 ## cleanup
 
-downloaded_versions=$(find "${assets_dir}" -type d -depth 1 | sort -rdu)
+downloaded_versions=$(find "${assets_dir}" -mindepth 1 -maxdepth 1 -type d | sort -rdu)
 kept_versions="$(echo "${downloaded_versions}" | head -n ${keep_releases})"
 
 delete_versions="${downloaded_versions}"

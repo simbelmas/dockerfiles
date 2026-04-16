@@ -1,4 +1,4 @@
-#!zsh -e
+#!/bin/bash -e
 
 export tftp_server_name=filia.skh.spdnova.xyz
 export current_hostname=sacha-pc.skh.spdnova.xyz

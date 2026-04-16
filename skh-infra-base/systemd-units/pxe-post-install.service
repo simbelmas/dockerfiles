@@ -1,0 +1,15 @@
+[Unit]
+Description=Run Post installation scripts
+Wants=network-online.target
+After=network-online.target
+After=systemd-homed.service
+ConditionPathExists=/run/ostree-booted
+
+[Service]
+RemainAfterExit=true
+Type=oneshot
+## Sample usage, Add a drop in with required actions
+ExecStart=/usr/libexec/post-install-hook.zsh
+
+[Install]
+WantedBy=multi-user.target

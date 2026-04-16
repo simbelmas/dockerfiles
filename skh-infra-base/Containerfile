@@ -16,15 +16,21 @@ COPY --chmod=0644 config/sysctl-ipv6.conf /usr/lib/sysctl.d/ipv6.conf
 COPY --chmod=0644 config/zz-default-editor.sh /etc/profile.d/
 COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
 COPY --chmod=0700 scripts/bootc-fleetlock-fetch-apply-upgrade /usr/local/sbin/
+COPY --chmod=0700 scripts/post-install-hook.zsh /usr/libexec/
+
+RUN ls -al /usr/lib* \
+    && exit 1
 
 ## Manage systemd services
 COPY systemd-units/set-timezone.service /usr/lib/systemd/system/
 COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.timer /usr/lib/systemd/system/
+COPY systemd-units/pxe-post-install.service /usr/lib/systemd/system/
 
 RUN systemctl enable set-timezone.service &&\
-    systemctl enable update-static-files.service
+    systemctl enable update-static-files.service &&\
+    systemctl enable pxe-post-install.service
 
 
 ## Manage static files update

@@ -70,6 +70,9 @@ if [[ -n "$(kubectl get node $(hostname) -o jsonpath='{.metadata.labels}' | grep
 fi
 
 # apply node configuration
-kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml
+if ! kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml ; then
+    echo "Error applying node definition, exiting"
+    exit 1
+fi
 
 echo "Worker node configuration done."

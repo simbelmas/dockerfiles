@@ -77,7 +77,10 @@ if [[ -n "$(kubectl get node $(hostname) -o jsonpath='{.metadata.labels}' | grep
 fi
 
 # apply node configuration
-kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml
+if ! kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml ; then
+    echo "Error applying node definition, exiting"
+    exit 1
+fi
 
 ## Expose etcd metrics
 if ! grep -q 'listen-metrics-urls=http://0.0.0.0:2381' /etc/kubernetes/manifests/etcd.yaml; then

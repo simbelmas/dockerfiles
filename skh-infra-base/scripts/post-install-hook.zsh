@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export tftp_server_name=filia.skh.spdnova.xyz
-export current_hostname=sacha-pc.skh.spdnova.xyz
+export current_hostname=$(hostname -f)
 tftp_server_ip=$(dig +short ${tftp_server_name})
 
 if [[ -z "${tftp_server_ip}" ]] ; then

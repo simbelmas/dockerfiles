@@ -2,6 +2,9 @@
 
 export tftp_server_name=filia.skh.spdnova.xyz
 export current_hostname=$(hostname -f)
+export tftp_server_host_url="http://${tftp_server_name}/host/${current_hostname}"
+export tftp_server_host_secret_url="http://${tftp_server_name}/host/${current_hostname}/secret"
+
 tftp_server_ip=$(dig +short ${tftp_server_name})
 
 if [[ -z "${tftp_server_ip}" ]] ; then
@@ -24,7 +27,7 @@ fi
 export pxe_src_mac
 
 temp_post_install=$(mktemp)
-if ! curl --silent --fail "http://${tftp_server_ip}/host/${current_hostname}/secret/post-install.sh?mac=${pxe_src_mac}" -o ${temp_post_install} ; then
+if ! curl --silent --fail "${tftp_server_host_secret_url}/post-install.sh?mac=${pxe_src_mac}" -o ${temp_post_install} ; then
     echo Failed to get post install script, exiting ... >&2
     exit 2
 fi

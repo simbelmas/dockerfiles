@@ -5,13 +5,7 @@ source /etc/fediceph/ceph-cluster-vars
 echo "# Starting Ceph lifecycle management"
 random_delay=$(( RANDOM % 31))
 echo "Waiting for ${random_delay} seconds to avoid race conditions"
-#sleep ${random_delay}
-
-if ! cat /etc/fediceph/ceph-services.yaml | cephadm shell -- ceph orch apply -i - ; then
-      echo "Didnt suceeded to apply services configuration, please apply it manually" >&2
-      exit 2
-    fi
-
+sleep ${random_delay}
 
 # Determine if ceph is installed on the host
 if [[ -n "$(systemctl list-units | grep ceph)" ]] ; then

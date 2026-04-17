@@ -8,7 +8,7 @@ echo "Waiting for ${random_delay} seconds to avoid race conditions"
 sleep ${random_delay}
 
 # Determine if ceph is installed on the host
-if [[ -n "$(systemctl list-units | grep ceph)" ]] ; then
+if [[ -n "$(systemctl list-units | grep ceph | grep -v ceph-node-lifecycle.service)" ]] ; then
   echo "Ceph is installed on the host"
   cephadm version
   ## rescen retunrs 1 if no new device is found

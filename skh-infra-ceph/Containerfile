@@ -8,8 +8,8 @@ RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.co
 COPY config/ceph-aliases.sh /etc/profile.d/
 COPY --chmod=0700 ./scripts/manage-ceph-deploy.sh /usr/local/lib/
 
-COPY ./systemd-units/skh-infra-ceph/systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
-RUN systemctl enable skh-infra-ceph/systemd-units/ceph-node-lifecycle.service &&\
+COPY ./systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
+RUN systemctl enable ceph-node-lifecycle.service &&\
     mkdir /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d
-COPY systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/
+COPY ./systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/
 RUN bootc container lint --fatal-warnings

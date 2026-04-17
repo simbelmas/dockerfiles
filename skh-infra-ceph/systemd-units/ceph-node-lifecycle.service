@@ -1,0 +1,15 @@
+[Unit]
+Description=Manage ceph node lifecycle
+Wants=network-online.target
+After=network-online.target
+After=pxe-post-install.service
+Requires=pxe-post-install.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/manage-ceph-deploy.sh
+Restart=on-failure
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

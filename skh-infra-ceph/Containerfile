@@ -1,10 +1,11 @@
-FROM olareg.skh.spdnova.xyz/skh-infra-kube:v43.53@sha256:cb06d89b5dc372187ec716229d3d67879b63ebe4782b47fa1814975059bb8089 AS Base
+FROM olareg.skh.spdnova.xyz/skh-infra-kube:v43.52@sha256:87f939c45be484d09d55f44ce4b66e3be1e9a406259a89bbdb4fdbe586b72818 AS Base
 
 FROM Base
 ENV CEPH_RELEASE=20.2.0
 
 RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.com/rpm-${CEPH_RELEASE}/el9/noarch/cephadm \
     && chmod 555 /usr/sbin/cephadm
-RUN echo 'alias ceph="cephadm shell -- ceph"' >>  /etc/profile.d/ceph_alias.sh
+COPY config/ceph-aliases.sh /etc/profile.d/
+
 
 RUN bootc container lint --fatal-warnings

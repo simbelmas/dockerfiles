@@ -38,6 +38,7 @@ else
       cephadm bootstrap --fsid 35b0826b-eaf3-4a4e-bd38-df8a20d5700b --mon-id $(hostname -f) --mgr-id $(hostname -f) --mon-ip $(ip route | grep -oP '^default.*src \K\S+')  --no-minimize-config --allow-fqdn-hostname --ssh-public-key /var/roothome/.ssh/id_ed25519.pub --ssh-private-key /var/roothome/.ssh/id_ed25519 --ssh-config /var/roothome/.ssh/config --skip-monitoring-stack
       cephadm shell -- ceph orch client-keyring set client.admin label:_admin
       cephadm shell -- ceph orch host label add $(hostname -f) _admin
+      cephadm shell -- ceph osd set noout
     )
     echo "Waiting that at least 3 nodes join the cluster to apply configuration"
     while true ; do

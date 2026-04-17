@@ -20,10 +20,16 @@ else
     if [[ "${node}" == "$(hostname -f)" ]] ; then
       continue
     fi
-    if [[ -n "$(ssh ${node} systemctl list-units | grep ceph)" ]] ; then
-      ceph_installed_on=${node}
-      break
-    fi
+    while true ; do
+      if ceph_check_output=$(ssh ${node} systemctl list-units | grep ceph) ; then
+        if [[ -n "${ceph_check_output}" ]] ; then
+          ceph_installed_on=${node}
+          break 2
+        fi
+      else
+        sleep 10
+      fi
+    done
   done
   if [[ "${ceph_installed_on}" == "no" ]] ; then
     echo "# Boostrapping ceph cluster"

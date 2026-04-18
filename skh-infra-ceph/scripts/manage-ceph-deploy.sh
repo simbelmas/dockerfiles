@@ -3,9 +3,6 @@
 source /etc/fediceph/ceph-cluster-vars
 
 echo "# Starting Ceph lifecycle management"
-random_delay=$(( RANDOM % 31))
-echo "Waiting for ${random_delay} seconds to avoid race conditions"
-sleep ${random_delay}
 
 # Determine if ceph is installed on the host
 if [[ -n "$(systemctl list-units | grep ceph | grep -v ceph-node-lifecycle.service)" ]] ; then
@@ -20,15 +17,14 @@ else
     if [[ "${node}" == "$(hostname -f)" ]] ; then
       continue
     fi
-    while true ; do
-      if ceph_check_output=$(ssh ${node} systemctl list-units | grep ceph) ; then
+    for ssh_check in "1 2 3 4 5" ; do
+      if ceph_check_output=$(ssh ${node} systemctl list-units | grep ceph | grep -v ceph-node-lifecycle.service) ; then
         if [[ -n "${ceph_check_output}" ]] ; then
           ceph_installed_on=${node}
           break 2
         fi
-      else
-        sleep 10
       fi
+      sleep $(( RANDM % 31 ))
     done
   done
   if [[ "${ceph_installed_on}" == "no" ]] ; then
@@ -42,7 +38,7 @@ else
     )
     echo "Waiting that at least 3 nodes join the cluster to apply configuration"
     while true ; do
-      number_of_hosts=$( cephadm shell --fsid 35b0826b-eaf3-4a4e-bd38-df8a20d5700b -- ceph  orch host ls | grep -oP '^[\d]+' | grep -v Infering)
+      number_of_hosts=$( cephadm shell --fsid 35b0826b-eaf3-4a4e-bd38-df8a20d5700b -- ceph orch host ls | grep -oP '^[\d]+' | grep -v Infering)
       if [[ "${number_of_hosts}" -lt 3 ]] ; then
 	      echo "Only ${number_of_hosts} in cluster, waiting hosts to apply configuration"
       else
@@ -58,7 +54,7 @@ else
   else
   echo  Ceph installed ${ceph_installed_on}, benching node status
   while true ; do
-    if host_ls=$(ssh ${ceph_installed_on} cephadm shell -- ceph orch host ls) ; then
+    if host_ls=$(ssh ${ceph_installed_on} cephadm shell -- ceph orch host ls 2>/dev/null) ; then
       if [[ -n "$(echo ${host_ls} | grep 'No orchestrator configured')" ]] ; then
         echo "Orchestrator is not yet ready, cluster may be boostrapping, retry in 10 seconds"
         sleep 10
@@ -66,15 +62,18 @@ else
       fi
       if [[ -z "$(echo ${host_ls} | grep "$(hostname -f)")" ]] ; then
         echo "Node is not managed by the cluster, insert it"
-        (
-          set -x
-          ssh ${ceph_installed_on} cephadm shell -- ceph orch host add $(hostname -f) $(ip route | grep -oP '^default.*src \K\S+') _admin
-        )
+        machine_hostname=$(hostname -f)
+        machine_ip=$(ip route | grep -oP '^default.*src \K\S+')
+        if ! ssh ${ceph_installed_on} cephadm shell -- ceph orch host add ${machine_hostname} ${machine_ip} _admin ; then
+          echo Node add failed, exiting
+          exit 1
+        fi
         break
       else
         echo "Nothing to do, ceph manage already added node."
       fi
     fi
+    sleep 10
   done
   fi
 fi

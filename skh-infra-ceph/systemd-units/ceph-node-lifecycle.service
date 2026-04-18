@@ -7,9 +7,11 @@ Requires=pxe-post-install.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/lib/manage-ceph-deploy.sh
+Environment=HOME=/var/roothome
+ExecStart=/usr/local/bin/manage-ceph-deploy.sh
 Restart=on-failure
 RemainAfterExit=true
+ProtectHome=no
 
 [Install]
 WantedBy=multi-user.target

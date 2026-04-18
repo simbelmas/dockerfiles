@@ -6,8 +6,8 @@ ENV CEPH_RELEASE=20.2.0
 RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.com/rpm-${CEPH_RELEASE}/el9/noarch/cephadm \
     && chmod 555 /usr/sbin/cephadm
 COPY config/ceph-aliases.sh /etc/profile.d/
-COPY --chmod=0700 ./scripts/manage-ceph-deploy.sh /usr/local/lib/
-
+COPY --chmod=0700 ./scripts/manage-ceph-deploy.sh /usr/local/bin/
+COPY --chmod=0700 ./scripts/zap-host-disks.sh /usr/local/bin/
 COPY ./systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
 RUN systemctl enable ceph-node-lifecycle.service &&\
     mkdir /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d

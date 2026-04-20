@@ -142,26 +142,81 @@ wait_hosts_and_apply_services() {
     sleep 10
   done
   echo "Applying ceph-services.yaml"
-  if ! cat /etc/fediceph/ceph-services.yaml | cephadm shell -- ceph orch apply -i -; then
-    echo "orch apply failed" >&2
-    exit 2
-  fi
-  set -x
+  while ! cat /etc/fediceph/ceph-services.yaml | cephadm shell -- ceph orch apply -i - ; do
+    echo "Orch apply failed, retrying in 10 secs"
+    sleep 10
+  done
+  ## wait for hdd class to be created
+
   ## Create crush rules
+  while [[ -z "$(cephadm shell -- ceph osd crush class ls | grep hdd)" ]] ; do
+    echo "Waiting for hdd class to appear to create crush rule"
+    sleep 10
+  done
+  set -x
   cephadm shell -- ceph osd crush rule create-replicated hdd_host_rule default host hdd
+  set +x
+  while [[ -z "$(cephadm shell -- ceph osd crush rule ls | grep hdd_host_rule)" ]] ; do
+    echo "Waiting for crush rule to be assigned."
+    sleep 10
+  done
+  set -x
   ## Set pool default size to 2 and allow using pool if replica is 1
-  cephadm shell -- ceph config set global osd_pool_default_crush_rule hdd_host_rule
+  cephadm shell -- ceph config set global osd_pool_default_crush_rule $(cephadm shell -- ceph osd crush rule dump hdd_host_rule | jq -r .rule_id)
   cephadm shell -- ceph config set global osd_pool_default_size 2
+  set +x
   ## the following has to be done at the end since it may fail if no osd is available (eg after reinstallation without wiping disks)
   ## Migrate mgr pool to this rule (wait a bit after defautl pool size set to 2 to le tmgr create it)
-  sleep 5 
+  while [[ -z "$(cephadm shell -- ceph osd pool ls | grep .mgr )" ]] ; do
+    echo "Waiting for .mgr pool to appear"
+    sleep 10
+  done
+  set -x
   cephadm shell -- ceph osd pool set .mgr min_size 1
   cephadm shell -- ceph osd pool set .mgr crush_rule hdd_host_rule
 
   ## Temp dashbord user config, remove when exploration done. dont care if it fails
-  ceph dashboard ac-user-create admin -i <(echo 'adminPassword1') administrator || true
+  cephadm shell -- ceph dashboard ac-user-create admin -i <(echo 'adminPassword1') administrator || true
   ## Delete defautl crush rule 
-  ceph osd crush rule rm replicated_rule
+  cephadm shell -- ceph osd crush rule rm replicated_rule
+
+  ## Create rbd pools
+  # --- 2-replicas pool ---
+  cephadm shell -- ceph osd pool create kube_hdd_replica_2 32 replicated hdd_host_rule
+  cephadm shell -- ceph osd pool set kube_hdd_replica_2 size 2
+  cephadm shell -- ceph osd pool set kube_hdd_replica_2 min_size 1
+  cephadm shell -- ceph osd pool application enable kube_hdd_replica_2 rbd
+
+  # --- 3-replicas pool ---
+  cephadm shell -- ceph osd pool create kube_hdd_replica_3 32 replicated hdd_host_rule
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 size 3
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 2
+  cephadm shell -- ceph osd pool application enable kube_hdd_replica_3 rbd
+
+  ## Create cephfs pools
+  # --- Metadata Pool (The Brain) ---
+  cephadm shell -- ceph osd pool create cephfs_metadata 32 replicated hdd_host_rule
+  cephadm shell -- ceph osd pool set cephfs_metadata size 3
+  cephadm shell -- ceph osd pool set cephfs_metadata min_size 1  # Keep it alive on 2 nodes
+
+  # --- Data Pool: Replica 2 ---
+  cephadm shell -- ceph osd pool create cephfs_data_r2 32 replicated hdd_host_rule
+  cephadm shell -- ceph osd pool set cephfs_data_r2 size 2
+  cephadm shell -- ceph osd pool set cephfs_data_r2 min_size 1
+
+  # --- Data Pool: Replica 3 ---
+  cephadm shell -- ceph osd pool create cephfs_data_r3 32 replicated hdd_host_rule
+  cephadm shell -- ceph osd pool set cephfs_data_r3 size 3
+  cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 2
+
+  # Create the FS using the R2 pool as the primary data pool and add r3 pool
+  cephadm shell -- ceph fs new kube_cephfs cephfs_metadata cephfs_data_r2
+  cephadm shell -- ceph fs add_data_pool kube_cephfs cephfs_data_r3
+
+  cephadm shell -- ceph osd pool application enable cephfs_metadata cephfs
+  cephadm shell -- ceph osd pool application enable cephfs_data_r2 cephfs
+  cephadm shell -- ceph osd pool application enable cephfs_data_r3 cephfs
+  set +x
 }
 
 join_existing_cluster() {

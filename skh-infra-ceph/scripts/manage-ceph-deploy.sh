@@ -186,28 +186,34 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool set kube_hdd_replica_2 size 2
   cephadm shell -- ceph osd pool set kube_hdd_replica_2 min_size 1
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_2 rbd
+  cephadm shell -- ceph osd pool set kube_hdd_replica_2 bulk true
 
   # --- 3-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_3 32 replicated hdd_host_rule
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 size 3
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 2
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 size 2
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 1
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_3 rbd
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 bulk true
 
   ## Create cephfs pools
   # --- Metadata Pool (The Brain) ---
   cephadm shell -- ceph osd pool create cephfs_metadata 32 replicated hdd_host_rule
-  cephadm shell -- ceph osd pool set cephfs_metadata size 3
+  ### increment size when new osd here
+  cephadm shell -- ceph osd pool set cephfs_metadata size 2
   cephadm shell -- ceph osd pool set cephfs_metadata min_size 1  # Keep it alive on 2 nodes
 
   # --- Data Pool: Replica 2 ---
   cephadm shell -- ceph osd pool create cephfs_data_r2 32 replicated hdd_host_rule
   cephadm shell -- ceph osd pool set cephfs_data_r2 size 2
   cephadm shell -- ceph osd pool set cephfs_data_r2 min_size 1
+  cephadm shell -- ceph osd pool set cephfs_data_r2 bulk true
 
   # --- Data Pool: Replica 3 ---
   cephadm shell -- ceph osd pool create cephfs_data_r3 32 replicated hdd_host_rule
-  cephadm shell -- ceph osd pool set cephfs_data_r3 size 3
-  cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 2
+  ## increment size when osd is here
+  cephadm shell -- ceph osd pool set cephfs_data_r3 size 2
+  cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 1
+  cephadm shell -- ceph osd pool set cephfs_data_r3 bulk true
 
   # Create the FS using the R2 pool as the primary data pool and add r3 pool
   cephadm shell -- ceph fs new kube_cephfs cephfs_metadata cephfs_data_r2
@@ -216,6 +222,10 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool application enable cephfs_metadata cephfs
   cephadm shell -- ceph osd pool application enable cephfs_data_r2 cephfs
   cephadm shell -- ceph osd pool application enable cephfs_data_r3 cephfs
+
+  # Deploy mds
+  cephadm shell -- ceph orch apply mds kube_cephfs 3
+
   set +x
 }
 

@@ -22,3 +22,11 @@ zap-disk-whitout-ceph () {
     )
 fi
 }
+
+watchceph () {
+  watch "source /etc/profile.d/ceph-aliases.sh ; $@"
+}
+
+wcs () {
+  watchceph ceph status
+}

@@ -225,7 +225,9 @@ wait_hosts_and_apply_services() {
 
   # Deploy mds
   cephadm shell -- ceph orch apply mds kube_cephfs 3
-
+  #allow hot standby to replay metadata directly, it enhances fallback speedup
+  cephadm shell -- ceph fs set kube_cephfs allow_standby_replay true
+  
   set +x
 }
 

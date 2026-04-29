@@ -1,6 +1,9 @@
 FROM quay.io/simbelmas/adguardhome:dockerio-latest-mirror@sha256:92929135ced2554aaf94706f766a98ad348f211df61b0704e2db7e8498cc00b7
 
-RUN addgroup -g 1001 adguard \
+RUN mkdir -p /adgkube/conf /adgkube/work \
+    && ln -vsf /adgkube/conf /opt/adguardhome/conf \
+    && ln -vsf /adgkube/work /opt/adguardhome/work \
+    && addgroup -g 1001 adguard \
     && adduser -G adguard -D -H -h /opt/adguardhome -u 1001 -s /bin/nologin adguard \
     && chown -Rv 1001:1001 /opt/adguardhome
 

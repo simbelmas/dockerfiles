@@ -33,7 +33,7 @@ RUN  microdnf --nodocs --best -y install \
        python3-jinja2-cli python3-jinja2 \
        rclone \
        s3cmd \
-       vim-enhanced \
+       vim-enhanced tar tmux\
         && microdnf clean all
 
 RUN sed -i 's@^Include /etc/ssh@#Include /etc/ssh@' /etc/ssh/ssh_config

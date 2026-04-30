@@ -223,6 +223,8 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool application enable cephfs_data_r2 cephfs
   cephadm shell -- ceph osd pool application enable cephfs_data_r3 cephfs
 
+  # create subvolume group
+  cephadm shell -- ceph fs subvolumegroup create kube_cephfs csi
   # Deploy mds
   cephadm shell -- ceph orch apply mds kube_cephfs 3
   #allow hot standby to replay metadata directly, it enhances fallback speedup

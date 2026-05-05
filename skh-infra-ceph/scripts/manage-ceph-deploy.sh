@@ -123,7 +123,10 @@ run_bootstrap() {
   set +x
   cephadm shell -- ceph orch client-keyring set client.admin label:_admin
   cephadm shell -- ceph orch host label add "$this_host" _admin
-  cephadm shell -- ceph osd set noout || true
+  ## Noout management 
+  #set noout to 48h
+  cephadm shell -- ceph config set global mon_osd_down_out_interval 172800
+  #cephadm shell -- ceph osd set noout || true
 }
 
 orch_host_count() {

@@ -179,6 +179,8 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph dashboard ac-user-create admin -i <(echo 'adminPassword1') administrator || true
   ## Delete defautl crush rule 
   cephadm shell -- ceph osd crush rule rm replicated_rule
+  ## Enable mgr prometheus exporter
+  cephadm shell -- ceph mgr module enable prometheus
 
   ## Create rbd pools
   # --- 2-replicas pool ---

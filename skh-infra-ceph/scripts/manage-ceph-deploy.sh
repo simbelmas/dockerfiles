@@ -166,7 +166,7 @@ wait_hosts_and_apply_services() {
   set -x
   ## Set pool default size to 2 and allow using pool if replica is 1
   cephadm shell -- ceph config set global osd_pool_default_crush_rule $(cephadm shell -- ceph osd crush rule dump hdd_host_rule | jq -r .rule_id)
-  cephadm shell -- ceph config set global osd_pool_default_size 2
+  cephadm shell -- ceph config set global osd_pool_default_size 3
   set +x
   ## the following has to be done at the end since it may fail if no osd is available (eg after reinstallation without wiping disks)
   ## Migrate mgr pool to this rule (wait a bit after defautl pool size set to 2 to le tmgr create it)
@@ -175,9 +175,11 @@ wait_hosts_and_apply_services() {
     sleep 10
   done
   set -x
-  cephadm shell -- ceph osd pool set .mgr min_size 1
+  cephadm shell -- ceph osd pool set .mgr min_size 2
   cephadm shell -- ceph osd pool set .mgr crush_rule hdd_host_rule
 
+  ## increase numbe rof pg per osd
+  cephadm shell -- ceph config set global mon_max_pg_per_osd 300
   ## Temp dashbord user config, remove when exploration done. dont care if it fails
   cephadm shell -- ceph dashboard ac-user-create admin -i <(echo 'adminPassword1') administrator || true
   ## Delete defautl crush rule 
@@ -195,8 +197,8 @@ wait_hosts_and_apply_services() {
 
   # --- 3-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_3 32 replicated hdd_host_rule
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 size 2
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 1
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 size 3
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 2
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_3 rbd
   cephadm shell -- ceph osd pool set kube_hdd_replica_3 bulk true
 
@@ -204,8 +206,8 @@ wait_hosts_and_apply_services() {
   # --- Metadata Pool (The Brain) ---
   cephadm shell -- ceph osd pool create cephfs_metadata 32 replicated hdd_host_rule
   ### increment size when new osd here
-  cephadm shell -- ceph osd pool set cephfs_metadata size 2
-  cephadm shell -- ceph osd pool set cephfs_metadata min_size 1  # Keep it alive on 2 nodes
+  cephadm shell -- ceph osd pool set cephfs_metadata size 3
+  cephadm shell -- ceph osd pool set cephfs_metadata min_size 2  
 
   # --- Data Pool: Replica 2 ---
   cephadm shell -- ceph osd pool create cephfs_data_r2 32 replicated hdd_host_rule
@@ -215,9 +217,8 @@ wait_hosts_and_apply_services() {
 
   # --- Data Pool: Replica 3 ---
   cephadm shell -- ceph osd pool create cephfs_data_r3 32 replicated hdd_host_rule
-  ## increment size when osd is here
-  cephadm shell -- ceph osd pool set cephfs_data_r3 size 2
-  cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 1
+  cephadm shell -- ceph osd pool set cephfs_data_r3 size 3
+  cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 2
   cephadm shell -- ceph osd pool set cephfs_data_r3 bulk true
 
   # Create the FS using the R2 pool as the primary data pool and add r3 pool
@@ -227,6 +228,10 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool application enable cephfs_metadata cephfs
   cephadm shell -- ceph osd pool application enable cephfs_data_r2 cephfs
   cephadm shell -- ceph osd pool application enable cephfs_data_r3 cephfs
+  
+  # --- Metadata pool : Replica 3 ---
+  cephadm shell -- ceph osd pool set cephfs_metadata size 3
+  cephadm shell -- ceph osd pool set cephfs_metadata min_size 2
 
   # create subvolume group
   cephadm shell -- ceph fs subvolumegroup create kube_cephfs csi

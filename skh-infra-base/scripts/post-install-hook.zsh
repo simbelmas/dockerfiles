@@ -12,18 +12,21 @@ if [[ -z "${tftp_server_ip}" ]] ; then
     exit 1
 fi
 
-pxe_src_iface=$(ip route get ${tftp_server_ip} | grep -oP 'dev \K\S+')
-pxe_src_ip=$(ip route get ${tftp_server_ip} | grep -oP 'src \K\S+')
+if [[ "$(ip -o link show up | grep -v 'lo:' | wc -l)" -gt 1 ]] && [[ -z "$(ip -o link show up | grep bond)" ]]; then
+    echo "More than one interface detected and no bonding setted up, identifying first" 
+    pxe_src_iface=$(ip -o link show | awk -F ': ' '$2 != "lo" {print $2 ; exit }')
+else
+    pxe_src_iface=$(ip route get ${tftp_server_ip} | grep -oP 'dev \K\S+')
+fi
 
-if [[ -z "${pxe_src_ip}" ]] || [[ -z "${pxe_src_iface}" ]] ; then
-    echoo "Did not succeeded to identify principal interface/ip, exiting ..." >&2
+pxe_src_ip=$(ip -o address show dev ${pxe_src_iface} | grep -oP 'inet \K[0-9.]+')
+pxe_src_mac=$( ip -o link show ${pxe_src_iface} | grep -oP 'link/ether \K\S+' | tr '[:lower:]' '[:upper:]')
+
+if [[ -z "${pxe_src_ip}" ]] || [[ -z "${pxe_src_iface}" ]] || [[ -z "${pxe_src_mac}" ]] ; then
+    echoo "Did not succeeded to identify principal interface/ip/mac, exiting ..." >&2
     exit 1
 fi
 
-if ! pxe_src_mac=$(ip link show ${pxe_src_iface} | grep -oP 'link/\S+ \K\S+' | tr '[:lower:]' '[:upper:]' ) || [[ -z "${pxe_src_mac}" ]] ; then
-    echo "Did not succeeded to identify principal interface mac, exiting ..." >&2
-    exit 1
-fi
 export pxe_src_mac
 
 temp_post_install=$(mktemp)

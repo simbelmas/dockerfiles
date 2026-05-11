@@ -70,7 +70,7 @@ if [[ -n "$(kubectl get node $(hostname) -o jsonpath='{.metadata.labels}' | grep
 fi
 
 # apply node configuration
-if ! kubectl apply --server-side -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml ; then
+if ! kubectl apply --server-side --force-conflicts -f /etc/kubernetes/fedora-kube.d/kube-node-customisation.yaml ; then
     echo "Error applying node definition, exiting"
     exit 1
 fi

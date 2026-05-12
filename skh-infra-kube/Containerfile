@@ -8,6 +8,8 @@ ENV KUBERNETES_PATCH_VERSION=""
 RUN dnf5 --nodocs -y install \
         python3 policycoreutils-python-utils \
         nvtop \
+        container-selinux \
+        selinux-policy-targeted \
         cri-o${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}${KUBERNETES_PATCH_VERSION} kubernetes${KUBERNETES_MINOR_VERSION}-kubeadm${KUBERNETES_PATCH_VERSION} \
         qemu-user-static qemu-user-binfmt &&\
     dnf5 clean all &&\
@@ -52,10 +54,11 @@ RUN systemctl disable bootc-fetch-apply-updates.timer &&\
 
 RUN rm /usr/lib/systemd/system/default.target.wants/bootc-fetch-apply-updates.timer
     
-## Gpu selinux /var/lib/cdi
+## Gpu selinux /var/lib/cdi + temporary CRI-O execmem workaround (see config/selinux/crio-execmem-workaround.cil)
 COPY config/gpu/cdi.cil /tmp/cdi.cil
-RUN semodule -i /tmp/cdi.cil \
-    && rm /tmp/cdi.cil
+COPY config/selinux/crio-execmem-workaround.cil /tmp/crio-execmem-workaround.cil
+RUN semodule -i /tmp/cdi.cil /tmp/crio-execmem-workaround.cil \
+    && rm -f /tmp/cdi.cil /tmp/crio-execmem-workaround.cil
     
 # BMAX kargs i915 kernel module
 # uses systemd service and a script to position kernel argument on specific nodes.

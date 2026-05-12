@@ -1,0 +1,12 @@
+;; Temporary workaround: CRI-O fails under SELinux enforcing with:
+;;   cannot make segment writable for relocation (PIE self-relocation of /usr/bin/crio).
+;; AVC shows: denied { execmem } scontext=kernel_t tcontext=kernel_t tclass=process
+;;
+;; On kube-node2 (Fedora 44 bootc, May 2026), this rule alone fixed it:
+;;   (allow kernel_t self (process (execmem)))
+;; A rule for container_runtime_t self execmem was loaded but did NOT match that denial.
+;;
+;; SECURITY: Broad — allows execmem for any task labeled kernel_t. Remove when upstream
+;; fixes kernel/SELinux (mis-attributed context vs composefs/ostree). File Fedora bug.
+
+(allow kernel_t self (process (execmem)))

@@ -19,6 +19,7 @@ FROM quay.io/simbelmas/fedora-minimal:v44.1@sha256:ede47da620f19c2e1c896b43c784d
 COPY --from=Downloader /opt/Radarr /opt/Radarr
 
 RUN microdnf --nodocs --best -y install sqlite3 libicu-devel \
+    aria2 \
     && microdnf clean all
 
 RUN echo 'app:x:1001:' >> /etc/group \

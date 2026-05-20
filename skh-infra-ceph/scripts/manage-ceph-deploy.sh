@@ -240,6 +240,8 @@ wait_hosts_and_apply_services() {
   #allow hot standby to replay metadata directly, it enhances fallback speedup
   cephadm shell -- ceph fs set kube_cephfs allow_standby_replay true
   
+  ## reduce bluestore warning lifetime
+  ceph config set osd bluestore_slow_ops_warn_lifetime 900
   set +x
 }
 

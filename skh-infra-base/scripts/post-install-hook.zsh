@@ -5,7 +5,7 @@ export current_hostname=$(hostname -f)
 export tftp_server_host_url="http://${tftp_server_name}/host/${current_hostname}"
 export tftp_server_host_secret_url="http://${tftp_server_name}/host/${current_hostname}/secret"
 
-tftp_server_ip=$(dig +short ${tftp_server_name})
+tftp_server_ip=$(dig +short ${tftp_server_name} | cut -f1 -d' ' | head -n1)
 
 if [[ -z "${tftp_server_ip}" ]] ; then
     echo "Did not succeeded to grad tftp server ip, exiting ..." >&2
@@ -26,6 +26,9 @@ if [[ "$(ip -o link show up | grep -v 'lo:' | wc -l)" -gt 1 ]] && [[ -z "$(ip -o
         nmcli con down ${pxe_src_iface}
         nmcli con up ${pxe_src_iface}
     ) 
+elif [[ -n "$(ip -o address | grep "${tftp_server_ip}")" ]]
+    # case of the server itself, the tftp server ip is worn by the machine
+    pxe_src_iface=$( ip -o address | awk "\$0 ~ /${tftp_server_ip}/ {print \$2;}")
 else
     pxe_src_iface=$(ip route get ${tftp_server_ip} | grep -oP 'dev \K\S+')
 fi
@@ -36,7 +39,7 @@ pxe_src_mac=$( ip -o link show ${pxe_src_iface} | grep -oP 'link/ether \K\S+' | 
 echo "Using reference interface ${pxe_src_iface} with ip ${pxe_src_ip} and mac ${pxe_src_mac}"
 
 if [[ -z "${pxe_src_ip}" ]] || [[ -z "${pxe_src_iface}" ]] || [[ -z "${pxe_src_mac}" ]] ; then
-    echoo "Did not succeeded to identify principal interface/ip/mac, exiting ..." >&2
+    echo "Did not succeeded to identify principal interface/ip/mac, exiting ..." >&2
     exit 1
 fi
 

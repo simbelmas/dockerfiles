@@ -187,6 +187,16 @@ wait_hosts_and_apply_services() {
   ## Enable mgr prometheus exporter
   cephadm shell -- ceph mgr module enable prometheus
 
+  ## Log to stdout instead of fs
+  # ceph-volume remains on /var/log/ceph
+  # 1. Disable logging to files cluster-wide
+  ceph config set global log_to_file false
+  ceph config set global mon_cluster_log_to_file false
+
+  # 2. Ensure logging to journald/stderr is active
+  ceph config set global log_to_stderr true
+  ceph config set global log_to_journald true
+
   ## Create rbd pools
   # --- 2-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_2 32 replicated hdd_host_rule

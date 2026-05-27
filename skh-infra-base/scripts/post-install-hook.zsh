@@ -26,7 +26,7 @@ if [[ "$(ip -o link show up | grep -v 'lo:' | wc -l)" -gt 1 ]] && [[ -z "$(ip -o
         nmcli con down ${pxe_src_iface}
         nmcli con up ${pxe_src_iface}
     ) 
-elif [[ -n "$(ip -o address | grep "${tftp_server_ip}")" ]]
+elif [[ -n "$(ip -o address | grep "${tftp_server_ip}")" ]] ; then
     # case of the server itself, the tftp server ip is worn by the machine
     pxe_src_iface=$( ip -o address | awk "\$0 ~ /${tftp_server_ip}/ {print \$2;}")
 else

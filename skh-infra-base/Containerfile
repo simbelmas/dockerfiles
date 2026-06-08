@@ -51,6 +51,9 @@ COPY systemd-units/static-0-mgr-user.conf /usr/lib/systemd/system/update-static-
 # Fix registries missconfiguration
 COPY systemd-units/static-force-registry-conf-upgrade.conf /usr/lib/systemd/system/update-static-files.service.d/
 
+# Disable ssd sleep
+COPY config/bootc-karggs-nvmve-config.toml /usr/lib/bootc/kargs.d/nvme-sleep.toml
+
 #RUN systemd-sysusers &&\
 #    echo 'mgr:test' | chpasswd 
 

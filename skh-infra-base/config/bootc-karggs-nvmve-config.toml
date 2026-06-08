@@ -1,0 +1,2 @@
+#Disable ssd sleep to avoid data loss in tier market ssds.
+kargs = ["nvme_core.default_ps_max_latency_us=0","nvme_core.hmb=0"]

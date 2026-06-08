@@ -1,5 +1,5 @@
 # Stage 1: Build the rootfs
-FROM quay.io/simbelmas/fedora-minimal:v44.12@sha256:ae6adef2850f8fb5f304951f7c0a03e26d75e691f91acd78afe8faeb08793d6b AS builder
+FROM quay.io/simbelmas/fedora-minimal:v44.13@sha256:76d353ccd271e0e66426f57059752541dc2ad36a472eb97cd1970452e35a68c3 AS builder
 RUN mkdir /target
 RUN dnf -y --installroot=/target \
 --setopt=install_weak_deps=False \

@@ -190,13 +190,21 @@ wait_hosts_and_apply_services() {
   ## Log to stdout instead of fs
   # ceph-volume remains on /var/log/ceph
   # 1. Disable logging to files cluster-wide
-  ceph config set global log_to_file false
-  ceph config set global mon_cluster_log_to_file false
+  cephadm shell -- ceph config set global log_to_file false
+  cephadm shell -- ceph config set global mon_cluster_log_to_file false
 
   # 2. Ensure logging to journald/stderr is active
-  ceph config set global log_to_stderr true
-  ceph config set global log_to_journald true
+  cephadm shell -- ceph config set global log_to_stderr true
+  cephadm shell -- ceph config set global log_to_journald true
 
+  ## Tunning scrub to avoid alert on slow lab disks
+  cephadm shell -- ceph config set osd osd_scrub_sleep 0.2
+  cephadm shell -- ceph config set osd osd_scrub_load_threshold 0.3
+  cephadm shell -- ceph config set osd osd_max_scrubs 1
+  cephadm shell -- ceph config set osd osd_scrub_begin_hour 1
+  cephadm shell -- ceph config set osd osd_scrub_end_hour 5
+  cephadm shell -- ceph config set osd osd_scrub_chunk_max 10
+  
   ## Create rbd pools
   # --- 2-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_2 32 replicated hdd_host_rule

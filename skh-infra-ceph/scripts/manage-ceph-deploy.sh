@@ -204,7 +204,9 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph config set osd osd_scrub_begin_hour 1
   cephadm shell -- ceph config set osd osd_scrub_end_hour 5
   cephadm shell -- ceph config set osd osd_scrub_chunk_max 10
-  
+
+  ## Increase osd bluestore cache to 2Gib
+  cephadm shell -- ceph config set osd bluestore_cache_size_hdd 2147483648
   ## Create rbd pools
   # --- 2-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_2 32 replicated hdd_host_rule

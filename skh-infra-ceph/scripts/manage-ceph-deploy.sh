@@ -207,10 +207,6 @@ wait_hosts_and_apply_services() {
 
   ## Increase osd bluestore cache to 2Gib
   cephadm shell -- ceph config set osd bluestore_cache_size_hdd 2147483648
-
-  ## Set autoscaler in warn mode by default
-  cephadm shell -- ceph config set osd osd_pool_default_pg_autoscale_mode warn
-  
   ## Create rbd pools
   # --- 2-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_2 32 replicated hdd_host_rule

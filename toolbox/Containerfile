@@ -1,5 +1,5 @@
 
-FROM quay.io/simbelmas/fedora-minimal:v44.15@sha256:8f422c3944b3534f7c9b7a591d0170503fd4e2426b0f34d62be467f3d3b4baed
+FROM quay.io/simbelmas/fedora-minimal:v44.16@sha256:0842a9b4a2263ddf60ea26882ab308fa88f70d91501e3b7ee69c8581d4502e63
 
 
 

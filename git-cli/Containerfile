@@ -12,7 +12,8 @@ RUN dnf -y --installroot=/target \
 FROM scratch
 COPY --from=builder /target /
 ENV GIT_SSH_COMMAND="ssh -i /ssh/ssh-privatekey -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/ssh/known_hosts"
-RUN echo 'app:x:1001:1001::/tmp:/sbin/nologin' >> /etc/passwd 
+RUN rm /etc/ssh/ssh_config.d/* || echo "no additional ssh config files to delete" \
+    && echo 'app:x:1001:1001::/tmp:/sbin/nologin' >> /etc/passwd 
 USER 65534
 ENTRYPOINT ["/usr/bin/git"]
 CMD ["--help"]

@@ -5,12 +5,13 @@ RUN dnf -y --installroot=/target \
     --setopt=install_weak_deps=False \
     --use-host-config \
     install \
-    git-core git-crypt ca-certificates \
+    git-core git-crypt ca-certificates dropbear \
     && dnf --installroot=/target clean all
 
 # Stage 2: Final image
 FROM scratch
 COPY --from=builder /target /
+ENV GIT_SSH_COMMAND="dbclient -i /ssh/ssh-privatekey -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/ssh/known_hosts"
 USER 65534
 ENTRYPOINT ["/usr/bin/git"]
 CMD ["--help"]

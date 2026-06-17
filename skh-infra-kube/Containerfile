@@ -1,4 +1,4 @@
-FROM olareg.skh.spdnova.xyz/skh-infra-base:v44.12@sha256:09e7e86077c8a9e4425d646dc1db2c614e29f0c689b161d5741c4314c66e2375 AS Base
+FROM olareg.skh.spdnova.xyz/skh-infra-base:v44.13@sha256:c432e5a923b0b56e83a1f29f0c9e065f480f5156969b5d8c08ec8f5542729335 AS Base
 
 FROM Base
 ENV KUBERNETES_MINOR_VERSION=1.34

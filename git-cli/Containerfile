@@ -11,6 +11,6 @@ RUN dnf -y --installroot=/target \
 # Stage 2: Final image
 FROM scratch
 COPY --from=builder /target /
-USER 1001
+USER 65534
 ENTRYPOINT ["/usr/bin/git"]
 CMD ["--help"]

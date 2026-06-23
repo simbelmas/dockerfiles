@@ -1,7 +1,7 @@
 FROM olareg.skh.spdnova.xyz/skh-infra-base:v44.14@sha256:17bb81ccdcdb8da8fca8773f1a688b2bf63494d03332acf4818eaff71a14608e AS Base
 
 FROM Base
-ENV KUBERNETES_MINOR_VERSION=1.34
+ENV KUBERNETES_MINOR_VERSION=1.35
 ## KUBERNETES_PATCH_VERSION: when empty follows fedora release lifecycle for patches
 ENV KUBERNETES_PATCH_VERSION=""
 

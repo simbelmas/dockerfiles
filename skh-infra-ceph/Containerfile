@@ -14,8 +14,17 @@ COPY ./systemd-units/var-disk-cleanup.service /usr/lib/systemd/system/
 COPY ./systemd-units/var-disk-cleanup.timer /usr/lib/systemd/system/
 RUN systemctl enable ceph-node-lifecycle.service &&\
     systemctl enable var-disk-cleanup.timer &&\
-    systemd-analyze verify /usr/lib/systemd/system/var-disk-cleanup.service &&\
-    systemd-analyze verify /usr/lib/systemd/system/var-disk-cleanup.timer &&\
     mkdir /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d
+
 COPY ./systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/
+
+RUN --mount=type=tmpfs,target=/run \
+    for service in \
+        var-disk-cleanup.service  \
+        var-disk-cleanup.timer \
+    ; do \
+        echo "Checking svc ${service}"; \
+        systemd-analyze verify "/usr/lib/systemd/system/${service}" || exit 1 ; \
+        systemctl enable "${service}" || exit 1; \
+    done
 RUN bootc container lint --fatal-warnings

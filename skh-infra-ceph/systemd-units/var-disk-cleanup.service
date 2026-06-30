@@ -1,0 +1,7 @@
+[Unit]
+Description=Reclaim space on /var (coredumps, stale data)
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/var-disk-cleanup.sh

@@ -1,0 +1,11 @@
+[Unit]
+Description=Periodic /var disk cleanup
+
+[Timer]
+OnStartupSec=15min
+OnCalendar=*-*-* 03:30:00
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

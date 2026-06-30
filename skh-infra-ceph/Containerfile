@@ -8,8 +8,14 @@ RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.co
 COPY config/ceph-aliases.sh /etc/profile.d/
 COPY --chmod=0700 ./scripts/manage-ceph-deploy.sh /usr/local/bin/
 COPY --chmod=0700 ./scripts/zap-host-disks.sh /usr/local/bin/
+COPY --chmod=0700 ./scripts/var-disk-cleanup.sh /usr/local/bin/
 COPY ./systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
+COPY ./systemd-units/var-disk-cleanup.service /usr/lib/systemd/system/
+COPY ./systemd-units/var-disk-cleanup.timer /usr/lib/systemd/system/
 RUN systemctl enable ceph-node-lifecycle.service &&\
+    systemctl enable var-disk-cleanup.timer &&\
+    systemd-analyze verify /usr/lib/systemd/system/var-disk-cleanup.service &&\
+    systemd-analyze verify /usr/lib/systemd/system/var-disk-cleanup.timer &&\
     mkdir /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d
 COPY ./systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/
 RUN bootc container lint --fatal-warnings

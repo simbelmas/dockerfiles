@@ -215,6 +215,7 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_2 rbd
   cephadm shell -- ceph osd pool set kube_hdd_replica_2 bulk true
   cephadm shell -- ceph osd pool set kube_hdd_replica_2 compression_algorithm zstd
+  cephadm shell -- ceph osd pool set kube_hdd_replica_2 compression_mode aggressive
 
   # --- 3-replicas pool ---
   cephadm shell -- ceph osd pool create kube_hdd_replica_3 32 replicated hdd_host_rule
@@ -223,6 +224,7 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_3 rbd
   cephadm shell -- ceph osd pool set kube_hdd_replica_3 bulk true
   cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_algorithm zstd
+  cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_mode aggressive
 
   ## Create cephfs pools
   # --- Metadata Pool (The Brain) ---
@@ -242,6 +244,7 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool set cephfs_data_r3 min_size 2
   cephadm shell -- ceph osd pool set cephfs_data_r3 bulk true
   cephadm shell -- ceph osd pool set cephfs_data_r3 compression_algorithm zstd
+  cephadm shell -- ceph osd pool set cephfs_data_r3 compression_mode aggressive
 
   # Create the FS using the R2 pool as the primary data pool and add r3 pool
   cephadm shell -- ceph fs new kube_cephfs cephfs_metadata cephfs_data_r2

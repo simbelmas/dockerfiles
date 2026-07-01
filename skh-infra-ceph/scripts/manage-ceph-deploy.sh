@@ -223,8 +223,9 @@ wait_hosts_and_apply_services() {
   cephadm shell -- ceph osd pool set kube_hdd_replica_3 min_size 2
   cephadm shell -- ceph osd pool application enable kube_hdd_replica_3 rbd
   cephadm shell -- ceph osd pool set kube_hdd_replica_3 bulk true
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_algorithm zstd
-  cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_mode aggressive
+  #disable compression because mriadb is hosted here and amoutn of data is really low
+  #cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_algorithm zstd
+  #cephadm shell -- ceph osd pool set kube_hdd_replica_3 compression_mode aggressive
 
   ## Create cephfs pools
   # --- Metadata Pool (The Brain) ---

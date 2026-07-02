@@ -31,6 +31,10 @@ COPY --chmod=0600 ./config/encryption-at-rest-configuration.yaml /etc/kubernetes
 COPY ./config/crio-bridge.conflist /etc/cni/net.d/100-crio-bridge.conflist
 
 COPY ./systemd-units/kubernetes-node-lifecycle.service /usr/lib/systemd/system/
+COPY ./systemd-units/kubeadm-tmp-cleanup.service /usr/lib/systemd/system/
+COPY --chmod=0700 ./scripts/kubeadm-tmp-cleanup.sh /usr/local/bin/
+RUN mkdir -p /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d
+COPY ./systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/kubeadm-tmp-cleanup.conf
 COPY --chmod=0700 ./scripts/kube-node-postinstall /usr/sbin/
 COPY --chmod=0700 ./scripts/manage_kubernetes_controlplane_lifecycle.sh /usr/local/lib/
 COPY --chmod=0700 ./scripts/manage_kubernetes_worker_lifecycle.zsh /usr/local/lib/
@@ -41,6 +45,7 @@ RUN --mount=type=tmpfs,target=/run \
         kubelet.service \
         crio.service \
         kubernetes-node-lifecycle.service \
+        kubeadm-tmp-cleanup.service \
         bootc-fleetlock-fetch-upgrade.service \
         bootc-fleetlock-fetch-upgrade.timer \
     ; do \

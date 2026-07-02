@@ -1,0 +1,9 @@
+[Unit]
+Description=Prune stale kubeadm backups in /etc/kubernetes/tmp
+After=kubernetes-node-lifecycle.service
+Requires=kubernetes-node-lifecycle.service
+ConditionPathExists=/etc/kubernetes/tmp
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/kubeadm-tmp-cleanup.sh

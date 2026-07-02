@@ -1,5 +1,5 @@
 [Unit]
-Description=Reclaim space on /var (coredumps, stale data)
+Description=Reclaim space on /var (coredumps, ceph logs, stale data)
 After=local-fs.target
 
 [Service]

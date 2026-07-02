@@ -2,11 +2,15 @@
 set -euo pipefail
 
 # Keep the small /var partition (~10 GiB on FCOS) from filling up.
-# Runs coredump cleanup and other /var clutter removal.
+# Runs coredump cleanup, ceph log trimming, and other /var clutter removal.
 
 COREDUMP_DIR=/var/lib/systemd/coredump
 COREDUMP_MAX_MB=100
 COREDUMP_MAX_AGE_DAYS=7
+
+CEPH_LOG_DIR=/var/log/ceph
+CEPH_VOLUME_LOG_MAX_MB=100
+CEPH_LOG_ROTATED_MAX_AGE_DAYS=14
 
 log() {
   echo "$*"
@@ -48,7 +52,29 @@ cleanup_ceph_removed_stores() {
   done
 }
 
+cleanup_ceph_logs() {
+  [[ -d $CEPH_LOG_DIR ]] || return 0
+
+  local keep_bytes=$(( CEPH_VOLUME_LOG_MAX_MB * 1024 * 1024 ))
+  local logfile size_mb
+
+  while IFS= read -r -d '' logfile; do
+    size_mb=$(du -m "$logfile" | cut -f1)
+    if [[ $size_mb -gt $CEPH_VOLUME_LOG_MAX_MB ]]; then
+      tail -c "$keep_bytes" "$logfile" > "${logfile}.tmp"
+      mv -f "${logfile}.tmp" "$logfile"
+      log "ceph log: trimmed ${logfile} to ${CEPH_VOLUME_LOG_MAX_MB} MiB (was ${size_mb} MiB)"
+    fi
+  done < <(find "$CEPH_LOG_DIR" -name 'ceph-volume.log' -type f -print0 2>/dev/null)
+
+  find "$CEPH_LOG_DIR" -type f \( -name '*.log-*' -o -name '*.gz' \) \
+    -mtime +"$CEPH_LOG_ROTATED_MAX_AGE_DAYS" -delete 2>/dev/null || true
+
+  log "ceph logs: $(du -sh "$CEPH_LOG_DIR" | cut -f1) (ceph-volume.log cap ${CEPH_VOLUME_LOG_MAX_MB} MiB)"
+}
+
 log "starting (/var free: $(var_free))"
 cleanup_coredumps
 cleanup_ceph_removed_stores
+cleanup_ceph_logs
 log "done (/var free: $(var_free))"

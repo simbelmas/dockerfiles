@@ -13,8 +13,7 @@ COPY ./systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
 COPY ./systemd-units/var-disk-cleanup.service /usr/lib/systemd/system/
 COPY ./systemd-units/var-disk-cleanup.timer /usr/lib/systemd/system/
 RUN systemctl enable ceph-node-lifecycle.service &&\
-    systemctl enable var-disk-cleanup.timer &&\
-    mkdir /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d
+    systemctl enable var-disk-cleanup.timer
 
 COPY ./systemd-units/drop-in-kubernetes-node-lifecycle.conf /usr/lib/systemd/system/kubernetes-node-lifecycle.service.d/
 

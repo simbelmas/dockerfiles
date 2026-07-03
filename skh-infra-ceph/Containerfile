@@ -1,7 +1,7 @@
 FROM olareg.skh.spdnova.xyz/skh-infra-kube:v43.80@sha256:0c3a4859a2fb9e674922b71295de456d3d113891966c93ae3fb70772a8c2339a AS Base
 
 FROM Base
-ENV CEPH_RELEASE=20.2.0
+ENV CEPH_RELEASE=20.2.2
 
 RUN curl --silent --output /usr/sbin/cephadm --location https://download.ceph.com/rpm-${CEPH_RELEASE}/el9/noarch/cephadm \
     && chmod 555 /usr/sbin/cephadm

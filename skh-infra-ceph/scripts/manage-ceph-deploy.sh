@@ -23,10 +23,13 @@ CEPH_JOIN_SLEEP="${CEPH_JOIN_SLEEP:-15}"
 
 this_host="$(hostname -f)"
 
+# True only when cephadm systemd units exist (ceph.target / ceph-<fsid>.target / ceph-<fsid>@*).
+# Do not grep unit *descriptions* or device names: LVM volumes like system-var_ceph create
+# blockdev@...var_ceph.target which falsely matches a naive 'ceph\.target' substring.
 ceph_units_present() {
-  local out
-  out=$(systemctl list-units --all --no-legend 2>/dev/null | grep -E 'ceph@|ceph\.target' | grep -v ceph-node-lifecycle || true)
-  [[ -n "$out" ]]
+  systemctl list-units --all --plain --no-legend \
+    'ceph.target' 'ceph-*.target' 'ceph-*@*.service' 2>/dev/null \
+    | grep -q .
 }
 
 peer_has_ceph() {
@@ -34,7 +37,7 @@ peer_has_ceph() {
   [[ "$node" == "$this_host" ]] && return 1
   local out
   if ! out=$(ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
-      "$node" 'systemctl list-units --all --no-legend 2>/dev/null | grep -E "ceph@|ceph\.target" | grep -v ceph-node-lifecycle || true' 2>/dev/null); then
+      "$node" "systemctl list-units --all --plain --no-legend 'ceph.target' 'ceph-*.target' 'ceph-*@*.service' 2>/dev/null" 2>/dev/null); then
     return 1
   fi
   [[ -n "$(echo "$out" | tr -d '[:space:]')" ]]

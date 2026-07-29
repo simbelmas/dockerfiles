@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-minimal:44@sha256:b8e754401acbd2bf165e0e36280a05bd191d807b0e59e8c473afced785e28d4f
+FROM quay.io/fedora/fedora-minimal:44@sha256:f784d2b128030a51dbe2e9e1626cdeff9b3787c5e2c89a454927fba401afdb60
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 

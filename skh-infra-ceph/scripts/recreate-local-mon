@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+# Recreate the Ceph mon on *this* host only.
+# Drop host from mon placement → remove mon → wipe local → restore placement
+# (orch redeploys). Does not touch mons on other hosts.
+#
+# Usage (root): ./recreate-local-mon.sh
+# Optional: FSID=... TIMEOUT_SECS=600 POLL_SECS=5
+
+set -u
+
+TIMEOUT_SECS="${TIMEOUT_SECS:-600}"
+POLL_SECS="${POLL_SECS:-5}"
+
+log() { printf '[%s] %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
+die() { log "ERROR: $*"; exit 1; }
+
+[[ ${EUID:-$(id -u)} -eq 0 ]] || die "run as root"
+command -v cephadm >/dev/null || die "cephadm not found"
+command -v python3 >/dev/null || die "python3 not found"
+[[ -f /etc/ceph/ceph.client.admin.keyring && -f /etc/ceph/ceph.conf ]] \
+  || die "need /etc/ceph/ceph.conf and ceph.client.admin.keyring"
+
+detect_fsid() {
+  if [[ -n "${FSID:-}" ]]; then echo "$FSID"; return; fi
+  if [[ -f /etc/ceph/ceph.conf ]]; then
+    local v
+    v=$(awk -F' *= *' '/^[[:space:]]*fsid[[:space:]]*=/{print $2; exit}' /etc/ceph/ceph.conf || true)
+    [[ -n "$v" ]] && { echo "$v"; return; }
+  fi
+  local dirs=()
+  mapfile -t dirs < <(ls -1 /var/lib/ceph 2>/dev/null | grep -E '^[0-9a-f-]{36}$' || true)
+  [[ ${#dirs[@]} -eq 1 ]] || die "cannot detect FSID (set FSID=...)"
+  echo "${dirs[0]}"
+}
+
+ceph_cli() {
+  cephadm shell \
+    --fsid "$FSID" \
+    --config /etc/ceph/ceph.conf \
+    --keyring /etc/ceph/ceph.client.admin.keyring \
+    -- "$@"
+}
+
+is_self_host() {
+  local h="$1"
+  [[ "$h" == "$HOST_FQDN" || "$h" == "$MON_ID" || "$h" == "${MON_ID}."* ]]
+}
+
+mon_placement_hosts() {
+  local out
+  out=$(ceph_cli ceph orch ls mon -f json 2>/dev/null) || return 1
+  python3 -c '
+import json, sys
+data = json.loads(sys.stdin.read())
+if isinstance(data, list):
+    data = data[0] if data else {}
+for h in ((data.get("placement") or {}).get("hosts") or []):
+    print(h.get("hostname") if isinstance(h, dict) else h)
+' <<<"$out"
+}
+
+placement_without_self() {
+  local h out=()
+  while read -r h; do
+    [[ -z "$h" ]] && continue
+    is_self_host "$h" && continue
+    out+=("$h")
+  done < <(mon_placement_hosts || true)
+  if [[ ${#out[@]} -eq 0 ]]; then
+    local dump
+    dump=$(ceph_cli ceph mon dump -f json 2>/dev/null) || true
+    while read -r h; do
+      [[ -z "$h" ]] && continue
+      is_self_host "$h" && continue
+      out+=("$h")
+    done < <(python3 -c '
+import json, sys
+for m in json.load(sys.stdin).get("mons", []):
+    n = m.get("name") or ""
+    if n: print(n)
+' <<<"$dump")
+  fi
+  (IFS=,; echo "${out[*]}")
+}
+
+self_in_mon_placement() {
+  local h
+  while read -r h; do
+    [[ -z "$h" ]] && continue
+    is_self_host "$h" && return 0
+  done < <(mon_placement_hosts || true)
+  return 1
+}
+
+mon_in_monmap() {
+  local out
+  out=$(ceph_cli ceph mon dump -f json 2>/dev/null) || return 1
+  MON_ID="$MON_ID" python3 -c '
+import json, os, sys
+me = os.environ["MON_ID"]
+sys.exit(0 if any(m.get("name") == me for m in json.load(sys.stdin).get("mons", [])) else 1)
+' <<<"$out"
+}
+
+mon_in_quorum() {
+  local out
+  out=$(ceph_cli ceph quorum_status -f json 2>/dev/null) || return 1
+  MON_ID="$MON_ID" python3 -c '
+import json, os, sys
+sys.exit(0 if os.environ["MON_ID"] in (json.load(sys.stdin).get("quorum_names") or []) else 1)
+' <<<"$out"
+}
+
+other_mons_in_quorum_ge_2() {
+  local q others
+  q=$(ceph_cli ceph quorum_status -f json 2>/dev/null) || return 1
+  others=$(MON_ID="$MON_ID" python3 -c '
+import json, os, sys
+me = os.environ["MON_ID"]
+print(sum(1 for n in (json.load(sys.stdin).get("quorum_names") or []) if n != me))
+' <<<"$q") || return 1
+  (( others >= 2 ))
+}
+
+local_mon_present() {
+  [[ -d "/var/lib/ceph/${FSID}/${DAEMON}" ]] && return 0
+  systemctl is-active --quiet "ceph-${FSID}@${DAEMON}.service" 2>/dev/null && return 0
+  command -v podman >/dev/null || return 1
+  podman ps -a --format '{{.Names}}' 2>/dev/null | grep -q "${DAEMON}"
+}
+
+apply_mon_placement() {
+  log "orch apply mon --placement=$1"
+  ceph_cli ceph orch apply mon --placement="$1" 2>/dev/null || true
+}
+
+wipe_local_mon() {
+  log "wipe local mon leftovers"
+  systemctl stop "ceph-${FSID}@${DAEMON}.service" 2>/dev/null || true
+  systemctl reset-failed "ceph-${FSID}@${DAEMON}.service" 2>/dev/null || true
+  cephadm rm-daemon --name "${DAEMON}" --fsid "${FSID}" --force --force-delete-data 2>/dev/null || true
+  rm -rf "/var/lib/ceph/${FSID}/${DAEMON}" 2>/dev/null || true
+  rm -rf "/var/lib/ceph/${FSID}/removed/${DAEMON}"* 2>/dev/null || true
+  if command -v podman >/dev/null; then
+    local c
+    while read -r c; do
+      [[ -n "$c" ]] && podman rm -f "$c" 2>/dev/null || true
+    done < <(podman ps -a --format '{{.Names}}' 2>/dev/null | grep "${DAEMON}" || true)
+  fi
+}
+
+wait_loop() {
+  local desc="$1" start
+  shift
+  start=$(date +%s)
+  log "wait: $desc"
+  while true; do
+    "$@" && { log "ok: $desc"; return 0; }
+    (( $(date +%s) - start >= TIMEOUT_SECS )) && die "timeout: $desc"
+    sleep "$POLL_SECS"
+  done
+}
+
+FSID="$(detect_fsid)"
+HOST_FQDN="$(hostname -f)"
+MON_ID="$(hostname -s)"
+DAEMON="mon.${MON_ID}"
+PEERS="$(placement_without_self)"
+RESTORE="${PEERS},${HOST_FQDN}"
+start=0
+
+log "FSID=$FSID DAEMON=$DAEMON"
+log "peers=$PEERS"
+[[ -n "$PEERS" ]] || die "empty peer placement"
+
+wait_loop ">=2 other mons in quorum" other_mons_in_quorum_ge_2
+
+# 1) stop local
+systemctl stop "ceph-${FSID}@${DAEMON}.service" 2>/dev/null || true
+wait_loop "local mon unit inactive" \
+  bash -c "! systemctl is-active --quiet ceph-${FSID}@${DAEMON}.service"
+
+# 2) drop this host from placement (blocks orch redeploy)
+start=$(date +%s)
+while self_in_mon_placement; do
+  apply_mon_placement "$PEERS"
+  (( $(date +%s) - start >= TIMEOUT_SECS )) && die "timeout: still in mon placement"
+  sleep "$POLL_SECS"
+done
+log "ok: removed from mon placement"
+
+# 3) remove from monmap
+start=$(date +%s)
+while mon_in_monmap; do
+  ceph_cli ceph orch daemon rm "${DAEMON}" --force 2>/dev/null || true
+  ceph_cli ceph mon remove "${MON_ID}" 2>/dev/null || true
+  (( $(date +%s) - start >= TIMEOUT_SECS )) && die "timeout: still in monmap"
+  sleep "$POLL_SECS"
+done
+log "ok: absent from monmap"
+
+# 4) wipe local
+start=$(date +%s)
+while local_mon_present; do
+  wipe_local_mon
+  (( $(date +%s) - start >= TIMEOUT_SECS )) && die "timeout: local leftovers"
+  sleep "$POLL_SECS"
+done
+log "ok: local wiped"
+
+# 5) restore placement — orch redeploys this mon
+start=$(date +%s)
+while ! mon_in_quorum; do
+  self_in_mon_placement || apply_mon_placement "$RESTORE"
+  (( $(date +%s) - start >= TIMEOUT_SECS )) && die "timeout: not in quorum"
+  sleep "$POLL_SECS"
+done
+log "ok: in quorum"
+
+ceph_cli ceph -s || true
+log "done"

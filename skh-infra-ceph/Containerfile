@@ -9,6 +9,7 @@ COPY config/ceph-aliases.sh /etc/profile.d/
 COPY --chmod=0700 ./scripts/manage-ceph-deploy.sh /usr/local/bin/
 COPY --chmod=0700 ./scripts/zap-host-disks.sh /usr/local/bin/
 COPY --chmod=0700 ./scripts/var-disk-cleanup.sh /usr/local/bin/
+COPY --chmod=0700 ./scripts/recreate-local-mon /usr/local/bin/
 COPY ./systemd-units/ceph-node-lifecycle.service /usr/lib/systemd/system/
 COPY ./systemd-units/var-disk-cleanup.service /usr/lib/systemd/system/
 COPY ./systemd-units/var-disk-cleanup.timer /usr/lib/systemd/system/

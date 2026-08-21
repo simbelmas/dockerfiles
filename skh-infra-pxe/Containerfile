@@ -1,4 +1,4 @@
-FROM olareg.skh.spdnova.xyz/skh-infra-base:v44.23@sha256:77ecef2adab64e808141b2ed54bd2ee26c9dd914c58da1cf4acb39f0a62b7f81 AS Base
+FROM olareg.skh.spdnova.xyz/skh-infra-base:v44.25@sha256:70235dbe981af56b988d890c17e6df392a55206761a502e9df317d5b50eff24c AS Base
 
 FROM Base
 

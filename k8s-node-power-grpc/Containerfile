@@ -1,0 +1,33 @@
+FROM quay.io/simbelmas/fedora-minimal:v44.29@sha256:708c94c389bf33c985f824db58da03f83f834d1e42a1e91497de73eac3dbbe03 AS Builder
+
+ARG TARGETARCH=amd64
+ARG GO_VERSION=1.26.6
+ARG GIT_REPO=https://git.spdnova.xyz/Sok3t/k8s-node-power-grpc.git
+ARG GIT_REF=main
+
+RUN microdnf --nodocs --best -y install \
+    curl tar gzip ca-certificates git \
+    && microdnf clean all
+
+RUN set -eux; \
+    curl -sSL "https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz" -o /tmp/go.tgz; \
+    tar -C /usr/local -xzf /tmp/go.tgz; \
+    rm -f /tmp/go.tgz
+
+ENV PATH=/usr/local/go/bin:$PATH \
+    GOPROXY=https://proxy.golang.org,direct \
+    CGO_ENABLED=0 \
+    GOOS=linux
+
+WORKDIR /src
+RUN git clone --depth 1 --branch "${GIT_REF}" "${GIT_REPO}" .
+RUN go build -trimpath -ldflags="-s -w" -o /grpc-daemon ./cmd/grpc-daemon
+
+FROM scratch
+
+LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+COPY --from=Builder /grpc-daemon /usr/local/bin/grpc-daemon
+
+USER 0
+ENTRYPOINT ["/usr/local/bin/grpc-daemon"]

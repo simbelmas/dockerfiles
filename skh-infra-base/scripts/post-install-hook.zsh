@@ -12,28 +12,46 @@ if [[ -z "${tftp_server_ip}" ]] ; then
     exit 1
 fi
 
-if [[ "$(ip -o link show up | grep -v 'lo:' | wc -l)" -gt 1 ]] && [[ -z "$(ip -o link show up | grep bond)" ]]; then
-    echo "More than one interface detected and no bonding setted up, identifying first and disabling others" 
-    pxe_src_iface=$(ip -o link show | awk -F ': ' '$2 != "lo" {print $2 ; exit }')
-    ## Disabling other interfaces
-    for iface in $(ip -o link show up | grep -Ev "lo:|${pxe_src_iface}:" | awk -F ': ' '$2 != "lo" {print $2}') ; do
-        echo Set ${iface} down.
-        nmcli con down ${iface} || echo Interface already down.
-    done
-    echo Switching primary interface down/up to refresh configuration.
-    (
-        set +e
-        nmcli con down ${pxe_src_iface}
-        nmcli con up ${pxe_src_iface}
-    ) 
-elif [[ -n "$(ip -o address | grep "${tftp_server_ip}")" ]] ; then
+# Identify the PXE-facing NIC from routing, not "first link". This unit is
+# re-run on live nodes to refresh files from PXE; CNI veth/bridges must not
+# be treated as extra physical interfaces.
+if [[ -n "$(ip -o address | grep "${tftp_server_ip}")" ]] ; then
     # case of the server itself, the tftp server ip is worn by the machine
     pxe_src_iface=$( ip -o address | awk "\$0 ~ /${tftp_server_ip}/ {print \$2;}")
 else
     pxe_src_iface=$(ip route get ${tftp_server_ip} | grep -oP 'dev \K\S+')
 fi
+pxe_src_iface="${pxe_src_iface%%@*}"
+
+if [[ -z "$(ip -o link show type bond 2>/dev/null)" ]]; then
+    extra_physical=""
+    for iface in $(ip -o link show up | awk -F ': ' '{print $2}') ; do
+        iface="${iface%%@*}"
+        [[ "${iface}" == "lo" || "${iface}" == "${pxe_src_iface}" ]] && continue
+        # Physical NICs have a backing device; veth/cni/flannel/dummy do not.
+        if [[ -e "/sys/class/net/${iface}/device" ]]; then
+            extra_physical="${extra_physical} ${iface}"
+        fi
+    done
+    extra_physical="${extra_physical# }"
+    if [[ -n "${extra_physical}" ]]; then
+        echo "More than one physical interface detected and no bonding setted up, disabling extras:${extra_physical}"
+        for iface in ${extra_physical} ; do
+            echo Set ${iface} down.
+            nmcli con down ${iface} || echo Interface already down.
+        done
+        echo Switching primary interface down/up to refresh configuration.
+        (
+            set +e
+            nmcli con down ${pxe_src_iface}
+            nmcli con up ${pxe_src_iface}
+        )
+    fi
+fi
 
 pxe_src_ip=$(ip -o address show dev ${pxe_src_iface} | grep -oP 'inet \K[0-9.]+')
+# Operational MAC of the route iface (bond0 on Ceph). Do not follow the
+# active slave or permaddr: SFP+ permanent MAC is not the PXE/yaml MAC.
 pxe_src_mac=$( ip -o link show ${pxe_src_iface} | grep -oP 'link/ether \K\S+' | tr '[:lower:]' '[:upper:]')
 
 echo "Using reference interface ${pxe_src_iface} with ip ${pxe_src_ip} and mac ${pxe_src_mac}"

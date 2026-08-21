@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Post installation scripts
+Description=Refresh host files from PXE and run post-install scripts
 Wants=network-online.target
 After=network-online.target
 After=systemd-homed.service

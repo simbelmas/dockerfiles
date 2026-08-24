@@ -5,6 +5,7 @@ FROM Base
 RUN dnf5 --nodocs --best -y install \
         zsh \
         rsync \
+        ethtool \
         vim-enhanced tmux &&\
     dnf5 clean all \
     && rm -rf /run/dnf /var/cache/* /var/lib/dnf /var/log/dnf5.log
@@ -18,6 +19,7 @@ COPY --chmod=0644 config/journald.conf /etc/systemd/journald.conf
 COPY --chmod=0700 scripts/update-static-file /usr/local/sbin/
 COPY --chmod=0700 scripts/bootc-fleetlock-fetch-apply-upgrade /usr/local/sbin/
 COPY --chmod=0700 scripts/post-install-hook.zsh /usr/libexec/
+COPY --chmod=0700 scripts/enable-wol /usr/libexec/
 
 
 ## Manage systemd services
@@ -26,10 +28,12 @@ COPY systemd-units/update-static-files.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.service /usr/lib/systemd/system/
 COPY systemd-units/bootc-fleetlock-fetch-upgrade.timer /usr/lib/systemd/system/
 COPY systemd-units/pxe-post-install.service /usr/lib/systemd/system/
+COPY systemd-units/enable-wol.service /usr/lib/systemd/system/
 
 RUN systemctl enable set-timezone.service &&\
     systemctl enable update-static-files.service &&\
-    systemctl enable pxe-post-install.service
+    systemctl enable pxe-post-install.service &&\
+    systemctl enable enable-wol.service
 
 
 ## Manage static files update

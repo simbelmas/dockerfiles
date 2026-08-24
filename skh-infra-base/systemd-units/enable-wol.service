@@ -1,0 +1,15 @@
+[Unit]
+Description=Enable Wake-on-LAN magic packet on capable interfaces
+Wants=network-online.target
+After=network-online.target
+After=NetworkManager.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/usr/libexec/enable-wol
+# Re-apply before NM tears the iface down so r8169 keeps the PHY up in S5.
+ExecStop=/usr/libexec/enable-wol
+
+[Install]
+WantedBy=multi-user.target

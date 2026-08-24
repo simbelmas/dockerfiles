@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Enable magic-packet WoL on physical (and bond) NICs that advertise support.
+# Explicit ethtool set is required for r8169: "Wake-on: g" in get_wol is not
+# enough unless the ioctl runs and PCI wakeup is enabled.
+
+if ! command -v ethtool >/dev/null ; then
+    echo "ethtool not found, exiting ..." >&2
+    exit 1
+fi
+
+enable_one() {
+    local iface="$1"
+    local supports wakeup
+
+    supports=$(ethtool "${iface}" 2>/dev/null | awk -F': *' '/Supports Wake-on:/ {print $2; exit}')
+    if [[ -z "${supports}" ]] || [[ "${supports}" != *g* ]] ; then
+        echo "Skipping ${iface}: magic-packet WoL not supported (${supports:-unknown})"
+        return 0
+    fi
+
+    if ! ethtool -s "${iface}" wol g ; then
+        echo "Failed to set wol g on ${iface}" >&2
+        return 0
+    fi
+    echo "Set ${iface} wol g (supports ${supports})"
+
+    wakeup="/sys/class/net/${iface}/device/power/wakeup"
+    if [[ -f "${wakeup}" ]] ; then
+        echo enabled > "${wakeup}" || true
+        echo "Set ${iface} PCI wakeup=$(cat "${wakeup}")"
+    fi
+}
+
+for n in /sys/class/net/* ; do
+    iface=$(basename "${n}")
+    [[ "${iface}" == lo ]] && continue
+    if [[ -e "/sys/class/net/${iface}/device" ]] || [[ -d "/sys/class/net/${iface}/bonding" ]] ; then
+        enable_one "${iface}"
+    fi
+done

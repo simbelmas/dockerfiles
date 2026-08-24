@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v44.29@sha256:708c94c389bf33c985f824db58da03f83f834d1e42a1e91497de73eac3dbbe03 AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v44.30@sha256:c431e0823da9d8b24b0ff739a014321809d1b1bc75909ac63476759d98aa36dd AS Builder
 
 ARG TARGETARCH=amd64
 ARG GO_VERSION=1.26.6

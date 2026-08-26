@@ -23,9 +23,15 @@ WORKDIR /src
 RUN git clone --depth 1 --branch "${GIT_REF}" "${GIT_REPO}" .
 RUN go build -trimpath -ldflags="-s -w" -o /grpc-daemon ./cmd/grpc-daemon
 
-FROM scratch
+# Runtime is fedora-minimal (not scratch): nsenter from util-linux joins pid 1's
+# mount namespace so lvs/lvremove see host VGs. The Go process cannot
+# setns(CLONE_NEWNS) itself (multithreaded → EINVAL).
+FROM quay.io/simbelmas/fedora-minimal:v44.30@sha256:c431e0823da9d8b24b0ff739a014321809d1b1bc75909ac63476759d98aa36dd
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
+
+RUN microdnf --nodocs --best -y install util-linux \
+    && microdnf clean all
 
 COPY --from=Builder /grpc-daemon /usr/local/bin/grpc-daemon
 

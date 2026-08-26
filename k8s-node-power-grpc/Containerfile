@@ -1,4 +1,4 @@
-FROM quay.io/simbelmas/fedora-minimal:v44.30@sha256:c431e0823da9d8b24b0ff739a014321809d1b1bc75909ac63476759d98aa36dd AS Builder
+FROM quay.io/simbelmas/fedora-minimal:v44.31@sha256:5b3feff280b7ba1163177456c28cd945917d100be47694bc47303e2d050c7bbe AS Builder
 
 ARG TARGETARCH=amd64
 ARG GO_VERSION=1.26.6
@@ -26,7 +26,7 @@ RUN go build -trimpath -ldflags="-s -w" -o /grpc-daemon ./cmd/grpc-daemon
 # Runtime is fedora-minimal (not scratch): nsenter from util-linux joins pid 1's
 # mount namespace so lvs/lvremove see host VGs. The Go process cannot
 # setns(CLONE_NEWNS) itself (multithreaded → EINVAL).
-FROM quay.io/simbelmas/fedora-minimal:v44.30@sha256:c431e0823da9d8b24b0ff739a014321809d1b1bc75909ac63476759d98aa36dd
+FROM quay.io/simbelmas/fedora-minimal:v44.31@sha256:5b3feff280b7ba1163177456c28cd945917d100be47694bc47303e2d050c7bbe
 
 LABEL maintainer "Simon Belmas <slos@soket.fr>"
 
